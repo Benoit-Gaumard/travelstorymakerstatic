@@ -1,7 +1,13 @@
 # Handoff — travelstorymaker.com (static site)
 
-Context transfer for continuing work in another AI tool. Written 2026-08-28.
-Everything below was verified against the repo, not recalled from memory.
+Context transfer for continuing work in another AI tool. Written 2026-08-28, revised the same day
+at commit `ecd9245`, immediately before the first deploy of this build.
+Everything below was verified against the repo, not recalled from memory. Counts, the git log, the
+orphan-asset status in §11 item 3 and the header behaviour in §11 items 6-8 were all re-checked at
+revision time rather than carried over.
+
+**If you are picking this up cold, read §2.1 (pre-deploy checklist), §8.1 (the CSP) and §11 item 5
+(the live site is a different codebase) before touching anything.**
 
 ---
 
@@ -36,8 +42,41 @@ Node version in use locally: **22.14.0**. Vercel builds on its own Node runtime 
 
 ---
 
-## 3. Commands
+## 2.1 Pre-deploy checklist
 
+Run through this before pushing a deploy. Everything here has bitten this project at least once.
+
+**In the repo, before you push:**
+
+- [ ] `node build.mjs` completes and reports **114 pages from 1000 entries**. A different page count
+      means something silently dropped out of the data.
+- [ ] `git status` is clean and `dist/` is *not* in the diff — it is gitignored on purpose.
+- [ ] No `.env` file has crept in. The repo is public.
+
+**In the Vercel dashboard, first deploy only:**
+
+- [ ] Framework Preset is **`Other`**. Anything else breaks the build or the output directory.
+- [ ] The apex `travelstorymaker.com` **301s to `www`**. Every canonical, sitemap URL and `og:url`
+      says `www`; if the apex serves the site directly, the entire site is duplicated. (§11 item 8)
+
+**Immediately after the deploy goes live — none of these can be checked from the repo:**
+
+- [ ] `curl -sSI https://www.travelstorymaker.com/` actually returns `Content-Security-Policy`,
+      `Permissions-Policy`, `X-Frame-Options: DENY` and HSTS. Vercel silently ignores a malformed
+      `vercel.json` header block.
+- [ ] **Load a page and confirm ads render, then open the console and confirm there are no CSP
+      violations.** A CSP that blocks AdSense produces no visible symptom on the page. (§8.1)
+- [ ] `/sitemap.xml`, `/robots.txt`, `/ads.txt` and `/llms.txt` all return 200 with the right
+      `Content-Type`.
+- [ ] Submit the sitemap in Google Search Console and re-check `ads.txt` in AdSense — AdSense caches
+      it and can take a day to re-read.
+
+**Known state at time of writing:** DNS still points at the old Next.js app, so none of the "after
+deploy" items have ever been checked against this build in production.
+
+---
+
+## 3. Commands
 ```powershell
 cd C:\REPOS\VIBE\travelstorymakerstatic
 
@@ -72,7 +111,7 @@ travelstorymakerstatic/
 ├── public/                    copied verbatim into dist/ after page generation
 │   ├── ads.txt
 │   ├── favicon.svg
-│   └── assets/{css/style.css, js/app.js, fonts/*.woff2, img/{logo.svg, photos/, flags/}}
+│   └── assets/{css/style.css, js/app.js, fonts/*.woff2, img/{logo.svg, hero-travelstorymaker.png, photos/, flags/}}
 ├── src/
 │   ├── layout.mjs             SITE + AUTHOR config, page shell, nav, footer, esc(), page()
 │   ├── components.mjs         entryCard(), entryList(), toolbar(), pagination(), regionTile()
@@ -213,8 +252,12 @@ no Netlify, no manual upload.
   detect a framework and the build fails or produces the wrong output directory.
 - `trailingSlash: true`, `cleanUrls: false` — every route is a directory containing `index.html`,
   so URLs end with `/`. Changing this would break every internal link and every sitemap entry.
-- Security headers (`X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, HSTS).
-- Cache headers: `/assets/*` immutable for a year, icons for a week, `ads.txt` for an hour.
+- Security headers: `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options: DENY`, HSTS,
+  `Permissions-Policy`, and a full `Content-Security-Policy`. See §8.1 before touching the CSP.
+- Cache headers: `/assets/img/*` and `/assets/fonts/*` immutable for a year; `/assets/css/*` and
+  `/assets/js/*` only `max-age=3600, must-revalidate` — **deliberately not immutable**, because those
+  filenames carry no content hash, so a year-long immutable cache would make an emergency fix to
+  `app.js` undeliverable to returning visitors. Icons for a week, `ads.txt` for an hour.
 - Explicit `Content-Type` for `ads.txt`, `llms.txt` and `site.webmanifest`.
 - **Seven permanent 301 redirects** from old `/blog/*` guide URLs to their new `/guides/*` homes.
   These preserve inbound links and search rankings for content published under the old structure —
@@ -226,7 +269,31 @@ the Vercel build with a config that lacked the redirects above. The `.nojekyll` 
 used to emit was removed at the same time — it only ever mattered to GitHub Pages.
 
 **DNS has not been switched.** `travelstorymaker.com` still resolves to the old Next.js app in
-`c:\REPOS\VIBE\travelstorymaker`. Cutting over is an outstanding task.
+`c:\REPOS\VIBE\travelstorymaker`. Cutting over is an outstanding task. Read §11 item 5 first — that
+app is a different, unreviewed codebase with a login and paid third-party APIs.
+
+### 8.1 The CSP and AdSense — do not edit this by eye
+
+The `Content-Security-Policy` in `vercel.json` was **tested in a real browser, not reasoned about**,
+and two rounds of testing were needed before it stopped breaking things silently:
+
+1. The first version blocked `ep1.adtrafficquality.google` in `connect-src`.
+2. The second still blocked `ep2.adtrafficquality.google/sodar/sodar2.js` in `script-src`.
+
+Those hosts are **Sodar, Google's invalid-traffic detection for AdSense**. Blocking them does not
+break the page and produces no visible symptom — it silently degrades click-fraud protection, which
+is an AdSense account risk. Any future change to the CSP must be re-verified by loading real pages
+with the header applied and reading the console, not by reviewing the string.
+
+The current policy allows `'unsafe-inline'` in `script-src` and `style-src`. That is unavoidable
+with AdSense Auto Ads, which injects inline script and style. The parts that are *not* negotiable and
+cost nothing — `object-src 'none'`, `base-uri 'self'`, `frame-ancestors 'none'`, `form-action 'none'`
+— are what actually contain a future injection bug in a hand-rolled string-concatenation templating
+engine. Keep them.
+
+`form-action 'none'` is correct **today** because there are zero `<form>` elements in all 114 pages
+(the `/submit/` flow is a `mailto:` link). If a real form is ever added, this must change to `'self'`
+or the submission will be blocked.
 
 ---
 
@@ -234,24 +301,33 @@ used to emit was removed at the same time — it only ever mattered to GitHub Pa
 
 ```
 remote  https://github.com/Benoit-Gaumard/travelstorymakerstatic.git
-branch  main  (last commit at handoff: 2eedf24 "feat: new version")
+branch  main   (clean, nothing uncommitted)
+head    ecd9245 = origin/main   2026-08-28
 ```
 
-**Uncommitted at handoff time:**
+Recent history, newest first:
 
 ```
- D .github/workflows/deploy.yml     removed: GitHub Pages was never used
- M .gitignore                       added dist/
- M public/assets/css/style.css      hero collage styles
- M src/pages/home.mjs               split hero + collage markup
-?? handoff.md                       this file
-D  dist/**                          ~275 files removed from the git index only
+ecd9245  fix(nav): keep the CTA gradient on hover in the mobile menu
+f9e9822  security: add CSP and Permissions-Policy, tighten caching, ignore .env
+fd88f32  fix(llms): drop guide and post counts, and correct the blog description
+302f041  content: drop item counts from the guides and blog section copy
+2f1bc33  feat(home): replace hero photo collage with a single travel illustration
+0b3233c  feat: new version
 ```
 
-The `dist/` deletions are index-only. The directory is intact on disk and the preview server still
-works. Do not be alarmed by the size of the diff.
+`dist/` is gitignored and has never been tracked in this history. `.gitignore` now also covers
+`.env`, `.env.*` and `.vercel/` — **this repository is public**, so a secret committed here is
+world-readable and is not undone by a later `git rm`.
 
-The homepage hero work is complete and verified at 1440 / 1024 / 390 px, just not committed.
+### 9.1 There were briefly two clones — only one is real
+
+Until 2026-08-28 a second clone existed at `C:\Users\begaumar\.copilot\repos\travelstorymakerstatic`,
+created by the Copilot app when the project was registered against the wrong path. Its local `main`
+was `29a4c4c`, an **unrelated root commit with no merge base** against the real `main` — an old
+snapshot with `dist/` committed and no `handoff.md`. It was deleted, and the app project now points
+at `C:\REPOS\VIBE\travelstorymakerstatic`. If a tool ever offers you a checkout under `.copilot\repos`,
+it is wrong; this directory is the only source of truth.
 
 ---
 
@@ -285,6 +361,41 @@ that between 1001 and 1100px. The image drifts 12px on a 9s loop, disabled under
 global size "Stories that make you" wrapped to a second line and added ~90px to the hero.
 Verified 320–1920px: hero is 629px at 1440 (was 828), 981px at 390, with no horizontal overflow.
 
+**Item counts removed from fast-moving sections.** `/guides/` and `/blog/` no longer state how many
+guides or trip reports exist, in the lede, the `<title>` or the meta description. A count in a meta
+description churns the SERP snippet on every publication and reads thin at small numbers. The same
+counts were also being injected into `llms.txt` by `build.mjs` and were missed on the first pass —
+check `build.mjs` as well as `src/pages/sections.mjs` if this ever comes up again. A hard-coded
+"and seven more" on the guides page was removed at the same time; unlike the others it was not
+derived from the data and would simply have become false.
+
+Counts elsewhere were deliberately **kept**: `294 stories`, `200 quotes`, `506 fun facts`,
+`36 countries`, `98 images` are all computed from the data, so they cannot drift, and they sit on a
+fixed 1000-entry dataset that does not move. Large numbers there are a credibility argument.
+
+**SEO audit, 2026-08-28.** The built output was cross-checked programmatically rather than by eye:
+114 pages, 113 indexable, 113 sitemap URLs. `404.html` is correctly excluded from the sitemap *and*
+carries `noindex`. Zero missing or duplicate canonicals, zero duplicate titles or descriptions,
+exactly one `<h1>` per page, `html lang` everywhere, and **292 JSON-LD blocks, all of which parse**.
+`og-image.png` really is 1200×630 as declared. The `ads.txt` publisher ID matches `SITE.adsenseClient`
+in `layout.mjs`. Known cosmetic residue: 67 titles exceed 60 characters and 24 descriptions exceed
+160, so Google will truncate them — not an error, but you do not control the end of the snippet.
+
+**Security review, 2026-08-28.** Adversarial read-only review of this repo. Result: no secrets in the
+working tree or in any of the commits, no exposed API key, no DOM XSS in `app.js`, `esc()` correct and
+applied, JSON-LD escaping verified empirically (240 entries contain HTML-special characters; zero raw
+`<` in any built JSON-LD block), `serve.mjs` resistant to ten path-traversal payloads, zero
+`console.log` shipped to the browser. The zero-dependency claim was verified rather than assumed.
+
+Four things were fixed: the missing CSP and `Permissions-Policy` (see §8.1), `X-Frame-Options`
+raised to `DENY`, the over-broad `immutable` cache on unhashed CSS/JS, `.env*` added to `.gitignore`,
+and a crash in `serve.mjs` where `decodeURIComponent` threw on a malformed escape such as `/%zz` and
+killed the process through an unhandled rejection in the async handler.
+
+**Mobile menu CTA contrast.** See gotcha 2 — "Propose a story" rendered white-on-near-white at
+1.13:1 when hovered in the burger menu. Fixed by restating the CTA hover inside the mobile media
+query at a higher specificity.
+
 ---
 
 ## 11. Open items the owner has not decided
@@ -297,14 +408,41 @@ Verified 320–1920px: hero is 629px at 1440 (was 828), 981px at 390, with no ho
    This was flagged as a Google "helpful content" and AdSense authenticity risk. Options offered:
    reframe as suggested itineraries in the third person, or replace with real trips. Unanswered.
 
-3. **`home-hero.jpg` (~300 KB) is now unreferenced** after the hero redesign, but is still shipped in
-   `public/` and still listed on `/credits/` — a credits page naming a photo that appears nowhere.
-   Remove it from `photos.json`, `public/assets/img/photos/`, and the `GENERIC` slot list in
-   `tools/fetch-assets.mjs`, or find it a use.
+3. **`home-hero.jpg` (~300 KB) is still unreferenced.** Confirmed on 2026-08-28: zero references in
+   `src/**` or the stylesheet, but the file is still in `public/assets/img/photos/`, still has three
+   entries in `src/generated/photos.json`, and is therefore still listed on `/credits/` — a credits
+   page naming a photo that appears nowhere on the site. Remove it from those three places plus the
+   `GENERIC` slot list in `tools/fetch-assets.mjs`, or find it a use.
 
-4. **Image sizing.** All photos are served at 1280px wide. The hero collage displays them at 222px.
-   No responsive `srcset` anywhere. If Lighthouse LCP becomes a problem, generating 480px variants is
-   the real fix, not more `fetchpriority` hints.
+4. **Image sizing.** All photos are served at 1280px wide and there is no responsive `srcset`
+   anywhere. The new hero illustration is a 499 KB PNG displayed at 440px — the single heaviest
+   render-blocking asset on the homepage and the likely LCP element. A WebP would be roughly 120 KB,
+   but encoding one needs a dependency, which breaks the zero-dependency rule. Unresolved trade-off.
+
+5. **The live site is a different codebase, and it has not been reviewed.** `travelstorymaker.com`
+   currently serves a Next.js app with routes that exist nowhere in this repo — `/login`, `/planner`,
+   `/create`, `/export`, `/esim`, `/car-rental`, `/book-activity` — and its live CSP allowlists
+   `api.maptiler.com`, `nominatim.openstreetmap.org` and `router.project-osrm.org`. **MapTiler is a
+   metered, key-based service whose key must be client-side.** A security checklist covering login
+   rate limiting, Supabase RLS, password hashing, session expiry, uploads and signup confirmation
+   applies to *that* application, not this one, and none of it has been audited. Do not let a clean
+   report on this repo be filed as a clean report on the domain.
+
+6. **Cutting over will change the headers on the domain.** The live Next.js app currently serves a
+   full CSP, a `Permissions-Policy` and `X-Frame-Options: DENY`. Before f9e9822 this build served
+   none of those, so deploying would have been a net security regression. It now matches — but
+   re-check after the first deploy that the headers actually arrive, and that ads still render.
+
+7. **HSTS `preload` is inert as configured.** `vercel.json` sends
+   `max-age=63072000; includeSubDomains; preload` on `www`, but the apex `travelstorymaker.com`
+   replies with only `max-age=63072000` before redirecting. The preload list is keyed on the apex,
+   so the domain cannot be accepted in this state. Either fix the apex response in the Vercel domain
+   settings and submit at hstspreload.org, or drop the `preload` token so the config states what is
+   true. Also note that `includeSubDomains` will force HTTPS on every future `*.travelstorymaker.com`.
+
+8. **Confirm the apex redirects to `www` before launch.** Every canonical, every sitemap URL and
+   `og:url` point at `https://www.travelstorymaker.com`. If the apex ever serves the site rather than
+   301-ing to `www`, the whole site is duplicated. This is a Vercel domain setting, not repo config.
 
 ---
 

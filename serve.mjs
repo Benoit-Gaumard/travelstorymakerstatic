@@ -24,7 +24,15 @@ const MIME = {
 };
 
 async function resolveFile(urlPath) {
-  const safe = normalize(decodeURIComponent(urlPath.split('?')[0])).replace(/^(\.\.[\\/])+/, '');
+  // decodeURIComponent throws on malformed escapes such as /%zz; without this guard the
+  // rejection is unhandled inside the async request handler and Node exits.
+  let decoded;
+  try {
+    decoded = decodeURIComponent(urlPath.split('?')[0]);
+  } catch {
+    return null;
+  }
+  const safe = normalize(decoded).replace(/^(\.\.[\\/])+/, '');
   let candidate = join(DIST, safe);
   if (!candidate.startsWith(DIST)) return null;
   try {

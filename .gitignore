@@ -2,3 +2,9 @@ node_modules/
 .DS_Store
 *.log
 dist/
+
+# Never commit secrets. This repository is public.
+.env
+.env.*
+!.env.example
+.vercel/

@@ -7,6 +7,14 @@ export const SITE = {
   adsenseClient: 'ca-pub-6636684537203477',
   email: 'travelstorymaker@gmail.com',
   locale: 'en',
+  /*
+   * Sitemap <lastmod> fallback for pages that carry no date of their own (home, collections,
+   * destinations, country pages, legal pages). Bump this by hand when the entry data or the site
+   * copy genuinely changes — do NOT wire it to the build date. Stamping every URL with "today" on
+   * every deploy tells Google all 113 pages changed when they did not, and Google then starts
+   * ignoring lastmod for the whole site.
+   */
+  contentUpdated: '2026-08-28',
 };
 
 export const AUTHOR = {

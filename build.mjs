@@ -49,15 +49,14 @@ async function emit(pages) {
   }
 }
 
-function sitemapXml(paths) {
-  const today = new Date().toISOString().slice(0, 10);
-  const urls = paths.map(function (p) {
-    const priority = p === '/' ? '1.0' : p.startsWith('/travelstories') || p.startsWith('/destinations') || p.startsWith('/guides') || p.startsWith('/blog') ? '0.8' : '0.5';
-    const freq = p === '/' || p.startsWith('/travelstories') ? 'weekly' : 'monthly';
+function sitemapXml(pages) {
+  const urls = pages.map(function (p) {
+    const priority = p.path === '/' ? '1.0' : p.path.startsWith('/travelstories') || p.path.startsWith('/destinations') || p.path.startsWith('/guides') || p.path.startsWith('/blog') ? '0.8' : '0.5';
+    const freq = p.path === '/' || p.path.startsWith('/travelstories') ? 'weekly' : 'monthly';
     return [
       '  <url>',
-      '    <loc>' + SITE.url + p + '</loc>',
-      '    <lastmod>' + today + '</lastmod>',
+      '    <loc>' + SITE.url + p.path + '</loc>',
+      '    <lastmod>' + (p.lastmod || SITE.contentUpdated) + '</lastmod>',
       '    <changefreq>' + freq + '</changefreq>',
       '    <priority>' + priority + '</priority>',
       '  </url>',
@@ -220,7 +219,7 @@ async function main() {
 
   const indexable = pages
     .filter(function (p) { return !p.path.endsWith('.html'); })
-    .map(function (p) { return p.path; });
+    .map(function (p) { return { path: p.path, lastmod: p.lastmod }; });
   await writeFile(join(DIST, 'sitemap.xml'), sitemapXml(indexable), 'utf8');
   await writeFile(join(DIST, 'robots.txt'), robotsTxt(), 'utf8');
   await writeFile(join(DIST, 'llms.txt'), llmsTxt(), 'utf8');

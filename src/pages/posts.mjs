@@ -58,6 +58,10 @@ export function postIndex(cfg) {
 
   return {
     path: cfg.base,
+    lastmod: cfg.posts.reduce(function (latest, p) {
+      const d = p.updated || p.published;
+      return d && d > latest ? d : latest;
+    }, ''),
     html: page({
       path: cfg.base,
       title: cfg.title,
@@ -142,6 +146,7 @@ export function postPages(cfg) {
 
     return {
       path,
+      lastmod: post.updated || post.published,
       html: page({
         path,
         title: post.title + ' | TravelStoryMaker',

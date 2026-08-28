@@ -1,13 +1,13 @@
 # Handoff — travelstorymaker.com (static site)
 
 Context transfer for continuing work in another AI tool. Written 2026-08-28, revised the same day
-at commit `ecd9245`, immediately before the first deploy of this build.
-Everything below was verified against the repo, not recalled from memory. Counts, the git log, the
-orphan-asset status in §11 item 3 and the header behaviour in §11 items 6-8 were all re-checked at
-revision time rather than carried over.
+at commit `0ffb2c7`, after the site went live on `travelstorymaker.com`.
+Everything below was verified against the repo or against production, not recalled from memory.
 
-**If you are picking this up cold, read §2.1 (pre-deploy checklist), §8.1 (the CSP) and §11 item 5
-(the live site is a different codebase) before touching anything.**
+**If you are picking this up cold, read §2.1 (post-deploy checks), §8.1 (the CSP — it can silently
+break both ads and the consent message) and §9.1 (commit identity) before touching anything.
+The one outstanding action that needs a human is §11 item 9: publishing the GDPR message in
+AdSense.**
 
 ---
 
@@ -42,7 +42,7 @@ Node version in use locally: **22.14.0**. Vercel builds on its own Node runtime 
 
 ---
 
-## 2.1 Pre-deploy checklist
+## 2.1 Deploy checklist
 
 Run through this before pushing a deploy. Everything here has bitten this project at least once.
 
@@ -52,6 +52,8 @@ Run through this before pushing a deploy. Everything here has bitten this projec
       means something silently dropped out of the data.
 - [ ] `git status` is clean and `dist/` is *not* in the diff — it is gitignored on purpose.
 - [ ] No `.env` file has crept in. The repo is public.
+- [ ] `git var GIT_AUTHOR_IDENT` and `git var GIT_COMMITTER_IDENT` both show
+      `Benoit-Gaumard <b.gaumard@outlook.com>` — see §9.1.
 
 **In the Vercel dashboard, first deploy only:**
 
@@ -66,6 +68,9 @@ Run through this before pushing a deploy. Everything here has bitten this projec
       `vercel.json` header block.
 - [ ] **Load a page and confirm ads render, then open the console and confirm there are no CSP
       violations.** A CSP that blocks AdSense produces no visible symptom on the page. (§8.1)
+- [ ] Once the GDPR message is published in AdSense (§11 item 9), confirm the consent message
+      actually appears from an EEA IP and that nothing from `fundingchoicesmessages.google.com`
+      is blocked in the console.
 - [ ] `/sitemap.xml`, `/robots.txt`, `/ads.txt` and `/llms.txt` all return 200 with the right
       `Content-Type`.
 - [ ] Submit the sitemap in Google Search Console and re-check `ads.txt` in AdSense — AdSense caches
@@ -291,15 +296,21 @@ cutover: `https://travelstorymaker.com/` 301s to `https://www.travelstorymaker.c
 ### 8.1 The CSP and AdSense — do not edit this by eye
 
 The `Content-Security-Policy` in `vercel.json` was **tested in a real browser, not reasoned about**,
-and two rounds of testing were needed before it stopped breaking things silently:
+and three rounds of testing were needed before it stopped breaking things silently:
 
 1. The first version blocked `ep1.adtrafficquality.google` in `connect-src`.
 2. The second still blocked `ep2.adtrafficquality.google/sodar/sodar2.js` in `script-src`.
+3. When consent moved to Google's CMP, `fundingchoicesmessages.google.com` had to be added to
+   `script-src`, `connect-src` and `frame-src` — otherwise our own policy blocks Google's consent
+   message and no banner ever appears.
 
-Those hosts are **Sodar, Google's invalid-traffic detection for AdSense**. Blocking them does not
-break the page and produces no visible symptom — it silently degrades click-fraud protection, which
-is an AdSense account risk. Any future change to the CSP must be re-verified by loading real pages
-with the header applied and reading the console, not by reviewing the string.
+The `adtrafficquality.google` hosts are **Sodar, Google's invalid-traffic detection for AdSense**.
+Blocking them does not break the page and produces no visible symptom — it silently degrades
+click-fraud protection, which is an AdSense account risk. Blocking the CMP host is worse: it leaves
+EEA visitors with no consent message at all while ads still load.
+
+Any future change to the CSP must be re-verified by loading real pages with the header applied and
+reading the console, not by reviewing the string.
 
 The current policy allows `'unsafe-inline'` in `script-src` and `style-src`. That is unavoidable
 with AdSense Auto Ads, which injects inline script and style. The parts that are *not* negotiable and
@@ -318,18 +329,25 @@ or the submission will be blocked.
 ```
 remote  https://github.com/Benoit-Gaumard/travelstorymakerstatic.git
 branch  main   (clean, nothing uncommitted)
-head    ecd9245 = origin/main   2026-08-28
+head    0ffb2c7 = origin/main   2026-08-28
 ```
 
 Recent history, newest first:
 
 ```
+0ffb2c7  seo: cap titles at 60 chars, and drop the HSTS preload token
+e992d35  feat(consent): hand over to Google's certified CMP and allow it in the CSP
+b1e7791  docs(handoff): record the required commit identity for this repo
+3036079  docs(handoff): record the cutover, the sitemap lastmod rule and the CMP gap
+d6b0060  fix(sitemap): make lastmod meaningful instead of the build date
+43b990a  fix(cache): stop the icon rule stealing the immutable cache from /assets/img
+38f7d3e  docs(handoff): bring the handoff up to date for the first deploy
 ecd9245  fix(nav): keep the CTA gradient on hover in the mobile menu
 f9e9822  security: add CSP and Permissions-Policy, tighten caching, ignore .env
 fd88f32  fix(llms): drop guide and post counts, and correct the blog description
 302f041  content: drop item counts from the guides and blog section copy
 2f1bc33  feat(home): replace hero photo collage with a single travel illustration
-0b3233c  feat: new version
+0b3233c  feat: new version   (root)
 ```
 
 `dist/` is gitignored and has never been tracked in this history. `.gitignore` now also covers
@@ -422,8 +440,27 @@ fixed 1000-entry dataset that does not move. Large numbers there are a credibili
 carries `noindex`. Zero missing or duplicate canonicals, zero duplicate titles or descriptions,
 exactly one `<h1>` per page, `html lang` everywhere, and **292 JSON-LD blocks, all of which parse**.
 `og-image.png` really is 1200×630 as declared. The `ads.txt` publisher ID matches `SITE.adsenseClient`
-in `layout.mjs`. Known cosmetic residue: 67 titles exceed 60 characters and 24 descriptions exceed
-160, so Google will truncate them — not an error, but you do not control the end of the snippet.
+in `layout.mjs`. The audit found 66 titles over 60 characters and 24 descriptions over 160; both were
+addressed afterwards — see §11 item 10.
+
+**Measure title length with entities decoded.** The first version of the audit counted `&amp;` as
+five characters and flagged titles that Google sees as four characters shorter. Anything that
+measures `<title>` or a `meta` description must decode entities first or it will "fix" titles that
+were already fine.
+
+**Sitemap, cache and title work after the cutover.** `lastmod` stopped being the build date (§2.2).
+An icon cache rule was matching everything under `/assets/img/`, so flags, the logo and the hero PNG
+were served with a one-week cache instead of a year while `.jpg` photos correctly kept `immutable` —
+the two `vercel.json` rules overlapped and the later one won. Titles are now capped at 60 characters
+by `fitTitle()`, taking the over-long count from 66 to 0 with no duplicates introduced.
+
+**Consent handed to Google's certified CMP.** The hand-rolled cookie banner was removed and
+`fundingchoicesmessages.google.com` was allowlisted in the CSP — without that our own policy would
+have blocked Google's consent message and it would have failed silently. See §11 item 9 for the
+remaining dashboard step. While editing the policy pages, two false statements were corrected: they
+described a `localStorage` value the site no longer writes, and the cookie page claimed "we load two
+typefaces from Google Fonts" when fonts are self-hosted and `font-src` is `'self'` — a privacy page
+should not describe a third-party data transfer that does not happen.
 
 **Security review, 2026-08-28.** Adversarial read-only review of this repo. Result: no secrets in the
 working tree or in any of the commits, no exposed API key, no DOM XSS in `app.js`, `esc()` correct and
@@ -474,20 +511,34 @@ query at a higher specificity.
    `Permissions-Policy`, `X-Frame-Options: DENY`, HSTS, `X-Content-Type-Options` and `Referrer-Policy`
    all arrive on `https://www.travelstorymaker.com/`.
 
-7. **HSTS `preload` was removed rather than made to work.** `www` sends
-   `max-age=63072000; includeSubDomains`, which is real protection. The `preload` token was dropped
-   on 2026-08-28 because it could never take effect: the preload list is keyed on the **apex**, and
-   `travelstorymaker.com` is a **Vercel platform-level domain redirect** that bypasses the deployment
-   entirely — its 301 carries none of our headers (no CSP, no `X-Frame-Options`, no
-   `Permissions-Policy`, just Vercel's default bare `max-age`). No change to `vercel.json` can reach
-   it.
+7. **HSTS `preload` was removed, and on Vercel it cannot be earned without moving the site to the
+   apex.** `www` sends `max-age=63072000; includeSubDomains`, which is real protection. The
+   `preload` token was dropped on 2026-08-28 because it can never take effect here.
 
-   To actually earn preload you would have to change the apex in Vercel → Domains from "Redirect" to
-   "No redirect", then handle the redirect inside `vercel.json` with a `has: host` rule so our
-   headers apply. That was deliberately not done: preload is near-irreversible (removal takes
-   months), `includeSubDomains` would then force HTTPS on every future subdomain, and this site has
-   no login, no accounts and no personal data, so the benefit — protecting the very first visit
-   before any HSTS header is seen — is small. Revisit only if the site ever handles credentials.
+   The reason is a **Vercel platform limitation, proven empirically on this site**: Vercel cannot
+   attach custom response headers to *any* redirect. This is not specific to the dashboard-level
+   apex redirect — a redirect declared in our own `vercel.json` behaves identically. Verified live:
+
+   ```
+   curl -sSI https://www.travelstorymaker.com/blog/how-to-book-a-cheap-flight
+   HTTP/1.1 308 Permanent Redirect
+   Strict-Transport-Security: max-age=63072000     <- Vercel's default only
+   ```
+
+   No CSP, no `X-Frame-Options`, no `Permissions-Policy` on that response, even though all three
+   are configured for `/(.*)`. An earlier draft of this handoff claimed the fix was to move the
+   apex redirect into `vercel.json` with a `has: host` rule — **that is wrong and was retracted.**
+   See Vercel issue #10964, still open.
+
+   Since hstspreload.org tests the apex directly and does not follow redirects, the only Vercel-native
+   route to preload is to invert the hosts: serve the site on `travelstorymaker.com` (200, so headers
+   apply) and redirect `www` to it. That means changing `SITE.url`, and with it all 113 canonicals,
+   all 113 sitemap URLs, every `og:url`, `robots.txt` and `llms.txt`. It was considered and declined
+   on 2026-08-28: the site has no login, no accounts, no payments and no personal data, so preload —
+   which only protects the very first visit against an active network attacker — is not worth
+   rewriting every canonical immediately before submitting the sitemap for indexing. Revisit only if
+   the site ever handles credentials. The goal of "both hosts send the full header" is not
+   achievable on Vercel at all: whichever host redirects cannot carry it.
 
 8. ~~Confirm the apex redirects to `www`.~~ **Resolved.** Verified live: apex 301s to `www`, and
    plain HTTP 308s to HTTPS on both hosts.

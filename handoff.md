@@ -71,8 +71,23 @@ Run through this before pushing a deploy. Everything here has bitten this projec
 - [ ] Submit the sitemap in Google Search Console and re-check `ads.txt` in AdSense — AdSense caches
       it and can take a day to re-read.
 
-**Known state at time of writing:** DNS still points at the old Next.js app, so none of the "after
-deploy" items have ever been checked against this build in production.
+**Known state at time of writing:** the cutover happened on 2026-08-28 and every "after deploy" item
+above was verified against production, except the two that need a dashboard: submitting the sitemap
+in Search Console, and re-checking `ads.txt` in AdSense. All 113 sitemap URLs were crawled live and
+every one returns 200, is self-canonical to its own `https://www.` URL, is indexable, has exactly one
+`<h1>` and a unique `<title>`.
+
+### 2.2 The sitemap's `lastmod` is deliberately not the build date
+
+`sitemapXml()` in `build.mjs` used `new Date()`, so every deploy stamped all 113 URLs with today —
+telling Google the entire site had changed when nothing had. Google discounts `lastmod` it judges
+unreliable, which then devalues the signal for pages that genuinely did change.
+
+Now: guide and trip-report pages use their own `updated`/`published` field, the two section indexes
+use the newest date among their posts, and everything else falls back to **`SITE.contentUpdated`** in
+`src/layout.mjs`. **Bump that constant by hand when content actually changes. Never wire it to the
+clock.** The sitemap is byte-identical across consecutive builds — if it stops being, something has
+reintroduced a build-time date.
 
 ---
 
@@ -268,9 +283,10 @@ deleted because nothing was ever deployed from it; it only consumed Actions minu
 the Vercel build with a config that lacked the redirects above. The `.nojekyll` file that `build.mjs`
 used to emit was removed at the same time — it only ever mattered to GitHub Pages.
 
-**DNS has not been switched.** `travelstorymaker.com` still resolves to the old Next.js app in
-`c:\REPOS\VIBE\travelstorymaker`. Cutting over is an outstanding task. Read §11 item 5 first — that
-app is a different, unreviewed codebase with a login and paid third-party APIs.
+**DNS was switched on 2026-08-28 and this build is now live on `travelstorymaker.com`.** The old
+Next.js app in `c:\REPOS\VIBE\travelstorymaker` no longer serves the domain. Verified live after the
+cutover: `https://travelstorymaker.com/` 301s to `https://www.travelstorymaker.com/`, `http://`
+308s to `https://` on both hosts, and all six security headers arrive intact.
 
 ### 8.1 The CSP and AdSense — do not edit this by eye
 
@@ -419,30 +435,41 @@ query at a higher specificity.
    render-blocking asset on the homepage and the likely LCP element. A WebP would be roughly 120 KB,
    but encoding one needs a dependency, which breaks the zero-dependency rule. Unresolved trade-off.
 
-5. **The live site is a different codebase, and it has not been reviewed.** `travelstorymaker.com`
-   currently serves a Next.js app with routes that exist nowhere in this repo — `/login`, `/planner`,
-   `/create`, `/export`, `/esim`, `/car-rental`, `/book-activity` — and its live CSP allowlists
-   `api.maptiler.com`, `nominatim.openstreetmap.org` and `router.project-osrm.org`. **MapTiler is a
-   metered, key-based service whose key must be client-side.** A security checklist covering login
-   rate limiting, Supabase RLS, password hashing, session expiry, uploads and signup confirmation
-   applies to *that* application, not this one, and none of it has been audited. Do not let a clean
-   report on this repo be filed as a clean report on the domain.
+5. **The old Next.js app is no longer serving the domain, but it still exists.** Before 2026-08-28,
+   `travelstorymaker.com` served a Next.js app with `/login`, `/planner`, `/create`, `/export` and a
+   client-side MapTiler key. DNS now points here, so that attack surface is off the public domain —
+   but the code still lives in `c:\REPOS\VIBE\travelstorymaker` and was never audited. If any part of
+   it is ever redeployed, or if its Supabase project and MapTiler key are still active, they need a
+   review of their own. A clean security report on *this* repo says nothing about that one.
 
-6. **Cutting over will change the headers on the domain.** The live Next.js app currently serves a
-   full CSP, a `Permissions-Policy` and `X-Frame-Options: DENY`. Before f9e9822 this build served
-   none of those, so deploying would have been a net security regression. It now matches — but
-   re-check after the first deploy that the headers actually arrive, and that ads still render.
+6. ~~Header regression on cutover.~~ **Resolved.** Verified live 2026-08-28: `Content-Security-Policy`,
+   `Permissions-Policy`, `X-Frame-Options: DENY`, HSTS, `X-Content-Type-Options` and `Referrer-Policy`
+   all arrive on `https://www.travelstorymaker.com/`.
 
-7. **HSTS `preload` is inert as configured.** `vercel.json` sends
-   `max-age=63072000; includeSubDomains; preload` on `www`, but the apex `travelstorymaker.com`
-   replies with only `max-age=63072000` before redirecting. The preload list is keyed on the apex,
-   so the domain cannot be accepted in this state. Either fix the apex response in the Vercel domain
-   settings and submit at hstspreload.org, or drop the `preload` token so the config states what is
-   true. Also note that `includeSubDomains` will force HTTPS on every future `*.travelstorymaker.com`.
+7. **HSTS `preload` is still inert.** Confirmed again after the cutover: `www` sends
+   `max-age=63072000; includeSubDomains; preload`, but the apex replies with only
+   `max-age=63072000` before its 301. The preload list is keyed on the apex, so the domain still
+   cannot be accepted. Fix the apex response in the Vercel domain settings and submit at
+   hstspreload.org, or drop the `preload` token so the config states what is true.
 
-8. **Confirm the apex redirects to `www` before launch.** Every canonical, every sitemap URL and
-   `og:url` point at `https://www.travelstorymaker.com`. If the apex ever serves the site rather than
-   301-ing to `www`, the whole site is duplicated. This is a Vercel domain setting, not repo config.
+8. ~~Confirm the apex redirects to `www`.~~ **Resolved.** Verified live: apex 301s to `www`, and
+   plain HTTP 308s to HTTPS on both hosts.
+
+9. **No certified consent management platform, and this is an AdSense risk in the EEA.** The cookie
+   banner (`layout.mjs:137-139`, `app.js:100-114`) is **notice-only**: one "Got it" button that sets
+   `localStorage['tsm-cookie-notice-v1']` and hides the banner. There is no reject option, no consent
+   signal is passed to Google, and the AdSense script at `layout.mjs:191` loads in `<head>`
+   unconditionally — before any interaction. Since January 2024 Google requires a **Google-certified
+   CMP** for serving ads to EEA/UK users; a hand-rolled banner does not qualify, and the documented
+   consequence is restricted ad serving to that traffic. The cheapest fix is Google's own free
+   certified CMP: AdSense → Privacy & messaging → GDPR message. **If you enable it, remove or gate
+   the hand-rolled banner or users will see two.** Note this affects ad *serving* in the EEA, not
+   approval — the approval requirements (original content, privacy policy, contact, navigation,
+   `ads.txt`) are all met.
+
+10. **67 titles exceed 60 characters and 24 descriptions exceed 160.** Google will truncate them, so
+    you do not control the end of the SERP snippet. Not an error and not a ranking penalty; a
+    copywriting cleanup whenever it is worth the time.
 
 ---
 

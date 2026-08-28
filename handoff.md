@@ -474,11 +474,20 @@ query at a higher specificity.
    `Permissions-Policy`, `X-Frame-Options: DENY`, HSTS, `X-Content-Type-Options` and `Referrer-Policy`
    all arrive on `https://www.travelstorymaker.com/`.
 
-7. **HSTS `preload` is still inert.** Confirmed again after the cutover: `www` sends
-   `max-age=63072000; includeSubDomains; preload`, but the apex replies with only
-   `max-age=63072000` before its 301. The preload list is keyed on the apex, so the domain still
-   cannot be accepted. Fix the apex response in the Vercel domain settings and submit at
-   hstspreload.org, or drop the `preload` token so the config states what is true.
+7. **HSTS `preload` was removed rather than made to work.** `www` sends
+   `max-age=63072000; includeSubDomains`, which is real protection. The `preload` token was dropped
+   on 2026-08-28 because it could never take effect: the preload list is keyed on the **apex**, and
+   `travelstorymaker.com` is a **Vercel platform-level domain redirect** that bypasses the deployment
+   entirely — its 301 carries none of our headers (no CSP, no `X-Frame-Options`, no
+   `Permissions-Policy`, just Vercel's default bare `max-age`). No change to `vercel.json` can reach
+   it.
+
+   To actually earn preload you would have to change the apex in Vercel → Domains from "Redirect" to
+   "No redirect", then handle the redirect inside `vercel.json` with a `has: host` rule so our
+   headers apply. That was deliberately not done: preload is near-irreversible (removal takes
+   months), `includeSubDomains` would then force HTTPS on every future subdomain, and this site has
+   no login, no accounts and no personal data, so the benefit — protecting the very first visit
+   before any HSTS header is seen — is small. Revisit only if the site ever handles credentials.
 
 8. ~~Confirm the apex redirects to `www`.~~ **Resolved.** Verified live: apex 301s to `www`, and
    plain HTTP 308s to HTTPS on both hosts.
@@ -496,9 +505,17 @@ query at a higher specificity.
    gone. The privacy and cookie pages already describe a consent message as being present, so the
    copy is only accurate once the message is live.
 
-10. **67 titles exceed 60 characters and 24 descriptions exceed 160.** Google will truncate them, so
-    you do not control the end of the SERP snippet. Not an error and not a ranking penalty; a
-    copywriting cleanup whenever it is worth the time.
+10. **Titles are capped at 60 characters automatically; 22 descriptions are still over 160 by
+    choice.** `fitTitle()` in `src/layout.mjs` drops the " | TravelStoryMaker" suffix whenever
+    keeping it would push a title past 60, which took the over-long count from 66 to 0. Titles stay
+    unique — verified — and Google still gets the site name from the `WebSite` JSON-LD.
+
+    `fitDescription()` trims only at a sentence boundary and only when what remains is still at
+    least 120 characters. That deliberately leaves 22 descriptions over 160: on country pages the
+    text is "N stories, quotes and fun facts about X. \<lede\>", and cutting the lede leaves a
+    59-character stub, which is worse in the SERP than a 179-character description Google simply
+    truncates. Shortening those properly is editorial work on `countries.mjs` ledes, not something
+    to automate.
 
 ---
 

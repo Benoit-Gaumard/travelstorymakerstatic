@@ -144,10 +144,48 @@ function footerMarkup() {
 }
 
 /**
+ * Google truncates titles at roughly 60 characters, so anything past that is invisible in the
+ * SERP and the brand suffix is what usually gets cut. Rather than hand-tuning 66 titles, drop
+ * " | TravelStoryMaker" whenever keeping it would push the title over the limit.
+ *
+ * This only ever shortens: a title that does not already carry the brand is left untouched, and
+ * the site name is still available to Google through the WebSite JSON-LD, which is what it uses
+ * to render the site name beside the title anyway.
+ */
+export function fitTitle(raw) {
+  const brand = ' | ' + SITE.name;
+  if (!String(raw).includes(brand)) return raw;
+  const bare = String(raw).split(brand).join('');
+  return bare.length + brand.length <= 60 ? bare + brand : bare;
+}
+
+/**
+ * Google renders roughly 155-160 characters of a description. Over-long ones are not an error,
+ * but the tail is invisible, so the snippet ends mid-thought.
+ *
+ * This trims only at a sentence boundary, never mid-sentence, and only when what remains is
+ * still a usable description. Country pages read "N stories, quotes and fun facts about X. <lede>",
+ * where cutting the lede leaves a thin 59-character stub — worse in the SERP than a 179-character
+ * description Google simply truncates. So a cut that lands under 120 characters is discarded and
+ * the original text is kept.
+ */
+export function fitDescription(raw) {
+  const text = String(raw);
+  if (text.length <= 160) return text;
+  const head = text.slice(0, 161);
+  const cut = Math.max(head.lastIndexOf('. '), head.lastIndexOf('? '), head.lastIndexOf('! '));
+  if (cut < 0) return text;
+  const trimmed = text.slice(0, cut + 1);
+  return trimmed.length >= 120 ? trimmed : text;
+}
+
+/**
  * @param {{title:string,description:string,path:string,body:string,onDark?:boolean,jsonLd?:object[],noindex?:boolean}} opts
  */
 export function page(opts) {
   const canonical = SITE.url + opts.path;
+  const title = fitTitle(opts.title);
+  const description = fitDescription(opts.description);
   const jsonLd = (opts.jsonLd || [])
     .map(function (obj) {
       return '<script type="application/ld+json">' + JSON.stringify(obj).replace(/</g, '\\u003c') + '</script>';
@@ -160,16 +198,16 @@ export function page(opts) {
     '<head>',
     '<meta charset="utf-8">',
     '<meta name="viewport" content="width=device-width, initial-scale=1">',
-    '<title>' + esc(opts.title) + '</title>',
-    '<meta name="description" content="' + esc(opts.description) + '">',
+    '<title>' + esc(title) + '</title>',
+    '<meta name="description" content="' + esc(description) + '">',
     opts.noindex ? '<meta name="robots" content="noindex,follow">' : '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">',
     '<link rel="canonical" href="' + esc(canonical) + '">',
     '<meta name="author" content="' + esc(SITE.name) + '">',
     '<meta property="og:type" content="' + (opts.path === '/' ? 'website' : 'article') + '">',
     '<meta property="og:site_name" content="' + esc(SITE.name) + '">',
     '<meta property="og:locale" content="en_US">',
-    '<meta property="og:title" content="' + esc(opts.title) + '">',
-    '<meta property="og:description" content="' + esc(opts.description) + '">',
+    '<meta property="og:title" content="' + esc(title) + '">',
+    '<meta property="og:description" content="' + esc(description) + '">',
     '<meta property="og:url" content="' + esc(canonical) + '">',
     '<meta property="og:image" content="' + SITE.url + '/og-image.png">',
     '<meta property="og:image:secure_url" content="' + SITE.url + '/og-image.png">',
@@ -178,8 +216,8 @@ export function page(opts) {
     '<meta property="og:image:height" content="630">',
     '<meta property="og:image:alt" content="' + esc(SITE.name) + ' — ' + esc(SITE.tagline) + '">',
     '<meta name="twitter:card" content="summary_large_image">',
-    '<meta name="twitter:title" content="' + esc(opts.title) + '">',
-    '<meta name="twitter:description" content="' + esc(opts.description) + '">',
+    '<meta name="twitter:title" content="' + esc(title) + '">',
+    '<meta name="twitter:description" content="' + esc(description) + '">',
     '<meta name="twitter:image" content="' + SITE.url + '/og-image.png">',
     '<meta name="twitter:image:alt" content="' + esc(SITE.name) + ' — ' + esc(SITE.tagline) + '">',
     '<meta name="theme-color" content="#070b1a">',

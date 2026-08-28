@@ -1,33 +1,25 @@
 import { page, SITE, esc, adSlot, storyCta, SOCIALS } from '../layout.mjs';
 import { entryCard, regionTile } from '../components.mjs';
-import { photo } from '../photos.mjs';
 import { ENTRIES, COUNT_BY_TYPE, REGIONS, COUNT_BY_REGION } from '../data/index.mjs';
 import { COUNTRIES } from '../countries.mjs';
 
-const COLLAGE = [
-  ['country-greece', 'Greece'],
-  ['art-aurora', 'Norway'],
-  ['country-peru', 'Peru'],
-  ['trip-thailand-1', 'Thailand'],
-];
+const HERO_ART = {
+  src: '/assets/img/hero-travelstorymaker.png',
+  width: 880,
+  height: 660,
+  alt: 'Illustration of a departing aeroplane, a globe, a suitcase, a folded map, a camera and a compass',
+};
 
-/** Tilted photo stack that carries the hero. The first image is the likely LCP element. */
-function heroCollage() {
-  const cards = COLLAGE.map(function (c, i) {
-    const p = photo(c[0]);
-    if (!p) return '';
-    return [
-      '<figure class="collage__card">',
-      '<img src="' + p.src + '" alt="' + esc(p.alt) + '" width="600" height="800"',
-      i === 0 ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"',
-      ' decoding="async">',
-      '<figcaption>' + esc(c[1]) + '</figcaption>',
-      '</figure>',
-    ].join('');
-  }).join('');
-
-  if (!cards) return '';
-  return '<div class="collage" aria-hidden="true"><div class="collage__glow"></div>' + cards + '</div>';
+/** Single illustration that carries the hero. It is the LCP element, so it loads eagerly. */
+function heroArt() {
+  return [
+    '<div class="hero__art">',
+    '<span class="hero__art-glow" aria-hidden="true"></span>',
+    '<img class="hero__art-img" src="' + HERO_ART.src + '" alt="' + esc(HERO_ART.alt) + '"',
+    ' width="' + HERO_ART.width + '" height="' + HERO_ART.height + '"',
+    ' loading="eager" fetchpriority="high" decoding="async">',
+    '</div>',
+  ].join('');
 }
 
 const FAQS = [
@@ -91,7 +83,7 @@ export function homePage() {
     '<a class="btn btn--ghost" href="/destinations/#by-country">Browse by country</a>',
     '</div>',
     '</div>',
-    heroCollage(),
+    heroArt(),
     '</div>',
     '<div class="container">',
     '<div class="stats">',

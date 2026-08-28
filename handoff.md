@@ -156,8 +156,8 @@ To force a specific link, hand-edit the value — it will be preserved.
 These all cost real debugging time. Do not rediscover them.
 
 1. **HTML `width`/`height` attributes beat CSS `aspect-ratio`.** A card was rendering 815px tall
-   instead of 271px. `.collage__card img` needs an explicit `height: auto` for `aspect-ratio` to win.
-   Keep the attributes anyway — they prevent layout shift.
+   instead of 271px. An image whose displayed size is driven by CSS needs an explicit `height: auto`
+   for the CSS to win. Keep the attributes anyway — they prevent layout shift.
 
 2. **Media queries do not add specificity.** `.site-header--on-dark .nav a` (0,2,1) beat `.nav a`
    (0,1,1) inside a media query, giving a white-on-white mobile menu. Fix by matching specificity,
@@ -185,6 +185,11 @@ These all cost real debugging time. Do not rediscover them.
    the article "To Be Everywhere Is to Be Nowhere" on one shared generic word. `score()` in
    `fetch-assets.mjs` now requires either a token shared with the **place** or at least two shared
    tokens, and ranks place-matches higher. 40 facts resolve to nothing rather than to something wrong.
+
+10. **A CSS animation on `translate` silently kills `translate: -50%` centring.** The hero
+    illustration is centred with `inset: 0 0 0 auto` + flexbox rather than a transform, because its
+    float animation animates the `translate` property and would otherwise reset the centring offset
+    to zero on the first keyframe.
 
 ---
 
@@ -255,10 +260,22 @@ Do not relabel these as sources.
 one implementation. On the cards the flag is `alt=""` + `aria-hidden` because the country name sits
 right beside it; on fact sheets it keeps a descriptive `alt`.
 
-**Homepage hero.** Rebuilt as a two-column `hero--split`: copy left, a 2×2 tilted photo collage right
-(Greece, Norway aurora, Peru, Thailand), over a navy→violet radial gradient with blurred colour blobs.
-Inspired by tripkygo.com. The old washed-out aeroplane-wing backdrop was removed. Cards drift 12px on
-a 9s loop, disabled under `prefers-reduced-motion`; two of four are hidden below 560px.
+**Homepage hero.** Rebuilt as `hero--split`: copy on the left, a single transparent-background 3D
+travel illustration (`public/assets/img/hero-travelstorymaker.png`, 880×660, ~499 KB) on the right,
+over a navy→violet radial gradient with blurred colour blobs. Inspired by tripkygo.com. The old
+washed-out aeroplane-wing backdrop and the four-photo tilted collage that briefly replaced it are
+both gone.
+
+From 1001px up the illustration is `position: absolute` inside `.hero__split` and flex-centred
+against the copy, so **it contributes nothing to the hero's height**. Below 1001px it drops back
+into the flow underneath the copy at 340px, and 260px below 560px. Copy and art are sized `58%` /
+`38%` so the CTA row can never run under the illustration — a fixed 660px copy column did exactly
+that between 1001 and 1100px. The image drifts 12px on a 9s loop, disabled under
+`prefers-reduced-motion`.
+
+`.hero--split h1` is capped at `clamp(2rem, 4.4vw, 3.4rem)`, below the global `3.9rem`. At the
+global size "Stories that make you" wrapped to a second line and added ~90px to the hero.
+Verified 320–1920px: hero is 629px at 1440 (was 828), 981px at 390, with no horizontal overflow.
 
 ---
 

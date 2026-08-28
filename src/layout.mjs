@@ -100,7 +100,7 @@ function footerMarkup() {
     '<p style="font-size:.93rem"><a href="/submit/">Propose your travel story &rarr;</a></p>',
     socialLinks(),
     '</div>',
-    '<div><h4>Read</h4><ul>',
+    '<div><h2 class="footer-col__title">Read</h2><ul>',
     '<li><a href="/travelstories/">All entries</a></li>',
     '<li><a href="/guides/">Travel guides</a></li>',
     '<li><a href="/blog/">Blog</a></li>',
@@ -109,7 +109,7 @@ function footerMarkup() {
     '<li><a href="/travelstories/fun-facts/">Fun facts</a></li>',
     '<li><a href="/destinations/">Destinations</a></li>',
     '</ul></div>',
-    '<div><h4>Site</h4><ul>',
+    '<div><h2 class="footer-col__title">Site</h2><ul>',
     '<li><a href="/submit/">Propose a story</a></li>',
     '<li><a href="/about/">About</a></li>',
     '<li><a href="/contact/">Contact</a></li>',
@@ -117,7 +117,7 @@ function footerMarkup() {
     '<li><a href="/credits/">Photo credits</a></li>',
     '<li><a href="/sitemap.xml">Sitemap</a></li>',
     '</ul></div>',
-    '<div><h4>Legal</h4><ul>',
+    '<div><h2 class="footer-col__title">Legal</h2><ul>',
     '<li><a href="/privacy/">Privacy policy</a></li>',
     '<li><a href="/terms/">Terms of use</a></li>',
     '<li><a href="/cookies/">Cookie policy</a></li>',
@@ -225,6 +225,14 @@ export function page(opts) {
     '<link rel="icon" href="/favicon.svg" type="image/svg+xml">',
     '<link rel="apple-touch-icon" href="/apple-touch-icon.png">',
     '<link rel="manifest" href="/site.webmanifest">',
+    /*
+     * The AdSense loader and Google's consent message are the two blocking third-party origins on
+     * every page. Warming their connections early is worth roughly 300ms of LCP on mobile.
+     * fonts.gstatic.com is here because Google's consent dialog pulls its own webfonts from it.
+     */
+    '<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>',
+    '<link rel="preconnect" href="https://fundingchoicesmessages.google.com" crossorigin>',
+    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
     fontPreloads(),
     '<style>' + fontFaceCss() + '</style>',
     '<link rel="stylesheet" href="/assets/css/style.css">',

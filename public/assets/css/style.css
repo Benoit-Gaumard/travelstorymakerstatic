@@ -647,7 +647,13 @@ details.faq p { color: var(--text-soft); margin: 0 0 16px; }
 .footer-grid { display: grid; grid-template-columns: 1.6fr repeat(3, 1fr); gap: 34px; }
 @media (max-width: 860px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 520px) { .footer-grid { grid-template-columns: 1fr; } }
-.site-footer h4 { color: #fff; font-size: .82rem; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 14px; }
+/*
+ * These are <h2> rather than <h4> so the document never skips a level: the last content heading
+ * on most pages is an <h2>, and h2 -> h4 failed the heading-order audit. Going back up a level
+ * is always valid, so <h2> is safe whatever precedes it. The class keeps the styling tied to the
+ * component rather than to the tag.
+ */
+.site-footer .footer-col__title { color: #fff; font-size: .82rem; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 14px; }
 .site-footer ul { list-style: none; padding: 0; margin: 0; }
 .site-footer li { margin-bottom: 9px; }
 .site-footer a { color: rgba(255,255,255,.7); font-size: .93rem; }

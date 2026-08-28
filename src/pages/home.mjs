@@ -8,6 +8,18 @@ const HERO_ART = {
   width: 880,
   height: 660,
   alt: 'Illustration of a departing aeroplane, a globe, a suitcase, a folded map, a camera and a compass',
+  /*
+   * The illustration is the LCP element. It renders at 260px on phones, 340px on tablets and at
+   * most 440px on desktop, so shipping the 880px file to every device wasted ~365KB on mobile and
+   * was the single biggest cost in the mobile Lighthouse run. The widths below mirror the
+   * breakpoints in .hero__art.
+   */
+  srcset: [
+    '/assets/img/hero-travelstorymaker-560.png 560w',
+    '/assets/img/hero-travelstorymaker-720.png 720w',
+    '/assets/img/hero-travelstorymaker.png 880w',
+  ].join(', '),
+  sizes: '(max-width: 560px) 260px, (max-width: 1000px) 340px, 440px',
 };
 
 /** Single illustration that carries the hero. It is the LCP element, so it loads eagerly. */
@@ -16,6 +28,7 @@ function heroArt() {
     '<div class="hero__art">',
     '<span class="hero__art-glow" aria-hidden="true"></span>',
     '<img class="hero__art-img" src="' + HERO_ART.src + '" alt="' + esc(HERO_ART.alt) + '"',
+    ' srcset="' + HERO_ART.srcset + '" sizes="' + HERO_ART.sizes + '"',
     ' width="' + HERO_ART.width + '" height="' + HERO_ART.height + '"',
     ' loading="eager" fetchpriority="high" decoding="async">',
     '</div>',

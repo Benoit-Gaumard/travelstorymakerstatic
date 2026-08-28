@@ -10,15 +10,15 @@ const GUIDES = {
   heroPhoto: 'art-train',
   schemaType: 'Article',
   h1: 'Travel guides<br><span class="grad-text">written by someone who got it wrong first</span>',
-  lede: ARTICLES.length + ' long-form guides on the decisions that actually determine whether a trip works: flights, cars, rooms, money, insurance, altitude, deserts, weather windows and what to leave at home.',
+  lede: 'Long-form guides on the decisions that actually determine whether a trip works: flights, cars, rooms, money, insurance, altitude, deserts, weather windows and what to leave at home.',
   title: 'Travel guides — practical long-form advice | TravelStoryMaker',
-  description: ARTICLES.length + ' in-depth travel guides: booking cheap flights, renting a car abroad, choosing insurance, seeing the northern lights, altitude, deserts, packing light and more.',
+  description: 'In-depth travel guides: booking cheap flights, renting a car abroad, choosing insurance, seeing the northern lights, altitude, deserts, packing light and more.',
   aboutHtml: [
     '<h2>How these are written</h2>',
     '<p>Every guide here is written by ' + esc(AUTHOR.name) + ', checked against public sources where it makes factual claims, and updated when things change. There are no affiliate links inside them and no sponsored placements, and we deliberately avoid naming specific banks, insurers or booking sites — products change every year, the principles behind them do not.</p>',
     '<p>Where a subject touches on health, money or insurance, the guide carries a plain note that it is general information rather than professional advice, because it is. If you find an error, <a href="/contact/">tell us</a>; our <a href="/editorial-policy/">editorial policy</a> explains how corrections are handled.</p>',
     '<h2>Looking for real trips?</h2>',
-    '<p>The <a href="/blog/">blog</a> is where the day-by-day trip reports live — Thailand, Japan, Cuba, the American Southwest and seven more, with the routes and the timings.</p>',
+    '<p>The <a href="/blog/">blog</a> is where the day-by-day trip reports live — Thailand, Japan, Cuba, the American Southwest and more, with the routes and the timings.</p>',
   ].join(''),
 };
 
@@ -29,9 +29,9 @@ const BLOG = {
   heroPhoto: 'trip-japan-1',
   schemaType: 'BlogPosting',
   h1: 'Trips I actually took,<br><span class="grad-text">day by day</span>',
-  lede: POSTS.length + ' trip reports with the full itinerary: where I went on which day, how long each leg really took, what it cost me in time, and the things I would change if I went back.',
+  lede: 'Trip reports with the full itinerary: where I went on which day, how long each leg really took, what it cost me in time, and the things I would change if I went back.',
   title: 'Travel blog — day-by-day trip reports and itineraries | TravelStoryMaker',
-  description: POSTS.length + ' day-by-day travel itineraries: Thailand, Japan, Cuba, the American Southwest, Greece, Spain, Slovenia, Dubai, Moscow and Lisbon.',
+  description: 'Day-by-day travel itineraries: Thailand, Japan, Cuba, the American Southwest, Greece, Spain, Slovenia, Dubai, Moscow and Lisbon.',
   aboutHtml: [
     '<h2>Why day by day</h2>',
     '<p>Most trip write-ups tell you a place was beautiful. That is not useful when you are trying to work out whether four days is enough for Slovenia, or how long the drive from Bryce to Moab actually takes. So these are structured as itineraries: what happened on day one, day two, day three, with real transfer times in a table at the end.</p>',

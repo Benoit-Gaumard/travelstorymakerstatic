@@ -163,6 +163,14 @@ These all cost real debugging time. Do not rediscover them.
    (0,1,1) inside a media query, giving a white-on-white mobile menu. Fix by matching specificity,
    not by wrapping in a media query.
 
+   This bit twice. The second time, the `@media (max-width: 900px)` block at the end of the file
+   set `.site-header .nav a:hover { background: rgba(16,22,44,.06) }` — (0,3,1), the *same*
+   specificity as `.nav a.nav__cta:hover` (0,3,1) but **later in the file**, so it won on source
+   order and stripped the CTA's gradient. The colour rule immediately after it kept the text
+   `#fff`, so "Propose a story" rendered white on a pale grey at 1.13:1 contrast. When a generic
+   `:hover` and a component `:hover` tie on specificity, restate the component rule in the block
+   with a higher one — do not rely on where it happens to sit in the file.
+
 3. **Emoji flags do not render on Windows.** 🇯🇵 relies on regional indicator symbols; Windows ships
    no glyphs for the pairs, so Chrome and Edge on Windows show bare "JP". All flags are **PNG images**
    for this reason. Never substitute emoji.

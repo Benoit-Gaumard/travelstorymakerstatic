@@ -736,6 +736,19 @@ details.faq p { color: var(--text-soft); margin: 0 0 16px; }
   .site-header .nav a.nav__cta,
   .site-header--on-dark .nav a.nav__cta,
   .site-header--on-dark .nav a.nav__cta[aria-current='page'] { color: #fff; }
+  /*
+   * The CTA hover has to be restated here. `.nav a.nav__cta:hover` (0,3,1) sits earlier in the
+   * file than the generic `.nav a:hover` above (also 0,3,1), so the generic rule won and replaced
+   * the gradient with a pale grey while the colour rule above kept the text white — white on grey,
+   * unreadable. These selectors are (0,4,1) so they win on specificity, not on source order.
+   */
+  .site-header .nav a.nav__cta:hover,
+  .site-header--on-dark .nav a.nav__cta:hover,
+  .site-header .nav a.nav__cta:focus-visible,
+  .site-header--on-dark .nav a.nav__cta:focus-visible {
+    background: linear-gradient(120deg, #1f6ff0 0%, #6d28d9 60%, #f43f5e 130%);
+    color: #fff;
+  }
 }
 
 /* ---------- Utils ---------- */

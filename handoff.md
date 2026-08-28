@@ -336,7 +336,35 @@ fd88f32  fix(llms): drop guide and post counts, and correct the blog description
 `.env`, `.env.*` and `.vercel/` — **this repository is public**, so a secret committed here is
 world-readable and is not undone by a later `git rm`.
 
-### 9.1 There were briefly two clones — only one is real
+### 9.1 Commit identity — set this first in any fresh clone
+
+Commits must be authored as **`Benoit-Gaumard <b.gaumard@outlook.com>`**. That is the GitHub account
+and the identity Vercel matches for deploy attribution. The machine's *global* git identity is
+`Benoit Gaumard <begaumar@microsoft.com>`, which is a different person as far as GitHub is concerned.
+
+This repo therefore carries a local override:
+
+```powershell
+git config --local user.name  "Benoit-Gaumard"
+git config --local user.email "b.gaumard@outlook.com"
+```
+
+**`.git/config` is not versioned, so a fresh clone silently reverts to the Microsoft identity.** Run
+the two commands above before the first commit in any new checkout. Verify with
+`git var GIT_AUTHOR_IDENT` and `git var GIT_COMMITTER_IDENT` — check *both*, and see the warning
+below.
+
+**Do not use `git commit --amend --author=...` as the routine fix.** It rewrites only the *author*
+and leaves the *committer* as the global identity, so the commit still carries the wrong address in
+half the metadata, and it forces a `--force-with-lease` push every time. Setting the local config
+fixes both fields with no history rewriting.
+
+Commits `0b3233c`, `2f1bc33`, `fd88f32` and `38f7d3e` were amended that way before the local config
+existed: their author is correct but their committer is still the Microsoft address. The remaining
+commits up to `3036079` are wrong in both fields. This was left as-is deliberately — rewriting would
+have changed every SHA, including the ones cited in §9 above, for a cosmetic gain.
+
+### 9.2 There were briefly two clones — only one is real
 
 Until 2026-08-28 a second clone existed at `C:\Users\begaumar\.copilot\repos\travelstorymakerstatic`,
 created by the Copilot app when the project was registered against the wrong path. Its local `main`

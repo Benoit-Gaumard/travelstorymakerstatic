@@ -481,6 +481,25 @@ described a `localStorage` value the site no longer writes, and the cookie page 
 typefaces from Google Fonts" when fonts are self-hosted and `font-src` is `'self'` — a privacy page
 should not describe a third-party data transfer that does not happen.
 
+**Lighthouse pass, 2026-08-28.** Mobile went from Performance 62 / Best Practices 77 to
+Best Practices 100 and Accessibility 96, with SEO already at 100. What was actually wrong:
+
+- **The CSP was breaking Google's own consent dialog.** `font-src 'self'` and `style-src 'self'`
+  blocked `fonts.gstatic.com` and `fonts.googleapis.com`, which the CMP uses for Material Icons and
+  Open Sans. Every entry in `errors-in-console` and `inspector-issues` came from this, and the
+  dialog rendered with fallback fonts and missing icons. A regression introduced with the CSP in
+  `f9e9822`, invisible until the CMP went live.
+- **The hero was the LCP element** at 499 KB, shipped at 880px to phones that render it at 260px.
+  Now `<picture>` with WebP at 560/720/880w: **62 KB on mobile**.
+- **The four Inter faces were the full woff2 files** (47 KB each) while `unicode-range` only ever
+  allowed the latin glyphs. Switched to the `-latin` subsets already on disk: **188 KB → 40 KB**,
+  no visual change.
+- Missing `preconnect` to the two Google origins, costed at ~308 ms.
+- Footer headings were `<h4>` directly after an `<h2>`, failing `heading-order`.
+
+The remaining `color-contrast` failures are inside Google's consent dialog markup, and the remaining
+Performance cost is third-party — see §11 item 4.
+
 **Security review, 2026-08-28.** Adversarial read-only review of this repo. Result: no secrets in the
 working tree or in any of the commits, no exposed API key, no DOM XSS in `app.js`, `esc()` correct and
 applied, JSON-LD escaping verified empirically (240 entries contain HTML-special characters; zero raw
@@ -514,10 +533,22 @@ query at a higher specificity.
    page naming a photo that appears nowhere on the site. Remove it from those three places plus the
    `GENERIC` slot list in `tools/fetch-assets.mjs`, or find it a use.
 
-4. **Image sizing.** All photos are served at 1280px wide and there is no responsive `srcset`
-   anywhere. The new hero illustration is a 499 KB PNG displayed at 440px — the single heaviest
-   render-blocking asset on the homepage and the likely LCP element. A WebP would be roughly 120 KB,
-   but encoding one needs a dependency, which breaks the zero-dependency rule. Unresolved trade-off.
+4. **Page weight is now dominated by AdSense and the consent dialog, not by us.** Measured on
+   production with Lighthouse after the optimisation pass: **first-party 133 KB, third-party 470 KB**
+   — `pagead2.googlesyndication.com` 219 KB, `fundingchoicesmessages.google.com` 144 KB, and
+   `fonts.gstatic.com` 101 KB which is Google's consent dialog pulling its own webfonts. Blocking
+   time was 3,944 ms for FundingChoices and 903 ms for Ads; first-party contributes essentially none
+   of it.
+
+   The first-party side has been taken about as far as it goes without a build toolchain: the hero
+   is 62 KB of WebP instead of 499 KB of PNG, and the fonts are 40 KB instead of 188 KB. **A poor
+   mobile Performance score is now a consequence of running ads, not of a fixable defect.** Do not
+   let a future pass chase it by making the LCP image lazy — that games the metric and makes the
+   real experience worse.
+
+   Note that the Performance number is extremely noisy run to run: local runs during this work
+   produced TBT between 620 ms and 3,950 ms on the same commit. Judge changes by bytes and by the
+   deterministic audits, not by the score.
 
 5. **The old Next.js app is no longer serving the domain, but it still exists.** Before 2026-08-28,
    `travelstorymaker.com` served a Next.js app with `/login`, `/planner`, `/create`, `/export` and a

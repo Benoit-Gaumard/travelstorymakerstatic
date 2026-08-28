@@ -134,10 +134,12 @@ function footerMarkup() {
     '<a class="back-to-top" href="#top" aria-label="Back to top" title="Back to top">',
     '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M12 19V5m0 0-6 6m6-6 6 6"/></svg>',
     '</a>',
-    '<aside class="cookie-notice" role="note" aria-label="Cookie notice">',
-    '<p>We use cookies for basic analytics and advertising. Read our <a href="/cookies/">cookie policy</a> and <a href="/privacy/">privacy policy</a>.</p>',
-    '<button class="btn btn--primary btn--sm" type="button" data-cookie-accept>Got it</button>',
-    '</aside>',
+    /*
+     * No hand-rolled cookie banner. Consent is handled by Google's certified CMP
+     * (AdSense > Privacy & messaging), which adsbygoogle.js loads from
+     * fundingchoicesmessages.google.com. A second homemade notice would show two banners,
+     * and a notice-only "Got it" button is not valid consent under GDPR anyway.
+     */
   ].join('');
 }
 

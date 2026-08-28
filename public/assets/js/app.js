@@ -97,22 +97,6 @@
     }
   }
 
-  /* ---- Cookie / consent notice ---- */
-  var notice = document.querySelector('.cookie-notice');
-  if (notice) {
-    var KEY = 'tsm-cookie-notice-v1';
-    var seen = false;
-    try { seen = window.localStorage.getItem(KEY) === '1'; } catch (e) { seen = false; }
-    if (!seen) notice.setAttribute('data-visible', 'true');
-    var ok = notice.querySelector('[data-cookie-accept]');
-    if (ok) {
-      ok.addEventListener('click', function () {
-        notice.setAttribute('data-visible', 'false');
-        try { window.localStorage.setItem(KEY, '1'); } catch (e) { /* ignore */ }
-      });
-    }
-  }
-
   /* ---- Back to top ---- */
   var toTop = document.querySelector('.back-to-top');
   if (toTop) {

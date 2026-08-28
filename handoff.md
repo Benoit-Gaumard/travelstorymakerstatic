@@ -483,17 +483,18 @@ query at a higher specificity.
 8. ~~Confirm the apex redirects to `www`.~~ **Resolved.** Verified live: apex 301s to `www`, and
    plain HTTP 308s to HTTPS on both hosts.
 
-9. **No certified consent management platform, and this is an AdSense risk in the EEA.** The cookie
-   banner (`layout.mjs:137-139`, `app.js:100-114`) is **notice-only**: one "Got it" button that sets
-   `localStorage['tsm-cookie-notice-v1']` and hides the banner. There is no reject option, no consent
-   signal is passed to Google, and the AdSense script at `layout.mjs:191` loads in `<head>`
-   unconditionally — before any interaction. Since January 2024 Google requires a **Google-certified
-   CMP** for serving ads to EEA/UK users; a hand-rolled banner does not qualify, and the documented
-   consequence is restricted ad serving to that traffic. The cheapest fix is Google's own free
-   certified CMP: AdSense → Privacy & messaging → GDPR message. **If you enable it, remove or gate
-   the hand-rolled banner or users will see two.** Note this affects ad *serving* in the EEA, not
-   approval — the approval requirements (original content, privacy policy, contact, navigation,
-   `ads.txt`) are all met.
+9. **Consent is handled by Google's certified CMP — the hand-rolled banner is gone.** The old banner
+   (`layout.mjs`, `app.js`, `.cookie-notice` in the stylesheet) was notice-only: one "Got it" button
+   writing `tsm-cookie-notice-v1` to localStorage, no reject option, and no signal passed to Google.
+   That is not valid consent under GDPR and is not a Google-certified CMP, which Google has required
+   since January 2024 for serving ads to EEA/UK users. It was removed, and `vercel.json` now
+   allowlists `https://fundingchoicesmessages.google.com` in `script-src`, `connect-src` and
+   `frame-src` — **without that the CMP would have been blocked by our own CSP and failed silently.**
+
+   **Remaining manual step, in the AdSense dashboard: Privacy & messaging → GDPR message → publish.**
+   Until that is done there is no consent notice on the site at all, because the homemade one is
+   gone. The privacy and cookie pages already describe a consent message as being present, so the
+   copy is only accurate once the message is live.
 
 10. **67 titles exceed 60 characters and 24 descriptions exceed 160.** Google will truncate them, so
     you do not control the end of the SERP snippet. Not an error and not a ranking penalty; a

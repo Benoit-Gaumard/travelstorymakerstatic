@@ -13,7 +13,16 @@ const HERO_ART = {
    * most 440px on desktop, so shipping the 880px file to every device wasted ~365KB on mobile and
    * was the single biggest cost in the mobile Lighthouse run. The widths below mirror the
    * breakpoints in .hero__art.
+   *
+   * WebP first, PNG fallback. The .webp files were produced from the .png ones with Chromium's own
+   * canvas encoder rather than by adding an image dependency, and they are committed like every
+   * other asset — the build does not generate them. See §6 of handoff.md.
    */
+  webpSrcset: [
+    '/assets/img/hero-travelstorymaker-560.webp 560w',
+    '/assets/img/hero-travelstorymaker-720.webp 720w',
+    '/assets/img/hero-travelstorymaker.webp 880w',
+  ].join(', '),
   srcset: [
     '/assets/img/hero-travelstorymaker-560.png 560w',
     '/assets/img/hero-travelstorymaker-720.png 720w',
@@ -27,10 +36,13 @@ function heroArt() {
   return [
     '<div class="hero__art">',
     '<span class="hero__art-glow" aria-hidden="true"></span>',
+    '<picture>',
+    '<source type="image/webp" srcset="' + HERO_ART.webpSrcset + '" sizes="' + HERO_ART.sizes + '">',
     '<img class="hero__art-img" src="' + HERO_ART.src + '" alt="' + esc(HERO_ART.alt) + '"',
     ' srcset="' + HERO_ART.srcset + '" sizes="' + HERO_ART.sizes + '"',
     ' width="' + HERO_ART.width + '" height="' + HERO_ART.height + '"',
     ' loading="eager" fetchpriority="high" decoding="async">',
+    '</picture>',
     '</div>',
   ].join('');
 }

@@ -208,6 +208,25 @@ reordered, which would silently mis-assign links.
 The fetcher caches: existing keys/files are skipped. To re-resolve one fact, delete its key and re-run.
 To force a specific link, hand-edit the value — it will be preserved.
 
+### 6.1 Image assets are pre-generated and committed, never built
+
+Everything under `public/assets/img/` is a committed binary. `build.mjs` only copies `public/` into
+`dist/`; it never resizes or re-encodes anything, and it must stay that way — Vercel's build has no
+image toolchain and the repo has no dependencies.
+
+The hero illustration ships as six files: PNG and WebP at 560, 720 and 880px wide. They were produced
+by two one-off scripts run locally, not by the build:
+
+- **Resizing**: a box filter in premultiplied alpha, re-encoded with `node:zlib` using the same
+  approach as `src/png.mjs`. Premultiplying matters — resizing straight RGBA bleeds dark fringes into
+  the transparent edges.
+- **WebP**: encoded by **Chromium's own `canvas.toDataURL('image/webp', 0.9)`**, driven over CDP.
+  Node has no WebP encoder and adding one would break the zero-dependency rule, but a headless
+  Chromium is already on this machine for testing. It cut the hero by 73-76% (233KB → 62KB at 560w)
+  with transparency intact.
+
+If you add another hero-sized image, do the same and commit the output. Do not add `sharp`.
+
 ---
 
 ## 7. Hard-won gotchas

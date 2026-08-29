@@ -100,7 +100,7 @@ export function homePage() {
     '<div class="container hero__inner hero__split">',
     '<div class="hero__copy">',
     '<span class="eyebrow"><span class="dot"></span>Free to read &middot; no account</span>',
-    '<h1>Stories that make you<br><span class="grad-text">pack a bag</span></h1>',
+    '<h1>Stories that make you <br><span class="grad-text">pack a bag</span></h1>',
     '<p class="hero__lede">Travel stories from the road, quotes that have been pushing people out of the door for two thousand years, and fun facts you will repeat at dinner. All on one page, all free, all loading in under a second.</p>',
     '<div class="hero__cta">',
     '<a class="btn btn--primary" href="/travelstories/">Read all &rarr;</a>',

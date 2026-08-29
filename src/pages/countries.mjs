@@ -105,7 +105,7 @@ export function countryPages() {
       factSheet(c),
       '</div>',
       '</section>',
-      toolbar(items.length),
+      toolbar(items.length, items),
       '<section class="section section--tight">',
       '<div class="container">',
       entryList(items),

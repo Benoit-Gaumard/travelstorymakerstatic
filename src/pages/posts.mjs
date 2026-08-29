@@ -49,6 +49,7 @@ export function postIndex(cfg) {
     '</section>',
     '<section class="section">',
     '<div class="container">',
+    '<div class="section-head"><h2>' + esc(cfg.indexHeading) + '</h2></div>',
     '<div class="post-grid">' + cfg.posts.map(function (p) { return postCard(p, cfg.base); }).join('') + '</div>',
     '<div class="prose" style="margin-top:56px">' + cfg.aboutHtml + '</div>',
     '</div>',

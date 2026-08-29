@@ -428,7 +428,7 @@ export function notFoundPage() {
     '<div class="hero__grid" aria-hidden="true"></div>',
     '<div class="container hero__inner center">',
     '<span class="eyebrow"><span class="dot"></span>Error 404</span>',
-    '<h1>You have taken<br><span class="grad-text">a wrong turn</span></h1>',
+    '<h1>You have taken <br><span class="grad-text">a wrong turn</span></h1>',
     '<p class="hero__lede" style="margin-inline:auto">This page does not exist, which happens to the best of us. The good news is that the rest of the site does.</p>',
     '<div class="hero__cta" style="justify-content:center">',
     '<a class="btn btn--primary" href="/travelstories/">Read the library</a>',

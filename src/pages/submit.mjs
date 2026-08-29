@@ -16,7 +16,7 @@ export function submitPage() {
     '<div class="hero__blobs" aria-hidden="true"><span class="hero__blob hero__blob--a"></span><span class="hero__blob hero__blob--c"></span></div>',
     '<div class="container hero__inner">',
     breadcrumbs(crumbs),
-    '<h1>Propose your<br><span class="grad-text">travel story</span></h1>',
+    '<h1>Propose your <br><span class="grad-text">travel story</span></h1>',
     '<p class="hero__lede">Every one of the ' + COUNT_BY_TYPE.story + ' stories in this library started as something that actually happened to somebody. If you have one, we would like to read it.</p>',
     '<div class="hero__cta">',
     '<a class="btn btn--primary" href="' + SUBMIT_MAILTO + '">Send your story by email</a>',
@@ -28,6 +28,7 @@ export function submitPage() {
     '<section class="section">',
     '<div class="container">',
 
+    '<div class="section-head"><h2>How it works</h2></div>',
     '<div class="steps-grid">',
     '<div class="step-card"><span class="step-card__n">1</span><h3>Write it badly</h3><p>Three to six sentences, in whatever order it comes out. Do not polish it. We would rather have the real version than a tidy one.</p></div>',
     '<div class="step-card"><span class="step-card__n">2</span><h3>Email it</h3><p>Use the button above and the template fills itself in. No account, no form, no newsletter you did not ask for.</p></div>',

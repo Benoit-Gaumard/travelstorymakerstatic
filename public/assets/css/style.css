@@ -19,7 +19,14 @@
 
   --text: #10162c;
   --text-soft: #4c5670;
-  --text-faint: #79839c;
+  /*
+   * Do not lighten this. It colours .entry__meta on every card, .entry__num, breadcrumbs,
+   * figure captions and the factsheet head — all small text. The previous #79839c measured
+   * 3.79:1 on --paper, 3.45:1 on --sand and 3.14:1 on --sand-2, below the 4.5:1 required at
+   * this size, which put 431 failing nodes on a single 100-entry listing page. This value
+   * keeps the same hue and clears 4.5:1 on all three backgrounds (worst case 4.91:1).
+   */
+  --text-faint: #5c6477;
   --line: rgba(16, 22, 44, 0.1);
 
   --radius: 18px;
@@ -151,9 +158,16 @@ p { margin: 0 0 1.1em; }
     flex-direction: column; align-items: stretch; gap: 2px;
     background: var(--paper); padding: 14px 20px 22px;
     border-bottom: 1px solid var(--line); box-shadow: var(--shadow-md);
-    transform: translateY(-8px); opacity: 0; pointer-events: none; transition: .18s;
+  /*
+   * `visibility` matters as much as `opacity` here: opacity alone leaves the links visible to
+   * the accessibility tree and in the tab order, so a keyboard or screen-reader user walks
+   * through the whole closed menu before reaching the page. app.js also sets `inert`; this is
+   * the CSS-level guarantee for browsers without it. It is inside the transition on purpose,
+   * so the menu still fades rather than snapping.
+   */
+    transform: translateY(-8px); opacity: 0; pointer-events: none; visibility: hidden; transition: .18s;
   }
-  .nav[data-open='true'] { transform: none; opacity: 1; pointer-events: auto; }
+  .nav[data-open='true'] { transform: none; opacity: 1; pointer-events: auto; visibility: visible; }
   .nav a { color: var(--text); padding: 12px 14px; font-size: 1rem; }
   .nav .btn { margin-top: 8px; justify-content: center; }
 }

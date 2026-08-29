@@ -1,4 +1,4 @@
-import { esc } from './layout.mjs';
+import { esc, fmt } from './layout.mjs';
 import { TYPES, REGIONS, COUNT_BY_REGION } from './data/index.mjs';
 import { photo, thumb } from './photos.mjs';
 import FACT_LINKS from './generated/factlinks.json' with { type: 'json' };
@@ -41,19 +41,51 @@ export function entryCard(entry) {
   ].join('');
 }
 
-export function toolbar(total) {
+const TYPE_CHIPS = [
+  { key: 'story', label: 'Stories' },
+  { key: 'quote', label: 'Quotes' },
+  { key: 'fact', label: 'Fun facts' },
+];
+
+/**
+ * @param {number} total  entries rendered on this page
+ * @param {object[]} [entries]  the entries themselves, used to derive the type filters
+ */
+export function toolbar(total, entries) {
+  /*
+   * Only offer a filter for types that are actually on the page. Country pages used to render
+   * all three chips unconditionally, so /destinations/japan/ — which has 10 fun facts, 8
+   * stories and no quotes — showed a "Quotes" chip that filtered the list down to the empty
+   * state. The page's own navigation led to a dead end on the highest-intent surface on the
+   * site. Below two types the group carries no information at all, so it is dropped entirely.
+   */
+  const present = new Set((entries || []).map(function (e) { return e.type; }));
+  const available = TYPE_CHIPS.filter(function (t) { return present.has(t.key); });
+  const chips = available.length > 1
+    ? [
+      '<div class="chips" role="group" aria-label="Filter by type">',
+      '<button class="chip" type="button" data-filter="all" aria-pressed="true">All</button>',
+      available.map(function (t) {
+        return '<button class="chip" type="button" data-filter="' + t.key + '" aria-pressed="false">' + esc(t.label) + '</button>';
+      }).join(''),
+      '</div>',
+    ].join('')
+    : '';
+
+  /*
+   * Name the scope. The search only filters the entries already rendered on this page, never
+   * the other 900, and saying "Search this page" did not make that concrete enough: someone
+   * searching a term that lives on page 4 concludes the site does not have it.
+   */
+  const scope = 'Search these ' + fmt(total) + ' entries';
+
   return [
     '<div class="toolbar">',
     '<div class="container">',
     '<div class="toolbar__row">',
-    '<div class="search"><label class="visually-hidden" for="entry-search">Search this page</label>',
-    '<input id="entry-search" type="search" placeholder="Search country, theme or word…" autocomplete="off"></div>',
-    '<div class="chips" role="group" aria-label="Filter by type">',
-    '<button class="chip" type="button" data-filter="all" aria-pressed="true">All</button>',
-    '<button class="chip" type="button" data-filter="story" aria-pressed="false">Stories</button>',
-    '<button class="chip" type="button" data-filter="quote" aria-pressed="false">Quotes</button>',
-    '<button class="chip" type="button" data-filter="fact" aria-pressed="false">Fun facts</button>',
-    '</div>',
+    '<div class="search"><label class="visually-hidden" for="entry-search">' + esc(scope) + ' by country, theme or word</label>',
+    '<input id="entry-search" type="search" placeholder="' + esc(scope) + '&hellip;" autocomplete="off"></div>',
+    chips,
     '<button class="chip" type="button" id="entry-shuffle">Surprise me</button>',
     '<p style="margin:0;font-size:.85rem;color:var(--text-faint);font-weight:600"><span id="entry-count">' + total + '</span> shown</p>',
     '</div>',
@@ -62,8 +94,16 @@ export function toolbar(total) {
   ].join('');
 }
 
-export function entryList(entries) {
+/**
+ * @param {object[]} entries
+ * @param {string} [heading]  section heading for the list. Rendered visually hidden: the hero
+ *   and the toolbar already carry the visible hierarchy, but without a real h2 the outline
+ *   jumps straight from the page h1 to the h3 on each card, so heading navigation skips the
+ *   structural level a screen-reader user moves between sections with.
+ */
+export function entryList(entries, heading) {
   return [
+    heading ? '<h2 class="visually-hidden">' + esc(heading) + '</h2>' : '',
     '<div class="entries" id="entry-list">',
     entries.map(entryCard).join(''),
     '</div>',

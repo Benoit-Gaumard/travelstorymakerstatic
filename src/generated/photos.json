@@ -870,19 +870,6 @@
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
     "bytes": 436754
   },
-  "home-hero": {
-    "slot": "home-hero",
-    "src": "/assets/img/photos/home-hero.jpg",
-    "alt": "Airplane wing sky and clouds",
-    "author": "Tobias1984",
-    "authorUrl": "https://commons.wikimedia.org/wiki/User:Tobias1984",
-    "source": "Wikimedia Commons",
-    "link": "https://commons.wikimedia.org/w/index.php?curid=51281245",
-    "license": "BY-SA",
-    "licenseVersion": "3.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
-    "bytes": 165877
-  },
   "trip-thailand-1": {
     "slot": "trip-thailand-1",
     "src": "/assets/img/photos/trip-thailand-1.jpg",

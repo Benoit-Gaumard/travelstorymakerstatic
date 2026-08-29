@@ -1,7 +1,7 @@
 # Handoff — travelstorymaker.com (static site)
 
-Context transfer for continuing work in another AI tool. Written 2026-08-28, revised the same day
-at commit `0ffb2c7`, after the site went live on `travelstorymaker.com`.
+Context transfer for continuing work in another AI tool. Written 2026-08-28, revised through
+2026-08-29 after the site went live on `travelstorymaker.com`.
 Everything below was verified against the repo or against production, not recalled from memory.
 
 **If you are picking this up cold, read §2.1 (post-deploy checks), §8.1 (the CSP — it can silently
@@ -174,7 +174,7 @@ and was untracked on 2026-08-28 with `git rm -r --cached dist`; the files remain
 
 - 1000 entries — 506 `fact`, 294 `story`, 200 `quote`
 - by region — europe 185, asia 215, africa 149, americas 189, oceania 64, polar 14, world 184
-- 36 country pages, 19 guides, 10 trip reports, 98 photos, 35 flags, 466 fact links
+- 36 country pages, 19 guides, 10 trip reports, 97 photos, 35 flags, 466 fact links
 - **114 pages**, 113 URLs in `sitemap.xml`
 
 ### `interleaveByType()` — the single most important function
@@ -199,7 +199,7 @@ node tools/fetch-assets.mjs fonts | photos | flags | links | all
 | File | Contents | Notes |
 | --- | --- | --- |
 | `fonts.json` | array of 6 `@font-face` descriptors (family, style, weight, unicode-range, src) | woff2 files live in `public/assets/fonts/`. Both a full and a `-latin` variant exist per face; the Latin ones are ~10 KB vs ~48 KB. |
-| `photos.json` | 98 slots → `{ src, alt, author, license, sourceUrl }` | Wikimedia Commons, CC / CC0 |
+| `photos.json` | 97 slots → `{ src, alt, author, license, link, ... }` | Wikimedia Commons, CC / CC0 |
 | `factlinks.json` | 466 keys `"title\|place"` → `{ title, url }` | Wikipedia "Read more" links on fun facts |
 
 `factlinks.json` is keyed by **`title|place`, never by numeric id** — ids shift whenever entry data is
@@ -347,13 +347,18 @@ or the submission will be blocked.
 
 ```
 remote  https://github.com/Benoit-Gaumard/travelstorymakerstatic.git
-branch  main   (clean, nothing uncommitted)
-head    0ffb2c7 = origin/main   2026-08-28
+branch  origin/main   (baseline; current worktree has unmerged local commits)
+head    b7c8ca2 = origin/main   2026-08-28
 ```
 
 Recent history, newest first:
 
 ```
+b7c8ca2  docs(handoff): record the Lighthouse pass and where the weight now sits
+248fabb  perf(fonts): serve the Inter latin subsets instead of the full faces
+74d4938  perf: serve the hero as WebP with a PNG fallback
+4c9a5ab  perf/a11y: unblock the consent dialog fonts, preconnect, responsive hero, heading order
+c49cce6  docs(handoff): retract a wrong HSTS claim and record the state after launch
 0ffb2c7  seo: cap titles at 60 chars, and drop the HSTS preload token
 e992d35  feat(consent): hand over to Google's certified CMP and allow it in the CSP
 b1e7791  docs(handoff): record the required commit identity for this repo
@@ -363,10 +368,6 @@ d6b0060  fix(sitemap): make lastmod meaningful instead of the build date
 38f7d3e  docs(handoff): bring the handoff up to date for the first deploy
 ecd9245  fix(nav): keep the CTA gradient on hover in the mobile menu
 f9e9822  security: add CSP and Permissions-Policy, tighten caching, ignore .env
-fd88f32  fix(llms): drop guide and post counts, and correct the blog description
-302f041  content: drop item counts from the guides and blog section copy
-2f1bc33  feat(home): replace hero photo collage with a single travel illustration
-0b3233c  feat: new version   (root)
 ```
 
 `dist/` is gitignored and has never been tracked in this history. `.gitignore` now also covers
@@ -451,7 +452,7 @@ check `build.mjs` as well as `src/pages/sections.mjs` if this ever comes up agai
 derived from the data and would simply have become false.
 
 Counts elsewhere were deliberately **kept**: `294 stories`, `200 quotes`, `506 fun facts`,
-`36 countries`, `98 images` are all computed from the data, so they cannot drift, and they sit on a
+`36 countries`, `97 images` are all computed from the data, so they cannot drift, and they sit on a
 fixed 1000-entry dataset that does not move. Large numbers there are a credibility argument.
 
 **SEO audit, 2026-08-28.** The built output was cross-checked programmatically rather than by eye:
@@ -544,11 +545,10 @@ query at a higher specificity.
    This was flagged as a Google "helpful content" and AdSense authenticity risk. Options offered:
    reframe as suggested itineraries in the third person, or replace with real trips. Unanswered.
 
-3. **`home-hero.jpg` (~300 KB) is still unreferenced.** Confirmed on 2026-08-28: zero references in
-   `src/**` or the stylesheet, but the file is still in `public/assets/img/photos/`, still has three
-   entries in `src/generated/photos.json`, and is therefore still listed on `/credits/` — a credits
-   page naming a photo that appears nowhere on the site. Remove it from those three places plus the
-   `GENERIC` slot list in `tools/fetch-assets.mjs`, or find it a use.
+3. ~~`home-hero.jpg` was credited but unreferenced.~~ **Resolved.** Verified again on 2026-08-29:
+   there were no live references in `src/`, `public/assets/css/` or `public/assets/js/`. Removed
+   `public/assets/img/photos/home-hero.jpg`, the `home-hero` slot from `src/generated/photos.json`,
+   and the matching `GENERIC` fetch slot in `tools/fetch-assets.mjs`.
 
 4. **Page weight is now dominated by AdSense and the consent dialog, not by us.** Measured on
    production with Lighthouse after the optimisation pass: **first-party 133 KB, third-party 470 KB**

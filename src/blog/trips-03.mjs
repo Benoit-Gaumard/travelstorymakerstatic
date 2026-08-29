@@ -1,8 +1,8 @@
 export default [
 {
   slug: 'my-trip-in-dubai-10-days',
-  title: 'My trip in Dubai (10 days)',
-  h1: 'My trip in Dubai (10 days)',
+  title: 'Dubai in 10 days: the old city, the desert, Abu Dhabi',
+  h1: 'Dubai in 10 days: the old city, the desert, Abu Dhabi',
   destination: 'Dubai',
   days: 10,
   description: 'Ten days in Dubai without spending a fortune: the old city, the desert, a day in Abu Dhabi, and the two hours a day you simply cannot use.',
@@ -78,8 +78,8 @@ export default [
 },
 {
   slug: 'my-trip-in-moscow-5-days',
-  title: 'My trip in Moscow (5 days)',
-  h1: 'My trip in Moscow (5 days)',
+  title: 'Moscow in 5 days: the Kremlin and the metro palaces',
+  h1: 'Moscow in 5 days: the Kremlin and the metro palaces',
   destination: 'Moscow',
   days: 5,
   description: 'Five days in Moscow: the Kremlin, a metro system built as a palace, and a city whose scale takes two days to adjust to.',
@@ -144,8 +144,8 @@ export default [
 },
 {
   slug: 'my-trip-in-lisbon-3-days',
-  title: 'My trip in Lisbon (3 days)',
-  h1: 'My trip in Lisbon (3 days)',
+  title: 'Lisbon in 3 days: trams, Belém and Sintra',
+  h1: 'Lisbon in 3 days: trams, Belém and Sintra',
   destination: 'Lisbon',
   days: 3,
   description: 'Three days in Lisbon done properly: tram 28 at the right hour, Belém in the morning, Sintra as a full day, and the hills nobody warns you about.',

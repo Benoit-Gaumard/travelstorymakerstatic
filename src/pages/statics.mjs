@@ -94,7 +94,6 @@ export function aboutPage() {
       jobTitle: AUTHOR.role,
       description: AUTHOR.bio,
       url: AUTHOR.url,
-      sameAs: AUTHOR.sameAs,
       email: 'mailto:' + SITE.email,
       worksFor: { '@type': 'Organization', name: SITE.name, url: SITE.url + '/' },
     }],

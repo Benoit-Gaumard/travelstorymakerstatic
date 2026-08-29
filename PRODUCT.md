@@ -114,15 +114,26 @@ What a neighbouring product could not truthfully copy without rebuilding:
    tension with the zero-dependency static architecture, the no-form CSP, and the "no account, no
    paywall" promise made in the current site copy. When it is taken up it is an architecture
    decision, not a feature request.
-2. **The 10 trip reports are written in the first person but are not the owner's own trips.**
-   Flagged as a Google "helpful content" and AdSense authenticity risk. Reframe in the third person,
-   or replace with real trips — unanswered.
-3. **`AUTHOR.sameAs` still exposes the full surname** while the display name is "Benoit Ga", and it
-   is emitted into around 20 JSON-LD blocks. Keep, replace or remove — unanswered.
+2. ~~**The 10 trip reports are written in the first person but are not the owner's own trips.**~~
+   **Addressed on 2026-08-29, and still open editorially.** The site no longer claims they are the
+   author's journeys: the section is "Trip itineraries, day by day", the ten titles are descriptive
+   rather than "My trip in X", and every trip report carries a visible provenance line under the
+   byline — "A constructed itinerary, written in the first person. Not a travel diary." — with a
+   fuller "How to read these" note on `/blog/`. **The article bodies are still written in the first
+   person and were not rewritten.** The disclosure reconciles them honestly; rewriting the prose, or
+   replacing the itineraries with real trips, remains an editorial decision for the owner.
+
+3. ~~**`AUTHOR.sameAs` still exposes the full surname.**~~ **Resolved on 2026-08-29.** The property
+   was removed from `AUTHOR` and from the two JSON-LD builders that emitted it (`src/pages/posts.mjs`
+   and `src/pages/statics.mjs`). Publishing under a shortened name while linking a profile that
+   spells it out was not a half-measure but no measure. If an external identity is wanted for
+   E-E-A-T later, add a profile that carries the published name.
+
 4. **The GDPR consent message has not been published in the AdSense dashboard.** Until it is, EEA
    and UK visitors get no consent notice at all, because the hand-rolled banner was removed. The
    privacy and cookie pages already describe a consent message as present, so the copy is only
-   accurate once it is live.
+   accurate once it is live. **This is the one open item that needs the owner's Google account and
+   cannot be done from the repository.**
 
 ## Brand Commitments
 
@@ -145,7 +156,7 @@ What a neighbouring product could not truthfully copy without rebuilding:
 Real, in the repository:
 
 - 1,000 written entries, ten data files, `src/data/`.
-- 98 CC / CC0 photographs from Wikimedia Commons, self-hosted, each credited with its licence on
+- 97 CC / CC0 photographs from Wikimedia Commons, self-hosted, each credited with its licence on
   `/credits/` — manifest at `src/generated/photos.json`.
 - 35 country flags, 466 resolved reference links (`src/generated/factlinks.json`).
 - 19 guides (`src/articles/`), 10 trip reports (`src/blog/`), 36 country profiles with fact sheets
@@ -159,8 +170,6 @@ Deliberately absent — future work must not invent these:
 - No published traffic, revenue or audience figures.
 - No first-hand reportage: the trip reports are not the owner's trips, and the stories are narrative
   vignettes rather than verified accounts. The FAQ already says so; keep it that way.
-- One photo, `home-hero.jpg`, is credited on `/credits/` but appears nowhere on the site. It is
-  either given a use or removed from the manifest — it must not stay credited and unused.
 
 ## Product Principles
 

@@ -717,6 +717,58 @@ details.faq p { color: var(--text-soft); margin: 0 0 16px; }
 }
 .factsheet__note strong { color: var(--text); }
 
+/* ---------- Country planning routes ---------- */
+/*
+ * The answer to "what do I read next about this country". Deliberately a link list rather than
+ * another grid of cards: the page already has 18-40 entry cards below it, and a second card grid
+ * would compete with them instead of standing out as the route onward.
+ */
+.plan { margin: 0 0 34px; }
+.plan h2 { font-size: 1.3rem; margin: 0 0 4px; }
+.plan__lede { margin: 0 0 18px; font-size: 0.95rem; color: var(--text-soft); max-width: 62ch; }
+.plan__links { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.plan__link {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 5px 12px;
+  min-height: 44px; padding: 15px 18px;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+  color: inherit; text-decoration: none;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.plan__link:hover,
+.plan__link:focus-visible {
+  border-color: rgba(47, 132, 255, 0.5); box-shadow: var(--shadow-sm);
+  transform: translateY(-1px); text-decoration: none;
+}
+.plan__kind {
+  flex: 0 0 auto; font-size: 0.68rem; font-weight: 800;
+  letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--brand-deep); background: rgba(47, 132, 255, 0.1);
+  padding: 4px 9px; border-radius: 999px;
+}
+.plan__title { flex: 1 1 12ch; font-weight: 700; color: var(--text); }
+.plan__meta { flex: 0 0 auto; font-size: 0.82rem; font-weight: 600; color: var(--text-faint); }
+
+/* Routes out of a long listing page, placed above the list rather than under a hundred cards. */
+.page-routes {
+  margin: 0 0 32px; padding: 22px 24px;
+  background: var(--sand); border: 1px solid var(--line); border-radius: var(--radius-lg);
+}
+.page-routes h2 { margin: 0 0 4px; }
+.page-routes p { margin: 0 0 14px; font-size: 0.93rem; color: var(--text-soft); max-width: 62ch; }
+.page-routes .chips { margin: 0; }
+
+/*
+ * Provenance line under a trip-report byline. Deliberately legible rather than fine print: it
+ * exists to stop a reader mistaking a first-person itinerary for a diary, which only works if
+ * they can actually read it.
+ */
+.provenance-note {
+  margin: 14px 0 0; padding: 10px 14px; max-width: 62ch;
+  font-size: 0.86rem; font-weight: 600; line-height: 1.45;
+  color: #fff; background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 12px;
+}
+
 /* ---------- Itinerary table ---------- */
 .itinerary-table {
   width: 100%; border-collapse: collapse; margin: 26px 0; font-size: 0.94rem;

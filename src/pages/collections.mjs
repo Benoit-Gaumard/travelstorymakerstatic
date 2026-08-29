@@ -4,8 +4,42 @@ import { flagImg } from '../flags.mjs';
 import { toolbar, entryList, pagination, itemListJsonLd, regionTile } from '../components.mjs';
 import { ENTRIES, TYPES, REGIONS, COUNT_BY_TYPE, COUNT_BY_REGION, interleaveByType } from '../data/index.mjs';
 import { COUNTRIES } from '../countries.mjs';
+import { countryOf } from './countries.mjs';
 
 const PER_PAGE = 100;
+
+/*
+ * A hundred entries in one column is about forty screens on a phone, and until now the only
+ * routes onward sat underneath all of them. This puts the missing dimension at the top: the
+ * countries actually represented on this page, linking to the country pages, which are the
+ * surface a visitor with trip intent is looking for. `relatedLinks()` still closes the page with
+ * types and continents; this is deliberately the one axis that block does not cover.
+ */
+function pageRoutes(entries) {
+  const counts = {};
+  entries.forEach(function (e) {
+    countryOf(e).forEach(function (c) { counts[c.slug] = (counts[c.slug] || 0) + 1; });
+  });
+
+  const top = COUNTRIES
+    .filter(function (c) { return counts[c.slug]; })
+    .sort(function (a, b) { return counts[b.slug] - counts[a.slug]; })
+    .slice(0, 10);
+
+  if (top.length < 3) return '';
+
+  return [
+    '<section class="page-routes">',
+    '<h2 style="font-size:1.3rem">Countries on this page</h2>',
+    '<p>Every country page collects its entries in one place, with a fact sheet and the guides for going there.</p>',
+    '<div class="chips">',
+    top.map(function (c) {
+      return '<a class="chip" href="/destinations/' + c.slug + '/">' + esc(c.title) + ' (' + counts[c.slug] + ')</a>';
+    }).join(''),
+    '</div>',
+    '</section>',
+  ].join('');
+}
 
 /** Builds an intro sentence from the actual contents of one page, so no two pages repeat. */
 function pageSummary(slice, pageNo, totalPages) {
@@ -65,6 +99,7 @@ function collection(opts) {
       '<section class="section section--tight">',
       '<div class="container">',
       '<div class="prose" style="margin-bottom:26px">' + (p === 1 && opts.intro ? opts.intro : '<p>' + esc(summary) + '</p>') + '</div>',
+      pageRoutes(slice),
       entryList(slice, 'Entries on this page'),
       pagination(opts.baseHref, p, totalPages),
       opts.related ? '<div style="margin-top:48px">' + opts.related + '</div>' : '',

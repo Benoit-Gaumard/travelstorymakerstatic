@@ -23,7 +23,13 @@ export const AUTHOR = {
   short: 'Benoit Ga',
   bio: 'Benoit Ga is a software engineer and lifelong traveller. He founded TravelStoryMaker to collect the kind of travel writing he wanted to read on a slow connection in a place he could not pronounce: short, checked, and free of preamble.',
   url: 'https://www.travelstorymaker.com/about/#author',
-  sameAs: ['https://github.com/Benoit-Gaumard'],
+  /*
+   * There is deliberately no `sameAs`. It used to point at github.com/Benoit-Gaumard, which put
+   * the full surname into roughly twenty JSON-LD blocks while every visible byline on the site
+   * says "Benoit Ga". Publishing under a shortened name and then linking a profile that spells it
+   * out is not a half-measure, it is no measure. If an external identity is wanted later, add a
+   * profile that carries the published name.
+   */
 };
 
 export function fmt(n) {

@@ -70,7 +70,6 @@ async function fonts() {
 /* ---------------- photos (Openverse -> Wikimedia Commons thumbnails) ---------------- */
 
 const GENERIC = [
-  ['home-hero', 'airplane wing sky and clouds'],
   ['hero-world', 'mountain lake sunrise landscape'],
   ['europe', 'italy coastal village'],
   ['asia', 'japan pagoda mountain'],

@@ -49,6 +49,7 @@ export function postIndex(cfg) {
     '</section>',
     '<section class="section">',
     '<div class="container">',
+    '<div class="section-head"><h2>' + esc(cfg.indexHeading) + '</h2></div>',
     '<div class="post-grid">' + cfg.posts.map(function (p) { return postCard(p, cfg.base); }).join('') + '</div>',
     '<div class="prose" style="margin-top:56px">' + cfg.aboutHtml + '</div>',
     '</div>',
@@ -122,6 +123,12 @@ export function postPages(cfg) {
       post.days ? ' &middot; ' + post.days + '-day trip' : '',
       '</span></div>',
       '</div>',
+      /*
+       * Said where the reader forms the belief, not only in the small print at the bottom. The
+       * itineraries read in the first person; the site must not let that be mistaken for a record
+       * of a journey the author made.
+       */
+      cfg.provenanceNote ? '<p class="provenance-note">' + esc(cfg.provenanceNote) + '</p>' : '',
       '</div>',
       '</section>',
       '<section class="section">',
@@ -165,7 +172,7 @@ export function postPages(cfg) {
             inLanguage: 'en',
             mainEntityOfPage: { '@type': 'WebPage', '@id': SITE.url + path },
             image: SITE.url + (hasPhoto(post.photo) ? '/assets/img/photos/' + post.photo + '.jpg' : '/og-image.png'),
-            author: { '@type': 'Person', name: AUTHOR.name, url: AUTHOR.url, sameAs: AUTHOR.sameAs },
+            author: { '@type': 'Person', name: AUTHOR.name, url: AUTHOR.url },
             publisher: {
               '@type': 'Organization',
               name: SITE.name,

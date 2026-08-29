@@ -6,11 +6,34 @@
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.getElementById('primary-nav');
   if (toggle && nav) {
-    toggle.addEventListener('click', function () {
+    /*
+     * Below 900px the menu is a fixed panel that is only *visually* closed. Hiding it with
+     * opacity and pointer-events left its seven links in the tab order and in the
+     * accessibility tree, so a keyboard or screen-reader user traversed the entire closed
+     * menu before reaching any content — invisible to mouse testing, which is why it survived
+     * a Lighthouse accessibility score of 96. `inert` is what actually removes them.
+     *
+     * Above 900px the same element is an ordinary horizontal nav bar and must never be inert,
+     * so the state is recomputed whenever the breakpoint is crossed, not just on click.
+     */
+    var mobile = window.matchMedia('(max-width: 900px)');
+
+    var syncNav = function () {
       var open = nav.getAttribute('data-open') === 'true';
-      nav.setAttribute('data-open', String(!open));
-      toggle.setAttribute('aria-expanded', String(!open));
+      if (mobile.matches && !open) nav.setAttribute('inert', '');
+      else nav.removeAttribute('inert');
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+
+    toggle.addEventListener('click', function () {
+      nav.setAttribute('data-open', String(nav.getAttribute('data-open') !== 'true'));
+      syncNav();
     });
+
+    if (mobile.addEventListener) mobile.addEventListener('change', syncNav);
+    else if (mobile.addListener) mobile.addListener(syncNav);
+    syncNav();
   }
 
   /* ---- Story filtering (client-side, over already-rendered HTML) ---- */

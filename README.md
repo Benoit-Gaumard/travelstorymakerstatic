@@ -9,8 +9,8 @@ A fully static, dependency-free site for <https://www.travelstorymaker.com>, bui
 | `/` | Home — presents the site |
 | `/travelstories/` (+ `page/2` … `page/10`) | All 1,000 entries, 100 per page |
 | `/travelstories/stories/`, `/quotes/`, `/fun-facts/` | Collections by type |
-| `/guides/` + 12 article pages | Long-form travel guides |
-| `/blog/` + 7 article pages | Practical articles: flights, car hire, stays, phones, cards, insurance |
+| `/guides/` + 19 article pages | Long-form travel guides |
+| `/blog/` + 10 trip report pages | Day-by-day trip reports with practical itineraries |
 | `/submit/` | Reader story submissions (mailto-based, no backend) |
 | `/destinations/` | Continent and country hub |
 | `/destinations/{europe,asia,…}/` | Collections by region |
@@ -51,12 +51,12 @@ Long-form guides live in `src/articles/articles-0*.mjs`. Country pages and their
 
 ```powershell
 node tools/fetch-assets.mjs fonts    # Inter + Fraunces woff2 into public/assets/fonts
-node tools/fetch-assets.mjs photos   # 60 CC-licensed photos into public/assets/img/photos
+node tools/fetch-assets.mjs photos   # 97 CC / CC0 photos into public/assets/img/photos
 ```
 
 Photos come from Wikimedia Commons via the Openverse API, are self-hosted (never hotlinked), and every one is credited with its licence on `/credits/`. The manifest is `src/generated/photos.json`; delete a key and re-run to replace a single image. Wikimedia only serves a fixed set of thumbnail widths — the fetcher tries 1280, 1024 then 800.
 
-There are no third-party requests at runtime apart from the AdSense script.
+There are no third-party requests at runtime apart from AdSense and Google's consent/CMP resources.
 
 ## Deployment
 
@@ -75,7 +75,7 @@ No install step and no dependencies, so builds finish in seconds. Add `www.trave
 
 ## Generated images
 
-`src/png.mjs` is a dependency-free PNG/ICO writer with anti-aliased SDF drawing and a small geometric stroke font. `src/images.mjs` uses it to render the 1200×630 Open Graph image and every icon at build time, so there are no binary assets to keep in sync in the repo.
+`src/png.mjs` is a dependency-free PNG/ICO writer with anti-aliased SDF drawing and a small geometric stroke font. `src/images.mjs` uses it to render the 1200×630 Open Graph image and every icon at build time, so those generated images do not need binary assets committed separately.
 
 ## AdSense
 

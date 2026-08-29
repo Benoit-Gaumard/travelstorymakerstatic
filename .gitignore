@@ -8,3 +8,8 @@ dist/
 .env.*
 !.env.example
 .vercel/
+
+# Local design-tooling state (Impeccable critique snapshots, hook config) and Playwright
+# scratch output. Not source, and not useful to anyone cloning this repo.
+.impeccable/
+.playwright-mcp/

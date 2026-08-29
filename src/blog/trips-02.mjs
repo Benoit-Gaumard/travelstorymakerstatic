@@ -1,11 +1,11 @@
 export default [
 {
   slug: 'my-trip-in-greece-5-days',
-  title: 'My trip in Greece (5 days)',
-  h1: 'My trip in Greece (5 days)',
+  title: 'Greece in 5 days: Athens and Naxos',
+  h1: 'Greece in 5 days: Athens and Naxos',
   destination: 'Greece',
   days: 5,
-  description: 'Athens and Naxos in five days: the Acropolis at opening time, the ferry decision that saved the trip, and why I skipped Santorini.',
+  description: 'Athens and Naxos in five days: the Acropolis at opening time, the ferry decision that saves the trip, and why Santorini is worth skipping.',
   photos: ['trip-greece-1', 'trip-greece-2', 'trip-greece-3'],
   photo: 'trip-greece-1',
   published: '2026-08-14',
@@ -64,8 +64,8 @@ export default [
 },
 {
   slug: 'my-trip-in-spain-alicante-granada-seville',
-  title: 'My trip in Spain (Alicante → Granada → Seville)',
-  h1: 'My trip in Spain (Alicante → Granada → Seville)',
+  title: 'Spain in 8 days: Alicante, Granada and Seville',
+  h1: 'Spain in 8 days: Alicante, Granada and Seville',
   destination: 'Spain',
   days: 8,
   description: 'Eight days across Andalusia and the Levante by bus and train: the Alhambra ticket problem, the best three hours in Seville, and eating at the right hour.',
@@ -135,8 +135,8 @@ export default [
 },
 {
   slug: 'my-trip-in-slovenia-4-days',
-  title: 'My trip in Slovenia (4 days)',
-  h1: 'My trip in Slovenia (4 days)',
+  title: 'Slovenia in 4 days: Ljubljana, Bled and the Soča',
+  h1: 'Slovenia in 4 days: Ljubljana, Bled and the Soča',
   destination: 'Slovenia',
   days: 4,
   description: 'Ljubljana, Lake Bled, the Soča valley and Piran in four days — a country small enough to cross in three hours and green enough to justify every one of them.',

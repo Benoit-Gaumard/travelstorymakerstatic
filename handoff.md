@@ -497,8 +497,25 @@ Best Practices 100 and Accessibility 96, with SEO already at 100. What was actua
 - Missing `preconnect` to the two Google origins, costed at ~308 ms.
 - Footer headings were `<h4>` directly after an `<h2>`, failing `heading-order`.
 
-The remaining `color-contrast` failures are inside Google's consent dialog markup, and the remaining
-Performance cost is third-party — see §11 item 4.
+The remaining Performance cost is third-party — see §11 item 4.
+
+**That Lighthouse pass missed two real defects, both fixed on 2026-08-29 (`c0e9586`).** They are
+recorded here because both are the kind a good score actively hides:
+
+- **`--text-faint` failed WCAG AA everywhere it was used.** The old `#79839c` measured 3.79:1 on
+  `--paper`, 3.45:1 on `--sand` and 3.14:1 on `--sand-2`, against the 4.5:1 required at those sizes.
+  It colours `.entry__meta` on **every card**, so `/travelstories/` alone carried 431 failing text
+  nodes. An earlier revision of this file claimed the residual `color-contrast` failures were inside
+  Google's consent dialog; that was wrong — they were in our own stylesheet. It is now `#5c6477`,
+  same hue, worst case 4.91:1. Verified in the browser: 431 failures to 0.
+- **The closed mobile menu kept its seven links in the tab order.** `.nav` was hidden with `opacity`
+  and `pointer-events: none` only, which hides it from a mouse but not from the keyboard or the
+  accessibility tree. That is exactly why it survived both visual testing and a score of 96.
+  `app.js` now applies `inert` below 900px while the menu is closed, and re-evaluates on breakpoint
+  change so the desktop nav is never inert; `visibility: hidden` is the CSS fallback.
+
+**Do not trust an accessibility score to find either class of bug.** Re-measure contrast from the
+computed styles, and test the closed mobile menu with the Tab key.
 
 **Security review, 2026-08-28.** Adversarial read-only review of this repo. Result: no secrets in the
 working tree or in any of the commits, no exposed API key, no DOM XSS in `app.js`, `esc()` correct and

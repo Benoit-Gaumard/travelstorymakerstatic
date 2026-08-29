@@ -85,7 +85,6 @@ function collection(opts) {
       '<section class="hero hero--compact' + (opts.photo ? ' hero--photo' : '') + '">',
       opts.photo ? heroBackdrop(opts.photo) : '',
       '<div class="hero__blobs" aria-hidden="true"><span class="hero__blob hero__blob--a"></span><span class="hero__blob hero__blob--b"></span></div>',
-      opts.photo ? '' : '<div class="hero__grid" aria-hidden="true"></div>',
       '<div class="container hero__inner">',
       breadcrumbs(crumbs),
       '<h1>' + esc(heading) + '</h1>',

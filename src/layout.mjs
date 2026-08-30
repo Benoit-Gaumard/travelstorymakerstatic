@@ -280,9 +280,14 @@ export function fontFaceCss() {
 }
 
 function fontPreloads() {
-  // Only the two faces used above the fold; the rest load with the stylesheet.
+  /*
+   * Public Sans ships as one variable file covering 400-800, so a single preload now covers every
+   * weight above the fold — the body copy, the nav and the h1 — instead of the two static faces
+   * this used to list. Newsreader is deliberately not preloaded: it is a display face, it appears
+   * below the h1 on most pages, and preloading it would compete with the LCP image for bandwidth.
+   */
   return FONTS.filter(function (f) {
-    return (f.family === 'Inter' && (f.weight === '400' || f.weight === '800'));
+    return f.family === 'Public Sans';
   }).map(function (f) {
     return '<link rel="preload" href="' + f.href + '" as="font" type="font/woff2" crossorigin>';
   }).join('');

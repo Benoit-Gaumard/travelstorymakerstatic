@@ -183,6 +183,24 @@ function countryCta(country, regionKey) {
   ].join('');
 }
 
+/*
+ * Build a meta description that leads with the country and stays inside Google's 160-character
+ * display budget. The entry count is credibility, so it is kept whenever there is room, and
+ * dropped rather than allowed to push the distinctive part of the sentence out of the snippet.
+ */
+export function fitMetaDescription(subject, lede, tail) {
+  const head = subject + ': ' + lede;
+  return head.length + 1 + tail.length <= 160 ? head + ' ' + tail : head;
+}
+
+function countryDescription(c, count) {
+  return fitMetaDescription(
+    c.title,
+    c.lede,
+    count + ' stories, quotes and fun facts.'
+  );
+}
+
 export function countryOf(entry) {
   const place = entry.place;
   const tail = place.includes(',') ? place.split(',').pop().trim() : place.trim();
@@ -278,7 +296,15 @@ export function countryPages() {
       html: page({
         path,
         title: c.title + ': travel stories, quotes and fun facts | TravelStoryMaker',
-        description: items.length + ' short travel stories, quotes and fun facts about ' + c.name + '. ' + c.lede,
+        /*
+         * Country name first, then the lede, then the count only when it fits inside 160
+         * characters. The old shape — "15 short travel stories, quotes and fun facts about
+         * Canada. <lede>" — spent 59 characters on boilerplate before saying anything specific,
+         * which pushed twelve country pages past 160 and buried the country name mid-string.
+         * fitDescription() could not rescue them either: cutting the lede left only the
+         * boilerplate, below its 120-character floor, so it kept the whole thing.
+         */
+        description: countryDescription(c, items.length),
         onDark: true,
         body,
         jsonLd: [

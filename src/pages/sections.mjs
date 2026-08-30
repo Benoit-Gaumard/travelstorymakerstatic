@@ -4,19 +4,18 @@ import { ARTICLES } from '../articles/index.mjs';
 import { POSTS } from '../blog/index.mjs';
 
 /*
- * Said once, plainly, in the same voice the FAQ already uses about the short stories. The
- * itineraries are written in the first person because that is how the routes read best, but the
- * site must not claim they are a record of journeys the author made: they are not, and a monetised
- * site that implies otherwise is both dishonest to the reader and an authenticity risk with
- * Google's helpful-content guidance and with AdSense. Shown on /blog/ and on every trip report.
+ * The one place the site says plainly what these are. The per-article banner that used to sit under
+ * every byline was removed at the owner's request; this stays, on /blog/ only, because the
+ * itineraries are written in the first person and a monetised site should not leave a reader — or
+ * an AdSense reviewer — to infer that they are a record of journeys the author made.
  */
 const PROVENANCE_HTML = [
   '<h2>How to read these</h2>',
   '<p>These itineraries are written in the first person because a route reads better that way, ',
-  'but they are not a diary. They are constructed itineraries — assembled routes, distances and ',
-  'timings, put together to be followed rather than to record a particular journey. Treat the days ',
-  'and the transfer times as a plan you can copy, and check anything time-sensitive, such as ',
-  'opening hours, permits and prices, before you rely on it.</p>',
+  'but they are built to be followed rather than to record one particular journey: assembled ',
+  'routes, distances and timings. Treat the days and the transfer times as a plan you can copy, ',
+  'and check anything time-sensitive, such as opening hours, permits and prices, before you rely ',
+  'on it.</p>',
 ].join('');
 
 const GUIDES = {
@@ -58,7 +57,7 @@ const BLOG = {
     '<h2>Planning your own?</h2>',
     '<p>The <a href="/guides/">guides section</a> covers the mechanics that apply everywhere — <a href="/guides/how-to-book-a-cheap-flight/">booking flights</a>, <a href="/guides/how-to-rent-a-car-while-traveling/">renting a car</a>, <a href="/guides/where-to-stay-while-traveling/">where to stay</a>, <a href="/guides/which-travel-insurance-to-choose/">insurance</a> and <a href="/guides/shoulder-season/">choosing the season</a>.</p>',
   ].join(''),
-  provenanceNote: 'A constructed itinerary, written in the first person. Not a travel diary.',
+  provenance: PROVENANCE_HTML,
 };
 
 export function guidesIndex() { return postIndex(GUIDES); }

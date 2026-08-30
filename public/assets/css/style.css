@@ -49,8 +49,8 @@
   --maxw: 1180px;
   --header-h: 68px;
 
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --font: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-display: 'Newsreader', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
 }
 
 *,
@@ -89,7 +89,8 @@ h2 { font-size: clamp(1.65rem, 3.4vw, 2.5rem); }
 h3 { font-size: clamp(1.15rem, 2vw, 1.4rem); }
 p { margin: 0 0 1.1em; }
 
-.display { font-family: var(--font-display); font-weight: 700; font-variation-settings: 'SOFT' 40, 'WONK' 1; }
+/* Newsreader has no SOFT/WONK axes — those belonged to Fraunces. Weight alone carries it now. */
+.display { font-family: var(--font-display); font-weight: 600; }
 
 .container { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: 20px; }
 .narrow { max-width: 760px; }
@@ -407,7 +408,7 @@ p { margin: 0 0 1.1em; }
 
 /* Story: a piece of writing. The title carries it, in the display face. */
 .entry[data-type='story'] .entry__title {
-  font-family: var(--font-display); font-size: 1.24rem; font-weight: 700;
+  font-family: var(--font-display); font-size: 1.24rem; font-weight: 600;
   letter-spacing: -0.01em; line-height: 1.25;
 }
 
@@ -782,18 +783,6 @@ details.faq p { color: var(--text-soft); margin: 0 0 16px; }
 .page-routes h2 { margin: 0 0 4px; }
 .page-routes p { margin: 0 0 14px; font-size: var(--fs-body-sm); color: var(--text-soft); max-width: 62ch; }
 .page-routes .chips { margin: 0; }
-
-/*
- * Provenance line under a trip-report byline. Deliberately legible rather than fine print: it
- * exists to stop a reader mistaking a first-person itinerary for a diary, which only works if
- * they can actually read it.
- */
-.provenance-note {
-  margin: 14px 0 0; padding: 10px 14px; max-width: 62ch;
-  font-size: var(--fs-meta); font-weight: 600; line-height: 1.45;
-  color: #fff; background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 12px;
-}
 
 /* ---------- Itinerary table ---------- */
 .itinerary-table {

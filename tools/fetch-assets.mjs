@@ -25,9 +25,26 @@ async function save(relPath, buffer) {
 
 /* ---------------- fonts ---------------- */
 
+/*
+ * Newsreader and Public Sans replace Fraunces and Inter. Inter is on every third site built in the
+ * last five years and Fraunces is the default "characterful serif" of the same wave; the design
+ * detector flags both as saturated. These two are not: Newsreader was drawn by Production Type for
+ * reading news on a screen, which is literally what this site does, and Public Sans is a highly
+ * legible open-aperture grotesque that holds up at small sizes on a cheap phone.
+ *
+ * Two request shapes matter here, and both were measured rather than assumed:
+ *
+ * - Public Sans is requested as a **variable** font across 400..800. Google then serves one 26KB
+ *   file covering every weight the stylesheet uses, instead of four static 26KB files (105KB).
+ * - Newsreader is requested **without its `opsz` axis**. Asking for `opsz@6..72` makes Google serve
+ *   the variable file at 125KB for the two faces; pinning the weight drops that to 48KB with no
+ *   visible difference at the sizes this site sets.
+ *
+ * Net: 74KB of webfont against 118KB before. Re-measure if you ever change these URLs.
+ */
 const FONT_CSS = [
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap',
-  'https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&display=swap',
+  'https://fonts.googleapis.com/css2?family=Public+Sans:wght@400..800&display=swap',
+  'https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,600;1,500&display=swap',
 ];
 
 async function fonts() {

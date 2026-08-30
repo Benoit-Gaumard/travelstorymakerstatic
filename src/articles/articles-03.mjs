@@ -215,7 +215,7 @@ export default [
   slug: 'responsible-travel',
   title: 'Going somewhere without making it worse',
   h1: 'Going somewhere without making it worse',
-  description: 'Where tourist money actually goes, which choices measurably matter, why the animal experience is usually the wrong one, and how to spend in a way that stays local.',
+  description: 'Where tourist money actually goes, which choices measurably matter, why the animal experience is usually wrong, and how to spend locally.',
   photo: 'art-responsible',
   published: '2026-08-12',
   updated: '2026-08-27',

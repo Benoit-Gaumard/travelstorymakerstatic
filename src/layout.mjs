@@ -10,7 +10,7 @@ export const SITE = {
   /*
    * Sitemap <lastmod> fallback for pages that carry no date of their own (home, collections,
    * destinations, country pages, legal pages). Bump this by hand when the entry data or the site
-   * copy genuinely changes — do NOT wire it to the build date. Stamping every URL with "today" on
+   * copy genuinely changes - do NOT wire it to the build date. Stamping every URL with "today" on
    * every deploy tells Google all 113 pages changed when they did not, and Google then starts
    * ignoring lastmod for the whole site.
    */
@@ -176,7 +176,7 @@ export function fitTitle(raw) {
  *
  * This trims only at a sentence boundary, never mid-sentence, and only when what remains is
  * still a usable description. Country pages read "N stories, quotes and fun facts about X. <lede>",
- * where cutting the lede leaves a thin 59-character stub — worse in the SERP than a 179-character
+ * where cutting the lede leaves a thin 59-character stub - worse in the SERP than a 179-character
  * description Google simply truncates. So a cut that lands under 120 characters is discarded and
  * the original text is kept.
  */
@@ -225,12 +225,12 @@ export function page(opts) {
     '<meta property="og:image:type" content="image/png">',
     '<meta property="og:image:width" content="1200">',
     '<meta property="og:image:height" content="630">',
-    '<meta property="og:image:alt" content="' + esc(SITE.name) + ' — ' + esc(SITE.tagline) + '">',
+    '<meta property="og:image:alt" content="' + esc(SITE.name) + ' - ' + esc(SITE.tagline) + '">',
     '<meta name="twitter:card" content="summary_large_image">',
     '<meta name="twitter:title" content="' + esc(title) + '">',
     '<meta name="twitter:description" content="' + esc(description) + '">',
     '<meta name="twitter:image" content="' + SITE.url + '/og-image.png">',
-    '<meta name="twitter:image:alt" content="' + esc(SITE.name) + ' — ' + esc(SITE.tagline) + '">',
+    '<meta name="twitter:image:alt" content="' + esc(SITE.name) + ' - ' + esc(SITE.tagline) + '">',
     '<meta name="theme-color" content="#070b1a">',
     '<link rel="icon" href="/favicon.ico" sizes="32x32">',
     '<link rel="icon" href="/favicon.svg" type="image/svg+xml">',
@@ -282,7 +282,7 @@ export function fontFaceCss() {
 function fontPreloads() {
   /*
    * Public Sans ships as one variable file covering 400-800, so a single preload now covers every
-   * weight above the fold — the body copy, the nav and the h1 — instead of the two static faces
+   * weight above the fold - the body copy, the nav and the h1 - instead of the two static faces
    * this used to list. Newsreader is deliberately not preloaded: it is a display face, it appears
    * below the h1 on most pages, and preloading it would compete with the LCP image for bandwidth.
    */
@@ -351,7 +351,7 @@ export function storyCta(opts) {
     '<div class="cta-band__text">',
     '<span class="eyebrow ' + (dark ? '' : 'eyebrow--light') + '"><span class="dot"></span>Your turn</span>',
     '<h2>Propose your travel story</h2>',
-    '<p>The missed ferry. The stranger who handed over a key. The meal that ran until midnight. If something happened to you on the road and you still think about it, send it — a few sentences is plenty, and we do the tidying up.</p>',
+    '<p>The missed ferry. The stranger who handed over a key. The meal that ran until midnight. If something happened to you on the road and you still think about it, send it - a few sentences is plenty, and we do the tidying up.</p>',
     '</div>',
     '<div class="cta-band__actions">',
     '<a class="btn btn--primary" href="' + primaryHref + '">Propose your travel story</a>',

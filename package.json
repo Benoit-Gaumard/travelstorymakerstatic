@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Fully static site for travelstorymaker.com — SEO & AdSense friendly.",
+  "description": "Fully static site for travelstorymaker.com - SEO & AdSense friendly.",
   "scripts": {
     "build": "node build.mjs",
     "serve": "node serve.mjs",

@@ -16,7 +16,7 @@ const HERO_ART = {
    *
    * WebP first, PNG fallback. The .webp files were produced from the .png ones with Chromium's own
    * canvas encoder rather than by adding an image dependency, and they are committed like every
-   * other asset — the build does not generate them. See §6 of handoff.md.
+   * other asset - the build does not generate them. See §6 of handoff.md.
    */
   webpSrcset: [
     '/assets/img/hero-travelstorymaker-560.webp 560w',
@@ -208,7 +208,7 @@ export function homePage() {
 
   return page({
     path: '/',
-    title: 'TravelStoryMaker — travel stories, quotes and fun facts',
+    title: 'TravelStoryMaker - travel stories, quotes and fun facts',
     description: 'A free library of short travel stories, travel quotes and fun facts about countries around the world, free to read with no account, no app and no paywall.',
     onDark: true,
     body,

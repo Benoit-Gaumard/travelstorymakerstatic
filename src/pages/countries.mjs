@@ -111,7 +111,7 @@ function planLink(href, kind, title, meta) {
  * and until now the page answered with a filtered slice of the reading library and then asked them
  * to submit a story of their own. This block gives them the one thing they came for: where to go
  * next. Country-specific writing wins; the essentials are the fallback so no country is a dead end.
- * Total links are capped at four — past that it stops being a decision and becomes a list.
+ * Total links are capped at four - past that it stops being a decision and becomes a list.
  */
 function planBlock(country) {
   const names = namesOf(country);
@@ -158,7 +158,7 @@ function planBlock(country) {
 
 /*
  * Country pages used to close on "Propose your travel story". That is the wrong thing to ask a
- * visitor who arrived to plan a trip, and it was the last thing on the page — the point where the
+ * visitor who arrived to plan a trip, and it was the last thing on the page - the point where the
  * session either continues or ends. It now closes on the two places they might actually want:
  * the continent, and every other country we have.
  */
@@ -298,8 +298,8 @@ export function countryPages() {
         title: c.title + ': travel stories, quotes and fun facts | TravelStoryMaker',
         /*
          * Country name first, then the lede, then the count only when it fits inside 160
-         * characters. The old shape — "15 short travel stories, quotes and fun facts about
-         * Canada. <lede>" — spent 59 characters on boilerplate before saying anything specific,
+         * characters. The old shape - "15 short travel stories, quotes and fun facts about
+         * Canada. <lede>" - spent 59 characters on boilerplate before saying anything specific,
          * which pushed twelve country pages past 160 and buried the country name mid-string.
          * fitDescription() could not rescue them either: cutting the lede left only the
          * boilerplate, below its 120-character floor, so it kept the whole thing.

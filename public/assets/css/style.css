@@ -1,5 +1,5 @@
 /* =========================================================
-   TravelStoryMaker — static design system
+   TravelStoryMaker - static design system
    ========================================================= */
 
 :root {
@@ -21,7 +21,7 @@
   --text-soft: #4c5670;
   /*
    * Do not lighten this. It colours .entry__meta on every card, .entry__num, breadcrumbs,
-   * figure captions and the factsheet head — all small text. The previous #79839c measured
+   * figure captions and the factsheet head - all small text. The previous #79839c measured
    * 3.79:1 on --paper, 3.45:1 on --sand and 3.14:1 on --sand-2, below the 4.5:1 required at
    * this size, which put 431 failing nodes on a single 100-entry listing page. This value
    * keeps the same hue and clears 4.5:1 on all three backgrounds (worst case 4.91:1).
@@ -30,7 +30,7 @@
 
   /*
    * Small-text scale. This band used to carry seventeen distinct steps between 0.68rem and
-   * 0.98rem — 13.1px, 13.4px, 13.6px, 13.8px, 14.1px, 14.4px and so on, differences no reader can
+   * 0.98rem - 13.1px, 13.4px, 13.6px, 13.8px, 14.1px, 14.4px and so on, differences no reader can
    * perceive as hierarchy but which together make the page look unresolved. Three steps, used
    * everywhere: a tracked uppercase label, secondary metadata, and small body copy. Add a fourth
    * only with a reason.
@@ -89,7 +89,7 @@ h2 { font-size: clamp(1.65rem, 3.4vw, 2.5rem); }
 h3 { font-size: clamp(1.15rem, 2vw, 1.4rem); }
 p { margin: 0 0 1.1em; }
 
-/* Newsreader has no SOFT/WONK axes — those belonged to Fraunces. Weight alone carries it now. */
+/* Newsreader has no SOFT/WONK axes - those belonged to Fraunces. Weight alone carries it now. */
 .display { font-family: var(--font-display); font-weight: 600; }
 
 .container { width: 100%; max-width: var(--maxw); margin-inline: auto; padding-inline: 20px; }
@@ -101,7 +101,7 @@ p { margin: 0 0 1.1em; }
 /*
  * Emphasis by colour and weight, not by a gradient clipped to the glyphs. Gradient text is the
  * single most recognisable generated-interface tell, and it was on the h1 of every hero on the
- * site — the first thing a visitor sees. These are solid, and both clear their contrast floor by
+ * site - the first thing a visitor sees. These are solid, and both clear their contrast floor by
  * a wide margin: the light accent measures about 11:1 on the dark hero, the dark one 7.5:1 on white.
  */
 .grad-text { color: #ffb37a; }
@@ -238,7 +238,7 @@ p { margin: 0 0 1.1em; }
   background: radial-gradient(closest-side, rgba(168, 85, 247, .5), rgba(47, 132, 255, .3) 55%, transparent 78%);
   filter: blur(52px);
 }
-/* height:auto is required — the width/height attributes would otherwise beat the intrinsic ratio. */
+/* height:auto is required - the width/height attributes would otherwise beat the intrinsic ratio. */
 .hero__art-img {
   display: block; width: 100%; height: auto;
   filter: drop-shadow(0 24px 42px rgba(4, 8, 22, .5));
@@ -255,7 +255,7 @@ p { margin: 0 0 1.1em; }
  * so it sits beside the paragraph without adding any height to the hero.
  * Flex centring is used rather than `translate: -50%` because the float animation owns `translate`.
  * Copy and art are sized in percentages that sum to 96%, so the CTA row can never run under the
- * illustration at the narrow end of the range — a fixed 660px copy column did exactly that.
+ * illustration at the narrow end of the range - a fixed 660px copy column did exactly that.
  */
 @media (min-width: 1001px) {
   .hero__copy { max-width: min(660px, 58%); }
@@ -374,7 +374,7 @@ p { margin: 0 0 1.1em; }
 
 /*
  * A quote, a checked fact and a narrative vignette are three different kinds of reading, and they
- * used to render as one card with a different stripe colour. The stripe is gone — a thick coloured
+ * used to render as one card with a different stripe colour. The stripe is gone - a thick coloured
  * edge on a card is the most worn tell in the category, and it was doing the work that typography
  * and surface should do. Each type is now a different object: a quote is set as a quotation, a
  * story leads with a headline in the display face, a fact stays plain and puts its reference first.
@@ -389,7 +389,7 @@ p { margin: 0 0 1.1em; }
 .entry[hidden] { display: none; }
 
 /*
- * Quote: a line somebody said. Set as a quotation, on paper rather than on a card — the sand
+ * Quote: a line somebody said. Set as a quotation, on paper rather than on a card - the sand
  * surface, the display italic and the attribution carry it. There is no oversized decorative
  * quotation mark: it was absolutely positioned behind the opening line and overlapped the text.
  */
@@ -813,7 +813,7 @@ details.faq p { color: var(--text-soft); margin: 0 0 16px; }
   /*
    * The CTA hover has to be restated here. `.nav a.nav__cta:hover` (0,3,1) sits earlier in the
    * file than the generic `.nav a:hover` above (also 0,3,1), so the generic rule won and replaced
-   * the gradient with a pale grey while the colour rule above kept the text white — white on grey,
+   * the gradient with a pale grey while the colour rule above kept the text white - white on grey,
    * unreadable. These selectors are (0,4,1) so they win on specificity, not on source order.
    */
   .site-header .nav a.nav__cta:hover,

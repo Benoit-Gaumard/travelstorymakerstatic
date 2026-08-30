@@ -98,7 +98,6 @@ export function homePage() {
     '<div class="hero__blobs" aria-hidden="true"><span class="hero__blob hero__blob--a"></span><span class="hero__blob hero__blob--b"></span><span class="hero__blob hero__blob--c"></span></div>',
     '<div class="container hero__inner hero__split">',
     '<div class="hero__copy">',
-    '<span class="eyebrow"><span class="dot"></span>Free to read &middot; no account</span>',
     '<h1>Stories that make you <br><span class="grad-text">pack a bag</span></h1>',
     '<p class="hero__lede">Travel stories from the road, quotes that have been pushing people out of the door for two thousand years, and fun facts you will repeat at dinner. All on one page, all free, all loading in under a second.</p>',
     '<div class="hero__cta">',

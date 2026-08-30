@@ -3,21 +3,6 @@ import { postIndex, postPages } from './posts.mjs';
 import { ARTICLES } from '../articles/index.mjs';
 import { POSTS } from '../blog/index.mjs';
 
-/*
- * The one place the site says plainly what these are. The per-article banner that used to sit under
- * every byline was removed at the owner's request; this stays, on /blog/ only, because the
- * itineraries are written in the first person and a monetised site should not leave a reader — or
- * an AdSense reviewer — to infer that they are a record of journeys the author made.
- */
-const PROVENANCE_HTML = [
-  '<h2>How to read these</h2>',
-  '<p>These itineraries are written in the first person because a route reads better that way, ',
-  'but they are built to be followed rather than to record one particular journey: assembled ',
-  'routes, distances and timings. Treat the days and the transfer times as a plan you can copy, ',
-  'and check anything time-sensitive, such as opening hours, permits and prices, before you rely ',
-  'on it.</p>',
-].join('');
-
 const GUIDES = {
   base: '/guides/',
   label: 'Guides',
@@ -53,11 +38,9 @@ const BLOG = {
     '<h2>Why day by day</h2>',
     '<p>Most trip write-ups tell you a place was beautiful. That is not useful when you are trying to work out whether four days is enough for Slovenia, or how long the drive from Bryce to Moab actually takes. So these are structured as itineraries: what happens on day one, day two, day three, with real transfer times in a table at the end.</p>',
     '<p>They also include the mistakes worth avoiding — the permit that is easy not to know about, the four hours that the Alhambra does not fit into, the island to skip. Those are usually the most useful part.</p>',
-    PROVENANCE_HTML,
     '<h2>Planning your own?</h2>',
     '<p>The <a href="/guides/">guides section</a> covers the mechanics that apply everywhere — <a href="/guides/how-to-book-a-cheap-flight/">booking flights</a>, <a href="/guides/how-to-rent-a-car-while-traveling/">renting a car</a>, <a href="/guides/where-to-stay-while-traveling/">where to stay</a>, <a href="/guides/which-travel-insurance-to-choose/">insurance</a> and <a href="/guides/shoulder-season/">choosing the season</a>.</p>',
   ].join(''),
-  provenance: PROVENANCE_HTML,
 };
 
 export function guidesIndex() { return postIndex(GUIDES); }

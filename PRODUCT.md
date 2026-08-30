@@ -118,11 +118,16 @@ What a neighbouring product could not truthfully copy without rebuilding:
 2. ~~**The 10 trip reports are written in the first person but are not the owner's own trips.**~~
    **Settled on 2026-08-30.** The site no longer claims they are journeys the author made: the
    section is "Trip itineraries, day by day" and the ten titles are descriptive rather than "My
-   trip in X". The owner decided to **keep the article bodies in the first person** and removed the
-   per-article banner that sat under each byline. The "How to read these" note on `/blog/` stays —
-   it is the one place the site states plainly that these are itineraries built to be followed
-   rather than a record of one journey. **Do not remove that one without saying so explicitly**: it
-   is what keeps the first-person prose honest for a reader and for an AdSense review.
+   trip in X". Beyond that the owner chose to keep the writing as it is — the article bodies stay
+   in the first person, the per-article provenance banner was removed, and so was the "How to read
+   these" note on `/blog/`.
+
+   **What this means, recorded plainly rather than left implicit:** the itineraries now read as
+   personal accounts and nothing on the site says otherwise. The `/faq/` answer about the short
+   stories ("narrative vignettes... not verified reportage") does not cover the trip reports. If
+   Google's helpful-content guidance or an AdSense review ever raises authenticity on `/blog/`,
+   this is the reason, and the fix is one sentence of disclosure or a pass over the prose. The
+   owner has weighed this and accepted it; do not silently reintroduce a disclosure banner.
 
 3. ~~**`AUTHOR.sameAs` still exposes the full surname.**~~ **Resolved on 2026-08-29.** The property
    was removed from `AUTHOR` and from the two JSON-LD builders that emitted it (`src/pages/posts.mjs`

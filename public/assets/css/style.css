@@ -388,7 +388,11 @@ p { margin: 0 0 1.1em; }
 .entry:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: rgba(47,132,255,.35); }
 .entry[hidden] { display: none; }
 
-/* Quote: a line somebody said. Set as a quotation, on paper rather than on a card. */
+/*
+ * Quote: a line somebody said. Set as a quotation, on paper rather than on a card — the sand
+ * surface, the display italic and the attribution carry it. There is no oversized decorative
+ * quotation mark: it was absolutely positioned behind the opening line and overlapped the text.
+ */
 .entry[data-type='quote'] { background: var(--sand); border-color: var(--sand-2); }
 /*
  * A quote's title is a shortened form of the quote itself, so showing both printed the same words
@@ -398,11 +402,6 @@ p { margin: 0 0 1.1em; }
 .entry[data-type='quote'] .entry__title {
   position: absolute; width: 1px; height: 1px; overflow: hidden;
   clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
-}
-.entry[data-type='quote'] .entry__text { position: relative; padding-top: 6px; }
-.entry[data-type='quote'] .entry__text::before {
-  content: '\201C'; font-family: var(--font-display); font-size: 3.4rem; line-height: 0;
-  color: rgba(109, 40, 217, .3); position: absolute; left: -4px; top: .42em;
 }
 .entry[data-type='quote'] .entry__author { font-size: var(--fs-body-sm); }
 

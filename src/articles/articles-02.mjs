@@ -220,7 +220,7 @@ export default [
   slug: 'desert-travel',
   title: 'What the desert actually asks of you',
   h1: 'What the desert actually asks of you',
-  description: 'Deserts are colder, emptier and more organised than people expect. How to plan a desert trip, what to carry, and why the Sahara at three in the morning is the real surprise.',
+  description: 'Deserts are colder, emptier and more organised than people expect. How to plan the trip, what to carry, and why the night is the real surprise.',
   photo: 'art-desert',
   published: '2026-06-17',
   updated: '2026-08-27',

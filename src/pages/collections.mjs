@@ -4,7 +4,7 @@ import { flagImg } from '../flags.mjs';
 import { toolbar, entryList, pagination, itemListJsonLd, regionTile } from '../components.mjs';
 import { ENTRIES, TYPES, REGIONS, COUNT_BY_TYPE, COUNT_BY_REGION, interleaveByType } from '../data/index.mjs';
 import { COUNTRIES } from '../countries.mjs';
-import { countryOf } from './countries.mjs';
+import { countryOf, fitMetaDescription } from './countries.mjs';
 
 const PER_PAGE = 100;
 
@@ -206,7 +206,7 @@ export function allCollections() {
       h1: r.name + ': ' + COUNT_BY_REGION[key] + ' stories, quotes and facts',
       lede: r.blurb,
       title: r.name + ' Travel Stories & Fun Facts | TravelStoryMaker',
-      description: COUNT_BY_REGION[key] + ' travel stories, quotes and fun facts about ' + r.name + '. ' + r.blurb,
+      description: fitMetaDescription(r.name, r.blurb, COUNT_BY_REGION[key] + ' stories, quotes and fun facts.'),
       intro: '<p>' + esc(r.blurb) + '</p>',
       related: relatedLinks(base),
     }));

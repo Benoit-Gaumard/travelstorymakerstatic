@@ -123,12 +123,6 @@ export function postPages(cfg) {
       post.days ? ' &middot; ' + post.days + '-day trip' : '',
       '</span></div>',
       '</div>',
-      /*
-       * Said where the reader forms the belief, not only in the small print at the bottom. The
-       * itineraries read in the first person; the site must not let that be mistaken for a record
-       * of a journey the author made.
-       */
-      cfg.provenanceNote ? '<p class="provenance-note">' + esc(cfg.provenanceNote) + '</p>' : '',
       '</div>',
       '</section>',
       '<section class="section">',

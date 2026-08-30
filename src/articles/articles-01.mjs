@@ -3,7 +3,7 @@ export default [
   slug: 'see-the-northern-lights',
   title: 'How to actually see the northern lights',
   h1: 'How to actually see the northern lights',
-  description: 'Latitude, season, moon phase, cloud cover and patience — a practical guide to planning an aurora trip that works, and what nobody tells you about the photographs.',
+  description: 'Latitude, season, moon phase, cloud cover and patience: how to plan an aurora trip that works, and what nobody tells you about the photographs.',
   photo: 'art-aurora',
   published: '2026-03-04',
   updated: '2026-08-27',

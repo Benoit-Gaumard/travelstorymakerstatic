@@ -103,7 +103,7 @@ export function submitPage() {
     html: page({
       path: '/submit/',
       title: 'Propose your travel story | TravelStoryMaker',
-      description: 'Share a travel story that actually happened to you. A few sentences is enough — we edit for length, publish it free under the name you choose, and you keep the copyright.',
+      description: 'Share a travel story that actually happened to you. A few sentences is enough: we edit for length, publish it free, and you keep the copyright.',
       onDark: true,
       body,
       jsonLd: [

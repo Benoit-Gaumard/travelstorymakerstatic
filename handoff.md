@@ -198,7 +198,7 @@ node tools/fetch-assets.mjs fonts | photos | flags | links | all
 
 | File | Contents | Notes |
 | --- | --- | --- |
-| `fonts.json` | array of 6 `@font-face` descriptors (family, style, weight, unicode-range, src) | woff2 files live in `public/assets/fonts/`. Both a full and a `-latin` variant exist per face; the Latin ones are ~10 KB vs ~48 KB. |
+| `fonts.json` | array of 3 `@font-face` descriptors (family, style, weight, unicode-range, src) | woff2 files live in `public/assets/fonts/`. **Public Sans is one variable file covering 400-800 (26KB); Newsreader is two static faces (48KB).** 75KB total. Both request shapes were measured, not assumed — see the comment above `FONT_CSS` in `tools/fetch-assets.mjs` before changing either URL. |
 | `photos.json` | 97 slots → `{ src, alt, author, license, link, ... }` | Wikimedia Commons, CC / CC0 |
 | `factlinks.json` | 466 keys `"title\|place"` → `{ title, url }` | Wikipedia "Read more" links on fun facts |
 
@@ -263,6 +263,13 @@ These all cost real debugging time. Do not rediscover them.
 
 7. **Google Fonts serves multiple subsets.** The naive parse picked the Vietnamese subset for Inter.
    Only accept `@font-face` blocks whose `unicode-range` starts with `U+0000-00FF`.
+
+   **The request shape decides the file size, by a factor of three.** Measured on 2026-08-30 when
+   the typefaces changed: asking Newsreader for its `opsz@6..72` axis makes Google serve 125KB for
+   two faces; pinning the weight instead serves 48KB with no visible difference at the sizes this
+   site sets. Conversely, asking Public Sans for a **variable** `wght@400..800` range serves one
+   26KB file covering every weight, where four static weights cost 105KB. Measure before choosing;
+   the intuitive request is the expensive one in both directions.
 
 8. **`requestAnimationFrame` is frozen in background tabs**, so an rAF-throttled scroll handler meant
    the back-to-top button never appeared. Throttling removed.
@@ -623,17 +630,23 @@ query at a higher specificity.
    gone. The privacy and cookie pages already describe a consent message as being present, so the
    copy is only accurate once the message is live.
 
-10. **Titles are capped at 60 characters automatically; 22 descriptions are still over 160 by
-    choice.** `fitTitle()` in `src/layout.mjs` drops the " | TravelStoryMaker" suffix whenever
-    keeping it would push a title past 60, which took the over-long count from 66 to 0. Titles stay
-    unique — verified — and Google still gets the site name from the `WebSite` JSON-LD.
+10. **Titles are capped at 60 characters automatically; descriptions now fit too.** `fitTitle()` in
+    `src/layout.mjs` drops the " | TravelStoryMaker" suffix whenever keeping it would push a title
+    past 60, which took the over-long count from 66 to 0. Titles stay unique — verified — and
+    Google still gets the site name from the `WebSite` JSON-LD.
 
-    `fitDescription()` trims only at a sentence boundary and only when what remains is still at
-    least 120 characters. That deliberately leaves 22 descriptions over 160: on country pages the
-    text is "N stories, quotes and fun facts about X. \<lede\>", and cutting the lede leaves a
-    59-character stub, which is worse in the SERP than a 179-character description Google simply
-    truncates. Shortening those properly is editorial work on `countries.mjs` ledes, not something
-    to automate.
+    **Resolved on 2026-08-30: 22 over-long descriptions are now 0.** The earlier note here said
+    shortening them was editorial work on `countries.mjs` ledes. That was the wrong diagnosis. The
+    real cost was the boilerplate: country pages read "15 short travel stories, quotes and fun
+    facts about Canada. \<lede\>", spending 59 characters before saying anything specific and
+    burying the country name mid-string. `fitDescription()` could not help either — cutting the
+    lede left only the boilerplate, below its 120-character floor, so it kept the whole thing.
+
+    `fitMetaDescription()` in `src/pages/countries.mjs` now builds them as "Canada: \<lede\>" and
+    appends the entry count only when it fits inside 160. Twelve country and region pages were
+    fixed by that formula alone; the remaining ten were hand-written descriptions on guides, one
+    trip report and `/submit/`, each shortened individually. No description is under 70 characters,
+    and none is duplicated.
 
 ---
 

@@ -108,20 +108,26 @@ What a neighbouring product could not truthfully copy without rebuilding:
 
 **Explicitly undecided — do not resolve these by inference:**
 
-1. **Trip-planning tools are intended to return to this domain.** The owner confirmed the intent;
-   scope, timing and shape are undecided. The domain previously served a Next.js app with
-   `/planner`, `/create`, `/export`, accounts and a client-side map key. This intent sits in direct
-   tension with the zero-dependency static architecture, the no-form CSP, and the "no account, no
-   paywall" promise made in the current site copy. When it is taken up it is an architecture
-   decision, not a feature request.
+1. ~~**Trip-planning tools are intended to return to this domain.**~~ **Decided on 2026-08-30: no.**
+   The owner ruled out bringing planning tools to this site. It stays a static reading and
+   reference library — no accounts, no forms, no backend. This resolves the tension that was
+   recorded here against the zero-dependency architecture, the `form-action 'none'` policy and the
+   "no account, no paywall" promise in the site copy: those constraints are now settled rather than
+   provisional, and a future request for an interactive tool is a decision to reopen this, not an
+   ordinary feature.
 2. ~~**The 10 trip reports are written in the first person but are not the owner's own trips.**~~
-   **Addressed on 2026-08-29, and still open editorially.** The site no longer claims they are the
-   author's journeys: the section is "Trip itineraries, day by day", the ten titles are descriptive
-   rather than "My trip in X", and every trip report carries a visible provenance line under the
-   byline — "A constructed itinerary, written in the first person. Not a travel diary." — with a
-   fuller "How to read these" note on `/blog/`. **The article bodies are still written in the first
-   person and were not rewritten.** The disclosure reconciles them honestly; rewriting the prose, or
-   replacing the itineraries with real trips, remains an editorial decision for the owner.
+   **Settled on 2026-08-30.** The site no longer claims they are journeys the author made: the
+   section is "Trip itineraries, day by day" and the ten titles are descriptive rather than "My
+   trip in X". Beyond that the owner chose to keep the writing as it is — the article bodies stay
+   in the first person, the per-article provenance banner was removed, and so was the "How to read
+   these" note on `/blog/`.
+
+   **What this means, recorded plainly rather than left implicit:** the itineraries now read as
+   personal accounts and nothing on the site says otherwise. The `/faq/` answer about the short
+   stories ("narrative vignettes... not verified reportage") does not cover the trip reports. If
+   Google's helpful-content guidance or an AdSense review ever raises authenticity on `/blog/`,
+   this is the reason, and the fix is one sentence of disclosure or a pass over the prose. The
+   owner has weighed this and accepted it; do not silently reintroduce a disclosure banner.
 
 3. ~~**`AUTHOR.sameAs` still exposes the full surname.**~~ **Resolved on 2026-08-29.** The property
    was removed from `AUTHOR` and from the two JSON-LD builders that emitted it (`src/pages/posts.mjs`
@@ -129,11 +135,10 @@ What a neighbouring product could not truthfully copy without rebuilding:
    spells it out was not a half-measure but no measure. If an external identity is wanted for
    E-E-A-T later, add a profile that carries the published name.
 
-4. **The GDPR consent message has not been published in the AdSense dashboard.** Until it is, EEA
-   and UK visitors get no consent notice at all, because the hand-rolled banner was removed. The
-   privacy and cookie pages already describe a consent message as present, so the copy is only
-   accurate once it is live. **This is the one open item that needs the owner's Google account and
-   cannot be done from the repository.**
+4. ~~**The GDPR consent message has not been published in the AdSense dashboard.**~~ **Done on
+   2026-08-30.** The owner published the message, submitted the sitemap in Search Console,
+   confirmed Google is reading `ads.txt`, and checked that the banner does not break the sticky
+   header on mobile. The privacy and cookie copy is now accurate.
 
 ## Brand Commitments
 

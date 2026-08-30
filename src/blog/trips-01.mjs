@@ -185,7 +185,7 @@ export default [
   h1: 'The American Southwest in 10 days: a road-trip route',
   destination: 'United States',
   days: 10,
-  description: 'Las Vegas to Zion, Bryce, Monument Valley, Antelope Canyon and the Grand Canyon: a 10-day loop with the real driving times and the permit mistakes that are easy to make.',
+  description: 'Las Vegas to Zion, Bryce, Monument Valley, Antelope Canyon and the Grand Canyon: a 10-day loop with real driving times and the permit traps.',
   photos: ['trip-usa-1', 'trip-usa-2', 'trip-usa-3'],
   photo: 'trip-usa-1',
   published: '2026-08-16',

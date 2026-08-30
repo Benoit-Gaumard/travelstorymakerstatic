@@ -113,7 +113,7 @@ export const COUNTRIES = [
     slug: 'vietnam', name: 'Vietnam', title: 'Vietnam', match: ['Vietnam'],
     query: 'ha long bay vietnam',
     lede: 'Sixteen hundred limestone islands, a railway that runs through people\'s front rooms, and coffee worth crossing a city for.',
-    intro: '<p>Hạ Long Bay contains close to 1,600 limestone karsts, most of them uninhabited because the cliffs are simply too steep. In Hanoi\'s old quarter a working railway runs within arm\'s reach of house fronts, and residents pull in their chairs twice a day as a matter of routine.</p><p>The entries here also include the advice for crossing a road full of motorbikes — walk slowly and never stop, terrifying for two days and obvious on the third — the sleeper bus with three rows of reclining pods and a strict no-shoes rule, and the bún chả stall that opens at eleven and sells out by one.</p>',
+    intro: '<p>Hạ Long Bay contains close to 1,600 limestone karsts, most of them uninhabited because the cliffs are simply too steep. In Hanoi\'s old quarter a working railway runs within arm\'s reach of house fronts, and residents pull in their chairs twice a day as a matter of routine.</p><p>The entries here also include the advice for crossing a road full of motorbikes - walk slowly and never stop, terrifying for two days and obvious on the third - the sleeper bus with three rows of reclining pods and a strict no-shoes rule, and the bún chả stall that opens at eleven and sells out by one.</p>',
   },
   {
     slug: 'indonesia', name: 'Indonesia', title: 'Indonesia', match: ['Indonesia'],
@@ -149,7 +149,7 @@ export const COUNTRIES = [
     slug: 'ethiopia', name: 'Ethiopia', title: 'Ethiopia', match: ['Ethiopia'],
     query: 'ethiopia landscape',
     lede: 'Thirteen months in the year, a day that starts at sunrise, and churches carved downwards into rock.',
-    intro: '<p>Ethiopia runs a 13-month calendar about seven years behind the Gregorian one, and the day begins at sunrise rather than midnight, which makes appointment-setting an interesting exercise. The eleven churches of Lalibela were cut <em>down</em> into solid rock in the 12th century, their roofs level with the ground.</p><p>Wild <em>Coffea arabica</em> still grows in Ethiopian forests, and the coffee ceremony — beans roasted in the room, ground by hand, poured three times — takes well over an hour. Refusing the third round is a small insult. The Danakil Depression, meanwhile, averages above 34 degrees year-round.</p>',
+    intro: '<p>Ethiopia runs a 13-month calendar about seven years behind the Gregorian one, and the day begins at sunrise rather than midnight, which makes appointment-setting an interesting exercise. The eleven churches of Lalibela were cut <em>down</em> into solid rock in the 12th century, their roofs level with the ground.</p><p>Wild <em>Coffea arabica</em> still grows in Ethiopian forests, and the coffee ceremony - beans roasted in the room, ground by hand, poured three times - takes well over an hour. Refusing the third round is a small insult. The Danakil Depression, meanwhile, averages above 34 degrees year-round.</p>',
   },
   {
     slug: 'namibia', name: 'Namibia', title: 'Namibia', match: ['Namibia'],
@@ -185,7 +185,7 @@ export const COUNTRIES = [
     slug: 'thailand', name: 'Thailand', title: 'Thailand', match: ['Thailand'],
     query: 'wat arun bangkok',
     lede: 'Never colonised, holder of the longest place name on Earth, and a new year fought with water.',
-    intro: '<p>Thailand is the only Southeast Asian nation never taken by a European power, largely through skilled nineteenth-century diplomacy. Bangkok\'s full ceremonial name runs to 168 letters and holds the record for the longest place name in the world; locals simply say Krung Thep.</p><p>Songkran began as a gentle blessing with water and has become a nationwide three-day soaking in April, the hottest month, conducted with buckets and no remorse whatsoever. The most useful phrase in the country is <em>mai pen rai</em> — never mind, it\'s fine — and the most useful rule is to pick the stall with the longest queue of people not holding cameras.</p>',
+    intro: '<p>Thailand is the only Southeast Asian nation never taken by a European power, largely through skilled nineteenth-century diplomacy. Bangkok\'s full ceremonial name runs to 168 letters and holds the record for the longest place name in the world; locals simply say Krung Thep.</p><p>Songkran began as a gentle blessing with water and has become a nationwide three-day soaking in April, the hottest month, conducted with buckets and no remorse whatsoever. The most useful phrase in the country is <em>mai pen rai</em> - never mind, it\'s fine - and the most useful rule is to pick the stall with the longest queue of people not holding cameras.</p>',
   },
   {
     slug: 'philippines', name: 'the Philippines', title: 'Philippines', match: ['Philippines'],
@@ -197,7 +197,7 @@ export const COUNTRIES = [
     slug: 'tanzania', name: 'Tanzania', title: 'Tanzania', match: ['Tanzania'],
     query: 'serengeti tanzania wildlife',
     lede: 'A collapsed volcano holding 25,000 animals, and the shortest war in history.',
-    intro: '<p>The Ngorongoro Crater is a caldera twenty kilometres across, home to around 25,000 large animals that rarely need to leave it. Kilimanjaro, Africa\'s highest mountain, is built from three cones — Kibo, Mawenzi and Shira — and Kibo is dormant rather than extinct.</p><p>The Anglo-Zanzibar War of 1896 lasted under 45 minutes, the shortest recorded war anywhere. The entries here also include the guide who says <em>pole pole</em> about four hundred times in five days, and the moment on summit night when walking at half speed stops feeling absurd because you have just passed the fast group sitting down in the dark.</p>',
+    intro: '<p>The Ngorongoro Crater is a caldera twenty kilometres across, home to around 25,000 large animals that rarely need to leave it. Kilimanjaro, Africa\'s highest mountain, is built from three cones - Kibo, Mawenzi and Shira - and Kibo is dormant rather than extinct.</p><p>The Anglo-Zanzibar War of 1896 lasted under 45 minutes, the shortest recorded war anywhere. The entries here also include the guide who says <em>pole pole</em> about four hundred times in five days, and the moment on summit night when walking at half speed stops feeling absurd because you have just passed the fast group sitting down in the dark.</p>',
   },
   {
     slug: 'mali', name: 'Mali', title: 'Mali', match: ['Mali'],

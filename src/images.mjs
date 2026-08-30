@@ -18,7 +18,7 @@ function stopsAt(t, stops) {
   return [mix(ca[0], cb[0], k), mix(ca[1], cb[1], k), mix(ca[2], cb[2], k)];
 }
 
-// Deterministic hash noise — keeps builds reproducible and kills gradient banding.
+// Deterministic hash noise - keeps builds reproducible and kills gradient banding.
 function noise(x, y) {
   const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
   return n - Math.floor(n);

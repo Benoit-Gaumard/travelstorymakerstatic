@@ -13,7 +13,7 @@ export default [
 <p>Flight pricing looks random and is not. Airlines divide every aircraft into fare buckets, each with a set number of seats, and the price you see is simply the cheapest bucket still open on the day you look. Understanding that one mechanism explains almost everything else: why prices jump overnight, why the same seat costs three different amounts, and why refreshing the page does not help.</p>
 <p>Here is what actually moves the number, in rough order of how much money it saves.</p>
 
-<h2>1. Be flexible with dates — it is worth more than every other trick combined</h2>
+<h2>1. Be flexible with dates - it is worth more than every other trick combined</h2>
 <p>Nothing else comes close. Moving a departure by two or three days routinely changes the fare by 30–50%, because you slide into a bucket that has not sold yet.</p>
 <p>Use the month view or flexible-date grid that every major search engine offers, rather than searching one specific date. Look at a whole month at once and the pattern becomes obvious: a handful of cheap days, a wall of expensive ones around school holidays, and a slow climb towards the weekend.</p>
 <p>If you can move your dates and you refuse to look at the calendar view, you are leaving the largest single saving on the table.</p>
@@ -29,7 +29,7 @@ export default [
 
 <h2>3. Fly on the unpopular days</h2>
 <p>Tuesday and Wednesday departures are typically cheaper than Friday and Sunday, because leisure travellers want long weekends and business travellers want Monday mornings and Thursday evenings. Early-morning and late-night departures are cheaper for the same reason.</p>
-<p>The old advice to <em>book</em> on a Tuesday is obsolete — airlines now reprice continuously with algorithms. It is the day you <em>fly</em> that matters, not the day you buy.</p>
+<p>The old advice to <em>book</em> on a Tuesday is obsolete - airlines now reprice continuously with algorithms. It is the day you <em>fly</em> that matters, not the day you buy.</p>
 
 <h2>4. Check nearby airports and split the journey</h2>
 <p>Most search engines let you add a radius around your origin and destination. A secondary airport an hour away can be dramatically cheaper, particularly where a low-cost carrier operates.</p>
@@ -43,7 +43,7 @@ export default [
 <h2>5. Compare the true total, not the headline fare</h2>
 <p>A low-cost fare with cabin bag, seat selection, checked luggage and airport transfer added can end up costing more than the full-service ticket that included all of it. Before comparing two options, add:</p>
 <ul>
-<li>Baggage, including cabin bags — several carriers now charge for anything larger than a rucksack under the seat.</li>
+<li>Baggage, including cabin bags - several carriers now charge for anything larger than a rucksack under the seat.</li>
 <li>Seat selection, if you care about sitting with the people you are travelling with.</li>
 <li>Payment-method fees, which some airlines still apply.</li>
 <li>Transport from a distant secondary airport, and whether it runs at your arrival time.</li>
@@ -66,14 +66,14 @@ export default [
 </ul>
 
 <h2>Hidden-city ticketing: why we do not recommend it</h2>
-<p>The technique — booking A→B→C and getting off at B because it is cheaper than A→B — works, and it is also a breach of nearly every airline's conditions of carriage. Consequences range from having the rest of your itinerary cancelled to losing a frequent flyer account. It also only works one way with hand luggage only. Know that it exists; understand the risk before using it.</p>
+<p>The technique - booking A→B→C and getting off at B because it is cheaper than A→B - works, and it is also a breach of nearly every airline's conditions of carriage. Consequences range from having the rest of your itinerary cancelled to losing a frequent flyer account. It also only works one way with hand luggage only. Know that it exists; understand the risk before using it.</p>
 
 <h2>Book direct with the airline where you can</h2>
-<p>Third-party agents are sometimes genuinely cheaper, and occasionally significantly so. But when something goes wrong — a schedule change, a cancellation, a missed connection — the airline will tell you to talk to the agent, and the agent will be slower and less able to help. If the saving is small, book direct. If the saving is large, take it with your eyes open.</p>
+<p>Third-party agents are sometimes genuinely cheaper, and occasionally significantly so. But when something goes wrong - a schedule change, a cancellation, a missed connection - the airline will tell you to talk to the agent, and the agent will be slower and less able to help. If the saving is small, book direct. If the saving is large, take it with your eyes open.</p>
 <p>Whatever you do, buy with a card that offers chargeback protection, and check that the agent is a real, contactable business before entering card details.</p>
 
 <h2>Know what you are owed when it goes wrong</h2>
-<p>Passenger rights vary by jurisdiction and are worth knowing before you need them. In the European Union and the United Kingdom, long delays and cancellations within the airline's control can entitle you to fixed cash compensation as well as meals, accommodation and re-routing — and that applies to flights departing those regions on any airline, and arriving on their carriers. Rules elsewhere are generally weaker.</p>
+<p>Passenger rights vary by jurisdiction and are worth knowing before you need them. In the European Union and the United Kingdom, long delays and cancellations within the airline's control can entitle you to fixed cash compensation as well as meals, accommodation and re-routing - and that applies to flights departing those regions on any airline, and arriving on their carriers. Rules elsewhere are generally weaker.</p>
 <p>Two habits pay for themselves: keep your boarding passes, and photograph the departure board showing the delay.</p>
 
 <h2>A simple routine that works</h2>
@@ -86,7 +86,7 @@ export default [
 </ol>
 <p>Do that and you will beat most people on your flight, without spending your evenings hunting.</p>
 
-<div class="callout"><p><strong>Related reading:</strong> our guide to <a href="/guides/shoulder-season/">why shoulder season beats high season</a> covers the other half of this — when to go, which is usually worth more than how you book.</p></div>
+<div class="callout"><p><strong>Related reading:</strong> our guide to <a href="/guides/shoulder-season/">why shoulder season beats high season</a> covers the other half of this - when to go, which is usually worth more than how you book.</p></div>
 `,
 },
 {
@@ -100,19 +100,19 @@ export default [
   minutes: 10,
   tags: ['Car rental', 'Driving', 'Budget'],
   body: `
-<p class="prose__meta">General information for travellers, not legal or insurance advice. Rental terms, licence requirements and insurance rules vary by country and by company — always read the specific agreement you are signing.</p>
+<p class="prose__meta">General information for travellers, not legal or insurance advice. Rental terms, licence requirements and insurance rules vary by country and by company - always read the specific agreement you are signing.</p>
 
 <p>Car rental is the part of a trip where the advertised price and the price you pay diverge most. A headline rate of a few units of currency a day is real, and so is the four-hundred-unit charge that can follow it. Almost all of the difference comes down to three things: the excess, the fuel policy, and what happens at drop-off.</p>
 <p>Get those right and renting a car is straightforward and often the best way to see a country.</p>
 
 <h2>The excess is the whole game</h2>
-<p>Your rental includes basic damage cover with an <strong>excess</strong> (called a deductible in the United States) — the amount you pay before the cover starts. It is commonly the equivalent of several hundred to two thousand units of currency, and the company will block that amount on your credit card as a deposit.</p>
+<p>Your rental includes basic damage cover with an <strong>excess</strong> (called a deductible in the United States) - the amount you pay before the cover starts. It is commonly the equivalent of several hundred to two thousand units of currency, and the company will block that amount on your credit card as a deposit.</p>
 <p>At the counter you will be offered "super cover" or "zero excess" to reduce it, typically at a daily rate that can double or triple the cost of the rental. This is where rental companies make their margin, and the pitch is designed to be difficult to refuse when you are tired and holding a queue.</p>
 <p>You have three real options:</p>
 <ol>
 <li><strong>Buy the counter product.</strong> Most expensive, simplest. Damage is settled on the spot with no money changing hands.</li>
 <li><strong>Buy standalone excess insurance</strong> from a third party before you travel. Usually a fraction of the counter price, often as an annual policy if you rent more than once a year. The catch: the rental company still blocks the excess on your card and still charges you for damage. You pay first, then claim it back with the paperwork.</li>
-<li><strong>Rely on a credit card that includes rental cover.</strong> Free if you already hold the card. Check the specific terms carefully — many exclude certain countries, vehicle types, rentals over a set number of days, and require you to decline the counter cover and pay the whole rental with that card.</li>
+<li><strong>Rely on a credit card that includes rental cover.</strong> Free if you already hold the card. Check the specific terms carefully - many exclude certain countries, vehicle types, rentals over a set number of days, and require you to decline the counter cover and pay the whole rental with that card.</li>
 </ol>
 <p>Whichever you choose, decide before you arrive at the desk. The counter is the worst place to make a financial decision.</p>
 
@@ -122,13 +122,13 @@ export default [
 <p>Keep the receipt from the fuel station nearest the return point. Some companies ask for it as proof, and a refuelling charge is one of the most common disputed items.</p>
 
 <h2>Do you need an International Driving Permit?</h2>
-<p>An IDP is not a licence. It is an official translation of the licence you already hold, issued in your own country before you travel, usually valid for one year. It has no power on its own — you must carry your normal licence with it.</p>
+<p>An IDP is not a licence. It is an official translation of the licence you already hold, issued in your own country before you travel, usually valid for one year. It has no power on its own - you must carry your normal licence with it.</p>
 <p>Whether you need one depends entirely on the country you are driving in and the country that issued your licence. Some require it by law, some require it only if your licence is not in the local alphabet, many do not require it at all. Rental companies and police may take different views, and the police view is the one that matters at the roadside.</p>
 <p>Check the official guidance of the country you are visiting a few weeks before you go, because an IDP usually cannot be issued from abroad.</p>
 
 <h2>What to check before you book</h2>
 <ul>
-<li><strong>Total price including all mandatory fees</strong> — airport surcharge, road tax, location fee, one-way fee.</li>
+<li><strong>Total price including all mandatory fees</strong> - airport surcharge, road tax, location fee, one-way fee.</li>
 <li><strong>Mileage limits.</strong> "Unlimited" is common in Europe and less so elsewhere. A per-kilometre charge on a long road trip adds up fast.</li>
 <li><strong>Additional driver cost.</strong> Sometimes free, sometimes a daily charge that exceeds the rental.</li>
 <li><strong>Young or senior driver surcharges.</strong> Under 25 and over 70 are frequently penalised.</li>
@@ -141,7 +141,7 @@ export default [
 <h2>At pickup: ten minutes that prevent a dispute</h2>
 <p>Damage disputes are the most common bad experience in car rental, and they are almost entirely preventable.</p>
 <ol>
-<li><strong>Photograph or film the entire car before you leave the bay</strong> — all four sides, the roof, the wheels and alloys, the windscreen, the mirrors, and the interior. Get the timestamp in the shot, or film one continuous walk-around.</li>
+<li><strong>Photograph or film the entire car before you leave the bay</strong> - all four sides, the roof, the wheels and alloys, the windscreen, the mirrors, and the interior. Get the timestamp in the shot, or film one continuous walk-around.</li>
 <li><strong>Photograph the fuel gauge and the odometer.</strong></li>
 <li><strong>Insist that every existing mark is on the check-out sheet</strong>, including scuffed alloys and windscreen chips. If the agent says "that's too small to matter", put it on the sheet anyway.</li>
 <li><strong>Check that there is a spare wheel or a repair kit</strong>, and that the warning triangle and high-visibility vest are present where they are legally required.</li>
@@ -150,7 +150,7 @@ export default [
 
 <h2>At drop-off</h2>
 <p>Return the car during staffed hours if you possibly can, and get a signed check-in sheet confirming no new damage. Out-of-hours key-drop returns are convenient and shift the entire burden of proof onto you.</p>
-<p>Whatever the hour, repeat the walk-around video. Photograph the fuel gauge and odometer again. Then keep everything until the deposit is released and the final charge appears on your statement — that can take two to four weeks.</p>
+<p>Whatever the hour, repeat the walk-around video. Photograph the fuel gauge and odometer again. Then keep everything until the deposit is released and the final charge appears on your statement - that can take two to four weeks.</p>
 <p>If a charge appears that you dispute, request photographs and a repair invoice, and raise it with your card issuer if the company will not engage.</p>
 
 <h2>Local driving rules worth checking in advance</h2>
@@ -160,7 +160,7 @@ export default [
 <li><strong>Tolls.</strong> Some countries use a windscreen vignette that must be bought before you join the motorway; others use electronic tags. Ask the rental company how tolls are billed.</li>
 <li><strong>Alcohol limits</strong>, which are lower than many people assume and zero in some countries.</li>
 <li><strong>Headlights on during the day</strong>, mandatory in several northern countries.</li>
-<li><strong>What to do after an accident</strong> — many countries require you to call the police for any collision, and insurers will refuse claims without a report.</li>
+<li><strong>What to do after an accident</strong> - many countries require you to call the police for any collision, and insurers will refuse claims without a report.</li>
 </ul>
 
 <h2>When not to rent at all</h2>
@@ -181,7 +181,7 @@ export default [
   minutes: 10,
   tags: ['Accommodation', 'Planning', 'Budget'],
   body: `
-<p>Where you sleep decides more of a trip than people expect. Not the room — the location, the hours you can come and go, whether there is somebody at the desk who knows the town, and how far you are from the first coffee of the morning.</p>
+<p>Where you sleep decides more of a trip than people expect. Not the room - the location, the hours you can come and go, whether there is somebody at the desk who knows the town, and how far you are from the first coffee of the morning.</p>
 <p>Here is what each type is genuinely good at, and how to choose between them without reading four hundred reviews.</p>
 
 <h2>The five options, honestly</h2>
@@ -197,7 +197,7 @@ export default [
 <p><strong>Best for:</strong> almost everything, and especially small towns and rural areas.</p>
 
 <h3>Hostels</h3>
-<p><strong>Good at:</strong> price, and meeting people. Modern hostels are not what they were — many have private rooms with en-suite bathrooms at guesthouse prices, and the common room is still the fastest way to find someone to hike with tomorrow.</p>
+<p><strong>Good at:</strong> price, and meeting people. Modern hostels are not what they were - many have private rooms with en-suite bathrooms at guesthouse prices, and the common room is still the fastest way to find someone to hike with tomorrow.</p>
 <p><strong>Weak at:</strong> sleep, in dorms. Earplugs and an eye mask are non-negotiable.</p>
 <p><strong>Best for:</strong> solo travellers, long trips, and anyone who wants company on demand rather than by default. Book a private room in a hostel and you get both.</p>
 
@@ -207,7 +207,7 @@ export default [
 <p><strong>Best for:</strong> stays of a week or more, families, and cold-weather trips where you want a base rather than a bed. If you use one, prefer a licensed listing and a host who is not operating twenty flats.</p>
 
 <h3>Everything else</h3>
-<p>Farm stays, monastery guest rooms, mountain huts, bothies, campsites and homestays are frequently the most memorable nights of a trip and the cheapest. A Scottish bothy has four walls, a fireplace, a visitors' book and no key — and somebody has usually left dry kindling for whoever comes next.</p>
+<p>Farm stays, monastery guest rooms, mountain huts, bothies, campsites and homestays are frequently the most memorable nights of a trip and the cheapest. A Scottish bothy has four walls, a fireplace, a visitors' book and no key - and somebody has usually left dry kindling for whoever comes next.</p>
 
 <h2>Choose the neighbourhood before the property</h2>
 <p>This is the step most people skip, and it matters more than the star rating. A four-star hotel by a motorway junction is worse than a simple room in the old town.</p>
@@ -224,7 +224,7 @@ export default [
 <ul>
 <li><strong>Sort by most recent.</strong> Management changes; a glowing review from three years ago is fiction.</li>
 <li><strong>Read the negative reviews first</strong>, and look for repetition. One person complaining about noise is a light sleeper. Nine people complaining about noise is a road.</li>
-<li><strong>Discount complaints that are not about the property</strong> — weather, the city, the price of taxis.</li>
+<li><strong>Discount complaints that are not about the property</strong> - weather, the city, the price of taxis.</li>
 <li><strong>Watch for the specific words that predict a bad night:</strong> "thin walls", "hard bed", "no hot water in the morning", "steep stairs", "far from everything", "the photos are old".</li>
 <li><strong>Check reviews from people like you.</strong> A place that families love may be exactly wrong for a solo traveller, and vice versa.</li>
 </ul>
@@ -262,7 +262,7 @@ export default [
   slug: 'use-your-phone-while-traveling-abroad',
   title: 'How to use your phone while travelling abroad',
   h1: 'How to use your phone while travelling abroad',
-  description: 'eSIM, local SIM or roaming — which to choose and when, how to avoid a four-figure data bill, and the settings to change before you get on the plane.',
+  description: 'eSIM, local SIM or roaming - which to choose and when, how to avoid a four-figure data bill, and the settings to change before you get on the plane.',
   photo: 'blog-phone',
   published: '2026-08-23',
   updated: '2026-08-27',
@@ -275,7 +275,7 @@ export default [
 <h2>Option 1: eSIM</h2>
 <p>An eSIM is a SIM card downloaded as software rather than posted as plastic. You buy a data plan online, scan a QR code, and your phone runs it alongside your normal number.</p>
 <p><strong>Good at:</strong> being ready before you land. No queue, no shop, no swapping a tiny piece of plastic over a hotel sink and losing it. You keep your home number active for calls and, crucially, for SMS verification codes from your bank.</p>
-<p><strong>Weak at:</strong> price per gigabyte on long stays, and phone calls — most travel eSIMs are data-only, so you make calls over the internet instead. Coverage is also whatever local network the provider has partnered with, which is not always the best one.</p>
+<p><strong>Weak at:</strong> price per gigabyte on long stays, and phone calls - most travel eSIMs are data-only, so you make calls over the internet instead. Coverage is also whatever local network the provider has partnered with, which is not always the best one.</p>
 <p><strong>Requires:</strong> an eSIM-capable and carrier-unlocked handset. Most phones released in the last five or six years qualify, but check yours specifically before relying on it.</p>
 <p><strong>Best for:</strong> trips of a few days to a few weeks, multi-country trips, and anyone who values arriving connected.</p>
 
@@ -287,7 +287,7 @@ export default [
 <h2>Option 3: roaming on your home plan</h2>
 <p><strong>Good at:</strong> doing nothing. Your number, your plan, no setup.</p>
 <p><strong>Weak at:</strong> cost, outside the regions where roaming is regulated. Within the European Economic Area, "roam like at home" rules mean EU and EEA residents generally use their domestic allowance at no extra charge. Outside such arrangements, per-megabyte roaming rates are the most expensive data you will ever buy.</p>
-<p>Many operators sell a daily travel pass — a fixed charge per day of use that unlocks your normal allowance. These are convenient and mid-priced; over a two-week trip they usually cost several times an eSIM.</p>
+<p>Many operators sell a daily travel pass - a fixed charge per day of use that unlocks your normal allowance. These are convenient and mid-priced; over a two-week trip they usually cost several times an eSIM.</p>
 <p><strong>Best for:</strong> short trips inside your regulated roaming region, and anyone who needs their own number to ring.</p>
 
 <h2>How not to get a shocking bill</h2>
@@ -298,7 +298,7 @@ export default [
 <li><strong>Set a data limit and a warning</strong> in your phone's mobile-data settings.</li>
 <li><strong>Turn off automatic app updates over mobile data</strong>, and automatic photo and cloud backup.</li>
 <li><strong>Ask your operator to place a spend cap</strong> on the account. Many will do it free and it converts a catastrophe into an inconvenience.</li>
-<li><strong>Disable Wi-Fi Assist / Adaptive Wi-Fi</strong>, which silently switches to mobile data when wifi is weak — a common cause of unexplained usage.</li>
+<li><strong>Disable Wi-Fi Assist / Adaptive Wi-Fi</strong>, which silently switches to mobile data when wifi is weak - a common cause of unexplained usage.</li>
 <li><strong>Beware ferries and cruise ships.</strong> Maritime and in-flight networks are not covered by roaming deals and are charged at extraordinary rates. Use flight mode at sea.</li>
 </ul>
 
@@ -307,7 +307,7 @@ export default [
 <ul>
 <li><strong>Offline maps</strong> for every city and region you will visit. Both major map apps do this, and offline search and walking directions work fully.</li>
 <li><strong>Offline translation packs</strong> for the local language, including the camera mode that reads menus and signs.</li>
-<li><strong>Boarding passes, hotel confirmations, insurance documents and your passport photo page</strong>, saved as files rather than links — a link is useless without data.</li>
+<li><strong>Boarding passes, hotel confirmations, insurance documents and your passport photo page</strong>, saved as files rather than links - a link is useless without data.</li>
 <li><strong>Music, podcasts and something to read</strong>, for the twelve-hour bus.</li>
 <li><strong>Your itinerary as a plain document</strong> with addresses in the local alphabet.</li>
 </ul>
@@ -316,7 +316,7 @@ export default [
 <p>Public wifi in cafés, airports and hotels is convenient and not private. The practical rules:</p>
 <ul>
 <li>Do not do banking or enter card details on an open network unless you are using a VPN.</li>
-<li>Prefer your mobile data for anything sensitive — it is encrypted by default.</li>
+<li>Prefer your mobile data for anything sensitive - it is encrypted by default.</li>
 <li>Turn off automatic connection to open networks, which stops your phone joining anything that shares a name with a network you once used.</li>
 <li>A reputable VPN is worth having, both for security on hotel networks and for reaching services that geo-block from abroad.</li>
 </ul>
@@ -340,7 +340,7 @@ export default [
 <li>Install and activate your eSIM, or confirm your roaming plan.</li>
 <li>Download offline maps and a translation pack.</li>
 <li>Save tickets, bookings and insurance as offline files.</li>
-<li>Check that your bank can reach you — authenticator app, or home SIM staying in.</li>
+<li>Check that your bank can reach you - authenticator app, or home SIM staying in.</li>
 <li>Charge the power bank and pack it in your cabin bag.</li>
 </ol>
 <p>Six steps, and the phone stops being a liability and goes back to being the most useful object you are carrying.</p>

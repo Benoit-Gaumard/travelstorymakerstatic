@@ -75,7 +75,7 @@ function collection(opts) {
   for (let p = 1; p <= totalPages; p++) {
     const slice = items.slice((p - 1) * PER_PAGE, p * PER_PAGE);
     const path = p === 1 ? opts.baseHref : opts.baseHref + 'page/' + p + '/';
-    const suffix = p === 1 ? '' : ' — page ' + p + ' of ' + totalPages;
+    const suffix = p === 1 ? '' : ' - page ' + p + ' of ' + totalPages;
     const crumbs = opts.crumbs.concat(p === 1 ? [] : [{ href: path, label: 'Page ' + p }]);
     const summary = pageSummary(slice, p, totalPages);
     const heading = p === 1 ? opts.h1 : opts.h1 + ', part ' + p;
@@ -267,7 +267,7 @@ export function destinationsHub(countryCounts) {
     path: '/destinations/',
     html: page({
       path: '/destinations/',
-      title: 'Destinations — travel stories and fun facts by country | TravelStoryMaker',
+      title: 'Destinations - travel stories and fun facts by country | TravelStoryMaker',
       description: 'Browse travel stories, quotes and fun facts by continent and by country, from Japan and Peru to Namibia and Antarctica.',
       onDark: true,
       body,

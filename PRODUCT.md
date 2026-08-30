@@ -3,7 +3,7 @@
 <!-- impeccable:product-schema 1 -->
 
 Product truth for travelstorymaker.com. Confirmed with the owner on 2026-08-29 and cross-checked
-against the repository. Visual decisions do not belong in this file — see `handoff.md` for the
+against the repository. Visual decisions do not belong in this file - see `handoff.md` for the
 engineering record.
 
 ## Platform
@@ -12,7 +12,7 @@ web
 
 ## Users
 
-**Primary — confirmed by the owner:** someone preparing a trip who is looking for information about
+**Primary - confirmed by the owner:** someone preparing a trip who is looking for information about
 a specific country. They arrive from a Google search on a country or a travel topic, usually on a
 phone, sometimes on a slow connection, and they land directly on an interior page rather than the
 homepage.
@@ -20,15 +20,15 @@ homepage.
 **Also served, by construction:** a casual reader who arrives on a single entry, reads one story,
 quote or fun fact, and may browse a few more.
 
-**Known tension, recorded deliberately:** the implementation today is a reading library — 1,000
-short entries organised by type and region — while the primary user is stated to be someone with
+**Known tension, recorded deliberately:** the implementation today is a reading library - 1,000
+short entries organised by type and region - while the primary user is stated to be someone with
 trip intent. The 36 country pages and the 19 guides are the only surfaces that currently serve that
 intent directly. Future product work should close this gap rather than assume it is already closed.
 
 ## Product Purpose
 
-A free, independent library of travel writing — short travel stories, travel quotes, fun facts, plus
-long-form guides and trip reports — published as plain, fast, static web pages.
+A free, independent library of travel writing - short travel stories, travel quotes, fun facts, plus
+long-form guides and trip reports - published as plain, fast, static web pages.
 
 **Success, as defined by the owner: advertising revenue.** Concretely, that means maximising pages
 viewed per visit and time on site. Every product decision is therefore judged on whether it gets a
@@ -39,7 +39,7 @@ Nothing is sold, there is no account, no paywall, and no email is collected to r
 
 ## Positioning
 
-Free travel reading that renders as real HTML, indexes completely, and loads on a bad connection —
+Free travel reading that renders as real HTML, indexes completely, and loads on a bad connection -
 where the comparable content elsewhere sits behind app shells, cookie walls, newsletter gates or
 listicle-grade SEO filler.
 
@@ -51,7 +51,7 @@ What a neighbouring product could not truthfully copy without rebuilding:
 - Zero npm dependencies, in production and in development. The only third-party runtime request is
   the AdSense script.
 - Fun facts are written in-house and checked, and 466 of the 506 carry a "Read more" link to a
-  reference article — a starting point, deliberately not labelled as a source.
+  reference article - a starting point, deliberately not labelled as a source.
 - Photography is CC-licensed, self-hosted rather than hotlinked, and credited with its licence on
   `/credits/`.
 
@@ -74,7 +74,7 @@ What a neighbouring product could not truthfully copy without rebuilding:
 
 **What exists today (verified against the build):**
 
-- 1,000 entries — 506 fun facts, 294 stories, 200 quotes — across seven regions.
+- 1,000 entries - 506 fun facts, 294 stories, 200 quotes - across seven regions.
 - 36 country pages with fact sheets and flags, 6 continent pages, 19 guides, 10 trip reports.
 - Type collections, paginated listings (100 per page), and in-page search and filtering that work
   on already-rendered markup.
@@ -106,11 +106,11 @@ What a neighbouring product could not truthfully copy without rebuilding:
 - **`form-action 'none'`** is correct only because the product has zero `<form>` elements. Adding a
   real form is a policy change, not just a markup change.
 
-**Explicitly undecided — do not resolve these by inference:**
+**Explicitly undecided - do not resolve these by inference:**
 
 1. ~~**Trip-planning tools are intended to return to this domain.**~~ **Decided on 2026-08-30: no.**
    The owner ruled out bringing planning tools to this site. It stays a static reading and
-   reference library — no accounts, no forms, no backend. This resolves the tension that was
+   reference library - no accounts, no forms, no backend. This resolves the tension that was
    recorded here against the zero-dependency architecture, the `form-action 'none'` policy and the
    "no account, no paywall" promise in the site copy: those constraints are now settled rather than
    provisional, and a future request for an interactive tool is a decision to reopen this, not an
@@ -118,7 +118,7 @@ What a neighbouring product could not truthfully copy without rebuilding:
 2. ~~**The 10 trip reports are written in the first person but are not the owner's own trips.**~~
    **Settled on 2026-08-30.** The site no longer claims they are journeys the author made: the
    section is "Trip itineraries, day by day" and the ten titles are descriptive rather than "My
-   trip in X". Beyond that the owner chose to keep the writing as it is — the article bodies stay
+   trip in X". Beyond that the owner chose to keep the writing as it is - the article bodies stay
    in the first person, the per-article provenance banner was removed, and so was the "How to read
    these" note on `/blog/`.
 
@@ -150,7 +150,7 @@ What a neighbouring product could not truthfully copy without rebuilding:
 - **Editorial promises made publicly on the site**, and therefore binding: no sponsored entries
   disguised as editorial, no affiliate links inside entries, advertisers have no influence or right
   of veto, ad units are visually distinct from entries, and confirmed factual errors are fixed.
-- **Reference links on fun facts are labelled "Read more", never "Source"** — deliberate, because a
+- **Reference links on fun facts are labelled "Read more", never "Source"** - deliberate, because a
   minority point at a general country article rather than at the specific fact.
 - **Flags are PNG images, never emoji.** Regional-indicator emoji do not render on Windows.
 - Existing assets: logo (`public/assets/img/logo.svg`), hero illustration, favicon set.
@@ -162,14 +162,14 @@ Real, in the repository:
 
 - 1,000 written entries, ten data files, `src/data/`.
 - 97 CC / CC0 photographs from Wikimedia Commons, self-hosted, each credited with its licence on
-  `/credits/` — manifest at `src/generated/photos.json`.
+  `/credits/` - manifest at `src/generated/photos.json`.
 - 35 country flags, 466 resolved reference links (`src/generated/factlinks.json`).
 - 19 guides (`src/articles/`), 10 trip reports (`src/blog/`), 36 country profiles with fact sheets
   (`src/countries.mjs`, `src/country-facts.mjs`).
 - A verified programmatic SEO audit and security review, both dated 2026-08-28, recorded in
   `handoff.md`.
 
-Deliberately absent — future work must not invent these:
+Deliberately absent - future work must not invent these:
 
 - No testimonials, no named customers, no partner or press mentions.
 - No published traffic, revenue or audience figures.
@@ -187,7 +187,7 @@ Deliberately absent — future work must not invent these:
    third page. Internal routes between entries, countries and guides earn their place; dead ends do
    not.
 4. **Fast on a bad connection, on a cheap phone.** Byte budgets and deterministic audits are the
-   judge, never a noisy Lighthouse score — and never by making the LCP image lazy to game a number.
+   judge, never a noisy Lighthouse score - and never by making the LCP image lazy to game a number.
 5. **Say what the content actually is.** Stories are vignettes, facts are checked, reference links
    are starting points. Overclaiming is both an AdSense risk and a breach of what the site already
    tells its readers.
@@ -201,7 +201,7 @@ behaviours and are treated as the floor:
 
 - Every page must be fully readable and navigable with JavaScript disabled.
 - Motion respects `prefers-reduced-motion`; the hero animation disables itself.
-- Country flags are images with appropriate `alt` handling — descriptive on fact sheets, `alt=""`
+- Country flags are images with appropriate `alt` handling - descriptive on fact sheets, `alt=""`
   and `aria-hidden` on cards where the country name sits alongside.
 - The site is written for slow connections and small screens as the default case, not the edge case.
 - Lighthouse accessibility measured at 96 on mobile (2026-08-28); the residual failures come from

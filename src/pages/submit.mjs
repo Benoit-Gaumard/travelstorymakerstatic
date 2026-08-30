@@ -32,13 +32,13 @@ export function submitPage() {
     '<div class="steps-grid">',
     '<div class="step-card"><span class="step-card__n">1</span><h3>Write it badly</h3><p>Three to six sentences, in whatever order it comes out. Do not polish it. We would rather have the real version than a tidy one.</p></div>',
     '<div class="step-card"><span class="step-card__n">2</span><h3>Email it</h3><p>Use the button above and the template fills itself in. No account, no form, no newsletter you did not ask for.</p></div>',
-    '<div class="step-card"><span class="step-card__n">3</span><h3>We edit and publish</h3><p>We trim for length, keep your voice, and put it in the library under your name or anonymously — your choice.</p></div>',
+    '<div class="step-card"><span class="step-card__n">3</span><h3>We edit and publish</h3><p>We trim for length, keep your voice, and put it in the library under your name or anonymously - your choice.</p></div>',
     '</div>',
 
     '<div class="prose" style="margin-top:64px">',
 
     '<h2 id="what-works">What makes a story work here</h2>',
-    '<p>The entries in this library are short on purpose — most are two to four sentences. What makes them worth reading is not scale or drama. It is a specific detail that could only have happened in that place, on that day, to you.</p>',
+    '<p>The entries in this library are short on purpose - most are two to four sentences. What makes them worth reading is not scale or drama. It is a specific detail that could only have happened in that place, on that day, to you.</p>',
     '<p>The best submissions tend to have one of these:</p>',
     '<ul>',
     '<li><strong>An unexpected kindness.</strong> The barman who let us sleep on beer crates in Reykjavík. The bus driver in Snowdonia who saw two head torches on the mountain and refused to leave.</li>',
@@ -75,7 +75,7 @@ export function submitPage() {
     '</div>',
 
     '<h2>What happens next</h2>',
-    '<p>Every submission is read by a person — usually ' + esc(AUTHOR.short) + '. If we publish it, you will get an email with the link and the entry number. If we do not, you will still get a reply, because sending someone your writing and hearing nothing back is a miserable experience.</p>',
+    '<p>Every submission is read by a person - usually ' + esc(AUTHOR.short) + '. If we publish it, you will get an email with the link and the entry number. If we do not, you will still get a reply, because sending someone your writing and hearing nothing back is a miserable experience.</p>',
     '<p>We are a small operation, so give it a couple of weeks. Published stories are checked against our <a href="/editorial-policy/">editorial policy</a> like everything else on the site.</p>',
 
     '<h2>An example of the right length</h2>',

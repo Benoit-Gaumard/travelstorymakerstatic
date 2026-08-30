@@ -58,7 +58,7 @@ export function creditsPage() {
     path: '/credits/',
     html: page({
       path: '/credits/',
-      title: 'Photo credits — TravelStoryMaker',
+      title: 'Photo credits - TravelStoryMaker',
       description: 'Attribution and licence details for every photograph used on TravelStoryMaker, all freely licensed via Wikimedia Commons.',
       onDark: true,
       body,

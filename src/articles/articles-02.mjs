@@ -15,7 +15,7 @@ export default [
 
 <h2>Start from the bag, not from the pile</h2>
 <p>If you pack into a large bag, you will fill it. Buy or borrow a smaller one and the problem solves itself, because the constraint does the arguing for you.</p>
-<p>For most trips of any length, a 35–40 litre carry-on is enough. Not "enough for a week" — enough. The difference between packing for five days and packing for three weeks is a laundry visit, not a second suitcase. Wheeled luggage was only patented in 1970 and the upright rolling case arrived in 1987, which is a useful reminder that people crossed continents for a very long time carrying rather less than we do.</p>
+<p>For most trips of any length, a 35–40 litre carry-on is enough. Not "enough for a week" - enough. The difference between packing for five days and packing for three weeks is a laundry visit, not a second suitcase. Wheeled luggage was only patented in 1970 and the upright rolling case arrived in 1987, which is a useful reminder that people crossed continents for a very long time carrying rather less than we do.</p>
 
 <h2>The three-climate wardrobe</h2>
 <p>Layers are not a slogan, they are a packing strategy. Three thin layers cover a wider temperature range than one thick one, weigh less in total, and dry faster.</p>
@@ -53,7 +53,7 @@ export default [
 </ul>
 
 <h2>Packing cubes: useful, but not for the reason people say</h2>
-<p>Cubes do not create space — compression makes things smaller in one dimension and denser in another. What they do is make the bag <em>navigable</em>: you can find one item without unpacking six, and repacking after a night stop takes two minutes instead of fifteen. On a trip with several moves, that is worth the small weight penalty. On a single-destination trip, it is not.</p>
+<p>Cubes do not create space - compression makes things smaller in one dimension and denser in another. What they do is make the bag <em>navigable</em>: you can find one item without unpacking six, and repacking after a night stop takes two minutes instead of fifteen. On a trip with several moves, that is worth the small weight penalty. On a single-destination trip, it is not.</p>
 
 <h2>The weigh-and-remove ritual</h2>
 <p>Pack the bag two days before you go. Then pick it up, walk around the house with it for five minutes, and put it on a scale. Anything above about 8 kilograms for carry-on means you will be fighting it at every set of stairs, and you will meet a great many stairs.</p>
@@ -64,7 +64,7 @@ export default [
 <p>The caveats are real: liquid limits mean decanting or buying on arrival, some budget airlines charge more for cabin bags than hold bags, and any knife or multi-tool has to go. Check the specific airline's cabin dimensions before you buy a bag, because they differ by several centimetres and the gate is not the place to discover it.</p>
 
 <h2>The part that changes your habits permanently</h2>
-<p>Almost everyone who has had their luggage go missing for three days reports the same thing afterwards: they were fine. Slightly bored of the same shirt, but fine. Three days without a bag is the most effective packing course available, and it teaches the lesson nothing else does — that the list of things you genuinely need is much shorter than the list of things you brought.</p>
+<p>Almost everyone who has had their luggage go missing for three days reports the same thing afterwards: they were fine. Slightly bored of the same shirt, but fine. Three days without a bag is the most effective packing course available, and it teaches the lesson nothing else does - that the list of things you genuinely need is much shorter than the list of things you brought.</p>
 <p>Own only what you can carry with you, wrote Solzhenitsyn, and know languages, know countries, know people. He was not writing about hand luggage, but it applies.</p>
 
 <div class="callout"><p><strong>Related reading:</strong> the <a href="/travelstories/quotes/">quotes collection</a> has more on travelling light, including Saint-Exupéry's version, and <a href="/travelstories/fun-facts/">fun facts</a> covers why wheeled luggage took until 1970 to appear.</p></div>
@@ -81,7 +81,7 @@ export default [
   minutes: 8,
   tags: ['Food', 'Markets', 'Practical'],
   body: `
-<p>The gap between the best meal on a trip and the worst is almost never about money. It is about information — and specifically about whether you ate where people who live there eat, or where people who are leaving in three days eat.</p>
+<p>The gap between the best meal on a trip and the worst is almost never about money. It is about information - and specifically about whether you ate where people who live there eat, or where people who are leaving in three days eat.</p>
 <p>These signals work almost everywhere, and they take about ninety seconds to read.</p>
 
 <h2>The signals that actually correlate with good food</h2>
@@ -139,7 +139,7 @@ export default [
 <p>None of this needs studying in advance. It needs watching for the first ten minutes and copying what everyone else does.</p>
 
 <h2>The one meal worth planning</h2>
-<p>Most meals should be found rather than booked. But most places have one thing that genuinely requires a reservation, a season or a specific address — a single restaurant, a market that only runs on Saturdays, a dish that sells out. Identify that one thing before you go and book it. Then leave the other twenty meals to the signals above, which is where the good stories come from anyway.</p>
+<p>Most meals should be found rather than booked. But most places have one thing that genuinely requires a reservation, a season or a specific address - a single restaurant, a market that only runs on Saturdays, a dish that sells out. Identify that one thing before you go and book it. Then leave the other twenty meals to the signals above, which is where the good stories come from anyway.</p>
 <p>And when something is very good, ask for the recipe. You will be given a list of ingredients with no quantities, it will take eleven attempts, and it will still not be right. That is the correct outcome.</p>
 
 <div class="callout"><p><strong>Related reading:</strong> <a href="/destinations/japan/">Japan</a>, <a href="/destinations/mexico/">Mexico</a>, <a href="/destinations/vietnam/">Vietnam</a> and <a href="/destinations/morocco/">Morocco</a> collections, plus the <a href="/travelstories/stories/">travel stories</a> that mostly happen around a table.</p></div>
@@ -162,7 +162,7 @@ export default [
 <p>Almost all of this is preventable, and almost none of it is about fitness.</p>
 
 <h2>What is actually happening</h2>
-<p>The percentage of oxygen in the air does not change with altitude — it is about 21% at sea level and about 21% on Everest. What changes is pressure. At 3,500 metres, air pressure is around two thirds of sea level, so each breath delivers roughly a third less oxygen. At 5,500 metres it is about half.</p>
+<p>The percentage of oxygen in the air does not change with altitude - it is about 21% at sea level and about 21% on Everest. What changes is pressure. At 3,500 metres, air pressure is around two thirds of sea level, so each breath delivers roughly a third less oxygen. At 5,500 metres it is about half.</p>
 <p>Your body compensates: you breathe faster, your heart rate rises, and over days you produce more red blood cells. That adaptation is what acclimatisation means, and it takes time that cannot be shortened by being fit. Marathon runners get altitude sickness. So do people who have been to altitude before without problems. Susceptibility is largely genetic and it is not a measure of anything.</p>
 
 <h2>The numbers that matter</h2>
@@ -190,7 +190,7 @@ export default [
 
 <h2>The two conditions that are emergencies</h2>
 <p>Both are uncommon and both are life-threatening. Descent is the treatment for both, and it should not be delayed until morning.</p>
-<p><strong>HACE</strong> (high altitude cerebral oedema): confusion, unusual behaviour, severe headache, and — the classic test — an inability to walk heel-to-toe in a straight line. Someone with HACE may not recognise their own condition, which is why companions matter more than self-assessment.</p>
+<p><strong>HACE</strong> (high altitude cerebral oedema): confusion, unusual behaviour, severe headache, and - the classic test - an inability to walk heel-to-toe in a straight line. Someone with HACE may not recognise their own condition, which is why companions matter more than self-assessment.</p>
 <p><strong>HAPE</strong> (high altitude pulmonary oedema): breathlessness at rest, a persistent cough, tightness in the chest, and extreme fatigue. Breathlessness that does not settle after several minutes of rest is the warning sign.</p>
 <p>For either: descend immediately, by at least 500–1,000 m, at night if necessary. Supplementary oxygen and medication help but do not replace descent.</p>
 
@@ -199,8 +199,8 @@ export default [
 <p>Coca tea and coca leaves are traditional across the Andes and locals will offer them constantly. They help mildly with symptoms. They do not acclimatise you, and they can show up on a drug test at home.</p>
 
 <h2>Planning a trip so altitude is not the problem</h2>
-<p>Sequence matters more than anything else. In Peru, spending a few days in the Sacred Valley — which is several hundred metres lower than Cusco — before returning to the city is far better than the reverse, and it is what experienced operators do. In Nepal, the standard Everest itineraries build in acclimatisation days at Namche and Dingboche precisely because the arithmetic demands it, and the trekkers who get into trouble are usually the ones who skipped them to save time.</p>
-<p>Build in slack. Two spare days in a two-week high-altitude trip is not lost time — it is the thing that lets you stop for a day without abandoning the trip.</p>
+<p>Sequence matters more than anything else. In Peru, spending a few days in the Sacred Valley - which is several hundred metres lower than Cusco - before returning to the city is far better than the reverse, and it is what experienced operators do. In Nepal, the standard Everest itineraries build in acclimatisation days at Namche and Dingboche precisely because the arithmetic demands it, and the trekkers who get into trouble are usually the ones who skipped them to save time.</p>
+<p>Build in slack. Two spare days in a two-week high-altitude trip is not lost time - it is the thing that lets you stop for a day without abandoning the trip.</p>
 
 <h2>The small stuff nobody warns you about</h2>
 <ul>
@@ -213,7 +213,7 @@ export default [
 </ul>
 <p>Handled properly, altitude is a scheduling problem rather than a health problem. Give it the days it asks for and the mountains are yours.</p>
 
-<div class="callout"><p><strong>Related reading:</strong> <a href="/destinations/peru/">Peru</a>, <a href="/destinations/bolivia/">Bolivia</a> and <a href="/destinations/nepal/">Nepal</a> in our collections — including why Chimborazo, not Everest, is the point furthest from the centre of the Earth.</p></div>
+<div class="callout"><p><strong>Related reading:</strong> <a href="/destinations/peru/">Peru</a>, <a href="/destinations/bolivia/">Bolivia</a> and <a href="/destinations/nepal/">Nepal</a> in our collections - including why Chimborazo, not Everest, is the point furthest from the centre of the Earth.</p></div>
 `,
 },
 {
@@ -233,10 +233,10 @@ export default [
 <h2>Understand which desert you are going to</h2>
 <p>"Desert" describes rainfall, not temperature, and the practical differences are enormous.</p>
 <ul>
-<li><strong>Hot sand deserts</strong> — the Sahara, parts of Arabia, the Namib. Extreme daytime heat, sharp night-time cooling, and genuine navigation difficulty.</li>
-<li><strong>High cold deserts</strong> — the Gobi, the Atacama, the Pamirs. Altitude compounds everything, and the Atacama has weather stations that have never recorded rain.</li>
-<li><strong>Rocky and semi-arid</strong> — Wadi Rum, much of the American Southwest, the Kalahari, which gets enough rain to support grass and trees and is technically a savanna.</li>
-<li><strong>Polar deserts</strong> — the McMurdo Dry Valleys, stripped bare by katabatic winds and unrained-on for roughly two million years.</li>
+<li><strong>Hot sand deserts</strong> - the Sahara, parts of Arabia, the Namib. Extreme daytime heat, sharp night-time cooling, and genuine navigation difficulty.</li>
+<li><strong>High cold deserts</strong> - the Gobi, the Atacama, the Pamirs. Altitude compounds everything, and the Atacama has weather stations that have never recorded rain.</li>
+<li><strong>Rocky and semi-arid</strong> - Wadi Rum, much of the American Southwest, the Kalahari, which gets enough rain to support grass and trees and is technically a savanna.</li>
+<li><strong>Polar deserts</strong> - the McMurdo Dry Valleys, stripped bare by katabatic winds and unrained-on for roughly two million years.</li>
 </ul>
 <p>The kit and the risks differ substantially. Read about the specific place, not about deserts.</p>
 
@@ -245,9 +245,9 @@ export default [
 <p>Practical rules: drink steadily rather than in large amounts occasionally; add electrolytes, because water alone flushes salt and can make things worse; and never rely on a single container. Carry water in at least two vessels so that one failure is an inconvenience rather than an emergency.</p>
 
 <h2>Heat, and the hours you simply do not use</h2>
-<p>Desert cultures organised themselves around this centuries ago and they were right. The middle of the day is for shade. Move early — first light to about ten — and again from late afternoon. Between those, do nothing energetic.</p>
+<p>Desert cultures organised themselves around this centuries ago and they were right. The middle of the day is for shade. Move early - first light to about ten - and again from late afternoon. Between those, do nothing energetic.</p>
 <p>Cover up rather than strip off. Loose, long, light-coloured clothing reduces both heat load and water loss far better than bare skin, which is why the traditional dress across the Sahara and Arabia looks the way it does. Add a wide brim or a head wrap, and sunglasses that actually block UV, because reflected glare off pale sand is punishing.</p>
-<p>Learn the early signs of heat exhaustion — heavy sweating, weakness, nausea, headache, clammy skin — and treat them by stopping, shading and rehydrating. Heat stroke, where sweating stops and confusion begins, is a medical emergency.</p>
+<p>Learn the early signs of heat exhaustion - heavy sweating, weakness, nausea, headache, clammy skin - and treat them by stopping, shading and rehydrating. Heat stroke, where sweating stops and confusion begins, is a medical emergency.</p>
 
 <h2>Cold, which is the part people fail to plan for</h2>
 <p>Clear desert skies radiate heat away extraordinarily fast after sunset. A 40°C day can become a 5°C night, and at altitude it goes below freezing. Every experienced desert traveller carries an insulating layer they did not appear to need at midday.</p>
@@ -275,11 +275,11 @@ export default [
 <li>A head torch with spare batteries.</li>
 <li>Offline maps, a paper map, a compass, and a power bank.</li>
 <li>A small first-aid kit including rehydration salts and blister treatment.</li>
-<li>Something to keep sand out of your camera. It gets everywhere and it does not leave — two months later you will find Saharan sand in the spine of a paperback.</li>
+<li>Something to keep sand out of your camera. It gets everywhere and it does not leave - two months later you will find Saharan sand in the spine of a paperback.</li>
 </ul>
 
 <h2>Why go at all</h2>
-<p>Because the silence is not like other silences. After the generator goes off in Wadi Rum there is no sound at all — not wind, not insects, nothing — and six people will sit in the dark for an hour without speaking. Because the Milky Way in the Kalahari is bright enough to cast a shadow. Because at Deadvlei the camelthorn trees died nine hundred years ago and the air is too dry for them to rot, so they simply stand there, black against white clay, waiting.</p>
+<p>Because the silence is not like other silences. After the generator goes off in Wadi Rum there is no sound at all - not wind, not insects, nothing - and six people will sit in the dark for an hour without speaking. Because the Milky Way in the Kalahari is bright enough to cast a shadow. Because at Deadvlei the camelthorn trees died nine hundred years ago and the air is too dry for them to rot, so they simply stand there, black against white clay, waiting.</p>
 <p>The desert asks for preparation and gives back scale. It is a fair trade.</p>
 
 <div class="callout"><p><strong>Related reading:</strong> <a href="/destinations/namibia/">Namibia</a>, <a href="/destinations/morocco/">Morocco</a>, <a href="/destinations/chile/">Chile</a> and <a href="/destinations/mali/">Mali</a> in our collections.</p></div>

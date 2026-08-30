@@ -16,7 +16,7 @@ export default [
 <p>The mechanism is worth understanding, because it tells you exactly what to do.</p>
 
 <h2>Why the body clock drifts</h2>
-<p>The human circadian rhythm runs slightly longer than 24 hours in most people — closer to 24.2. Light resets it each day. Left in a bunker with no daylight, people drift later, which is why staying up late is easy and getting up early is not.</p>
+<p>The human circadian rhythm runs slightly longer than 24 hours in most people - closer to 24.2. Light resets it each day. Left in a bunker with no daylight, people drift later, which is why staying up late is easy and getting up early is not.</p>
 <p>This asymmetry is the entire reason <strong>eastward travel is harder</strong>. Flying west lengthens your day, which your body already wants to do. Flying east shortens it, which it resists. The rough rule of thumb is one day of adjustment per time zone going east, and rather less going west.</p>
 
 <h2>Light is the lever. Everything else is minor.</h2>
@@ -35,7 +35,7 @@ export default [
 <li><strong>Sleep on the plane only if it is night at your destination.</strong> Otherwise stay awake, even if the cabin lights are off.</li>
 <li><strong>On arrival, get outside.</strong> Twenty to thirty minutes of daylight does more than any supplement.</li>
 <li><strong>Do not nap for more than 20–30 minutes</strong> on the first day, and not after mid-afternoon.</li>
-<li><strong>Go to bed at a plausible local hour</strong> — not 7pm because you are wrecked. Aim for 10pm and accept a rough first night.</li>
+<li><strong>Go to bed at a plausible local hour</strong> - not 7pm because you are wrecked. Aim for 10pm and accept a rough first night.</li>
 <li><strong>Eat at local mealtimes from the first meal.</strong> Digestion has its own clock and food helps drag it across.</li>
 </ol>
 
@@ -45,7 +45,7 @@ export default [
 <p><strong>Alcohol</strong> is the one that consistently makes things worse. It shortens the time to fall asleep and wrecks the quality of sleep afterwards, and at altitude in a dry cabin it dehydrates you faster than on the ground.</p>
 
 <h2>The flight itself</h2>
-<p>Cabin air is drier than most deserts — relative humidity on a long-haul flight often sits below 20%. That is why you are thirsty, why your eyes hurt, and why food tastes bland: low pressure and dry air dull the perception of sweet and salty, which is exactly why airline meals are seasoned so heavily.</p>
+<p>Cabin air is drier than most deserts - relative humidity on a long-haul flight often sits below 20%. That is why you are thirsty, why your eyes hurt, and why food tastes bland: low pressure and dry air dull the perception of sweet and salty, which is exactly why airline meals are seasoned so heavily.</p>
 <ul>
 <li>Drink water steadily. Bring an empty bottle through security and fill it airside.</li>
 <li>Get up and walk every couple of hours. Circulation, not exercise, is the point.</li>
@@ -66,7 +66,7 @@ export default [
 </ul>
 
 <h2>Give the first day nothing important</h2>
-<p>The most effective jet-lag strategy is scheduling. Do not land and go straight into the thing you came for. Give the first day a long walk, a simple meal, a market, an early night — things that are pleasant, outdoors, and forgiving if you are operating at 70%.</p>
+<p>The most effective jet-lag strategy is scheduling. Do not land and go straight into the thing you came for. Give the first day a long walk, a simple meal, a market, an early night - things that are pleasant, outdoors, and forgiving if you are operating at 70%.</p>
 <p>Two days later you will be on local time and the trip will effectively begin. Plan the itinerary that way and jet lag becomes a mild inconvenience rather than a third of the holiday.</p>
 
 <div class="callout"><p><strong>Related reading:</strong> the <a href="/destinations/world/">Around the World</a> collection covers why contrails form, why aircraft windows have a small hole, and how time zones came from railway timetables.</p></div>
@@ -88,7 +88,7 @@ export default [
 
 <h2>Start from the boats, not from the islands</h2>
 <p>Almost everyone plans this backwards: pick five appealing islands, then try to connect them. Ferry networks are hub-and-spoke, not point-to-point, and two islands you can see from each other may have no direct service at all, requiring a full day back through the hub.</p>
-<p>Do it the other way round. Find the ferry operators for the region, look at what actually runs on your dates, and build the route along existing lines. In Greece that means understanding which island group you are in — the Cyclades, the Dodecanese and the Ionian are largely separate networks, and hopping between them usually means going back to Piraeus.</p>
+<p>Do it the other way round. Find the ferry operators for the region, look at what actually runs on your dates, and build the route along existing lines. In Greece that means understanding which island group you are in - the Cyclades, the Dodecanese and the Ionian are largely separate networks, and hopping between them usually means going back to Piraeus.</p>
 
 <h2>The rules that stop a route falling apart</h2>
 <ul>
@@ -156,25 +156,25 @@ export default [
   minutes: 7,
   tags: ['Photography', 'Practical'],
   body: `
-<p>Most travel photographs are never looked at twice. Not because they are badly taken, but because they were taken as a record rather than as a picture — proof of attendance, filed and forgotten.</p>
+<p>Most travel photographs are never looked at twice. Not because they are badly taken, but because they were taken as a record rather than as a picture - proof of attendance, filed and forgotten.</p>
 <p>The photographs people return to have something in common: they were taken deliberately, in good light, with something in the frame that gives a sense of scale or of a person. None of that requires an expensive camera. All of it requires slowing down for about thirty seconds.</p>
 
 <h2>Light decides almost everything</h2>
-<p>The single largest difference between a photograph that works and one that does not is the hour it was taken. Midday sun is directly overhead, high contrast, and flattening — it is the worst light of the day and it is when most people are out sightseeing.</p>
+<p>The single largest difference between a photograph that works and one that does not is the hour it was taken. Midday sun is directly overhead, high contrast, and flattening - it is the worst light of the day and it is when most people are out sightseeing.</p>
 <ul>
 <li><strong>The hour after sunrise and the hour before sunset</strong> give warm, low, directional light that models shape. Everything looks better and there are fewer people in the way.</li>
-<li><strong>The twenty minutes after sunset</strong> — blue hour — is when city lights balance with the sky. This is when to photograph skylines, bridges and lit windows, not at midnight when the sky is black.</li>
+<li><strong>The twenty minutes after sunset</strong> - blue hour - is when city lights balance with the sky. This is when to photograph skylines, bridges and lit windows, not at midnight when the sky is black.</li>
 <li><strong>Overcast is not bad light.</strong> It is an enormous softbox, and it is ideal for markets, forests, portraits and anything with detail.</li>
 <li><strong>Rain is excellent</strong> and nearly nobody shoots in it. Reflections, umbrellas, wet stone, steam.</li>
 </ul>
-<p>At high latitudes the light lasts for hours instead of minutes, because the sun meets the horizon at a shallow angle — one of the genuine advantages of northern travel.</p>
+<p>At high latitudes the light lasts for hours instead of minutes, because the sun meets the horizon at a shallow angle - one of the genuine advantages of northern travel.</p>
 
 <h2>Put something in the front of the frame</h2>
-<p>A wide view of a valley reads as flat because the eye has no reference. Adding something close — a rock, a doorway, a branch, a person's back — gives depth and scale immediately.</p>
+<p>A wide view of a valley reads as flat because the eye has no reference. Adding something close - a rock, a doorway, a branch, a person's back - gives depth and scale immediately.</p>
 <p>This is the difference between "I was at the Grand Canyon" and a photograph of the Grand Canyon. It is also why the same viewpoint produces a thousand identical pictures: everyone stands in the same place and shoots the same middle distance.</p>
 
 <h2>Move your feet before you touch the zoom</h2>
-<p>Two steps left, crouching down, or climbing three stairs will change a composition more than any setting. Low angles make things feel large; high angles make patterns readable. Shooting through something — an archway, a window, foliage — frames the subject and adds layers.</p>
+<p>Two steps left, crouching down, or climbing three stairs will change a composition more than any setting. Low angles make things feel large; high angles make patterns readable. Shooting through something - an archway, a window, foliage - frames the subject and adds layers.</p>
 <p>The most common improvement available to any traveller is simply: get closer.</p>
 
 <h2>Photographing people, properly</h2>
@@ -182,7 +182,7 @@ export default [
 <ul>
 <li><strong>Ask.</strong> A gesture at the camera and a smile is understood everywhere. Being refused occasionally is a fair price.</li>
 <li><strong>Buy something first</strong> if you are in a market. It changes the exchange from extraction to interaction.</li>
-<li><strong>Photograph hands and work</strong>, not just faces — the dhow builder's stick with notches, the baker's forearms, the mechanic's improvised part.</li>
+<li><strong>Photograph hands and work</strong>, not just faces - the dhow builder's stick with notches, the baker's forearms, the mechanic's improvised part.</li>
 <li><strong>Stay for a minute afterwards.</strong> The second and third frames, once the pose relaxes, are the good ones.</li>
 <li><strong>Never photograph children without a parent's clear agreement</strong>, and do not photograph anyone in distress, in poverty or at prayer as though they are scenery.</li>
 <li><strong>Some places have rules.</strong> Ceremonies, monasteries, memorials and some communities prohibit photography outright. The monk-alms procession in Luang Prabang is silent for a reason, and the tourist with a flash is the story everyone tells afterwards.</li>
@@ -190,7 +190,7 @@ export default [
 
 <h2>The twenty-four exposure discipline</h2>
 <p>A film camera gives you twenty-four frames for a two-week trip, which forces you to look before pressing. You cannot replicate the scarcity on a phone, but you can replicate the behaviour:</p>
-<p>Before each photograph, ask what the subject is and why the frame is this shape. Take three frames, not thirty. Then — and this is the part almost nobody does — <strong>edit that evening</strong>. Ten minutes a day deleting the near-duplicates leaves you with a set you will actually revisit, rather than four thousand files you will never open.</p>
+<p>Before each photograph, ask what the subject is and why the frame is this shape. Take three frames, not thirty. Then - and this is the part almost nobody does - <strong>edit that evening</strong>. Ten minutes a day deleting the near-duplicates leaves you with a set you will actually revisit, rather than four thousand files you will never open.</p>
 
 <h2>Phone settings worth changing once</h2>
 <ul>
@@ -236,11 +236,11 @@ export default [
 <h2>3. Make the money land locally</h2>
 <p>The share of tourist spending that stays in the destination varies enormously. All-inclusive resorts owned abroad, booked through a foreign platform, staffed on imported supply chains, keep very little in the country. A guesthouse, a local guide, a market stall and a family restaurant keep almost all of it.</p>
 <ul>
-<li><strong>Hire local guides.</strong> They know where the water is, which track is passable, and what you are looking at — and it is one of the few good jobs in many remote regions.</li>
+<li><strong>Hire local guides.</strong> They know where the water is, which track is passable, and what you are looking at - and it is one of the few good jobs in many remote regions.</li>
 <li><strong>Eat where the food is bought locally.</strong> Markets, family restaurants, street stalls.</li>
 <li><strong>Buy things made where you are</strong>, from the person who made them. Ask what it is and how long it took. In Guna Yala a hand-stitched mola takes weeks; the price will feel like theft on your side.</li>
 <li><strong>Pay the local price without haggling it to the floor.</strong> The negotiation is often part of the culture; grinding a stallholder down over the equivalent of a coffee is not.</li>
-<li><strong>Tip according to local norms</strong>, and remember that they are norms — expected in the United States, unusual in Japan, rounded up in much of Europe.</li>
+<li><strong>Tip according to local norms</strong>, and remember that they are norms - expected in the United States, unusual in Japan, rounded up in much of Europe.</li>
 </ul>
 
 <h2>4. The animal question, answered simply</h2>
@@ -258,15 +258,15 @@ export default [
 </ul>
 
 <h2>6. Fly less, stay longer</h2>
-<p>Flying is the largest single component of most trips' carbon footprint, and no amount of towel reuse offsets a short-haul weekend. The two changes that count are taking fewer, longer trips, and choosing rail where rail is competitive — which, city centre to city centre, is nearly everywhere under about six hours.</p>
+<p>Flying is the largest single component of most trips' carbon footprint, and no amount of towel reuse offsets a short-haul weekend. The two changes that count are taking fewer, longer trips, and choosing rail where rail is competitive - which, city centre to city centre, is nearly everywhere under about six hours.</p>
 <p>Direct flights beat connections, because take-off and climb dominate fuel use. Economy class has a fraction of the per-passenger footprint of business, simply because of floor area. Offsets are better than nothing and considerably worse than not flying; treat them as a donation, not a licence.</p>
 
 <h2>7. Behave like a guest, because you are one</h2>
-<p>Most of this is not complicated. Learn ten words. Dress as the place expects at religious sites. Ask before photographing. Find out what the rules are — Nyepi in Bali means the airport closes and nobody goes outside for 24 hours, and that applies to you too. Do not climb on things that are sacred, and do not take the lava home, which in Hawaii is considered both disrespectful and unlucky.</p>
+<p>Most of this is not complicated. Learn ten words. Dress as the place expects at religious sites. Ask before photographing. Find out what the rules are - Nyepi in Bali means the airport closes and nobody goes outside for 24 hours, and that applies to you too. Do not climb on things that are sacred, and do not take the lava home, which in Hawaii is considered both disrespectful and unlucky.</p>
 <p>The best short version of this belongs to the outdoors: <em>leave it better than you found it</em>. Take nothing but pictures, leave nothing but footprints.</p>
 
 <h2>What not to worry about</h2>
-<p>Some things get moralised far beyond their impact. Whether you use a paper or digital ticket is irrelevant. Whether you buy a souvenir is irrelevant. Whether you visit a country at all is usually the wrong question — the people who lose most when tourism collapses are the people who depend on it, and staying home is rarely the ethical choice it feels like.</p>
+<p>Some things get moralised far beyond their impact. Whether you use a paper or digital ticket is irrelevant. Whether you buy a souvenir is irrelevant. Whether you visit a country at all is usually the wrong question - the people who lose most when tourism collapses are the people who depend on it, and staying home is rarely the ethical choice it feels like.</p>
 <p>The decisions that matter are: when you go, how long you stay, how you get there, where you sleep, who you pay, and whether you touch the wildlife. Get those six right and you are doing more than almost anyone else on the plane.</p>
 
 <div class="callout"><p><strong>Related reading:</strong> the <a href="/travelstories/fun-facts/">fun facts</a> collection covers Costa Rica's renewable grid, Bhutan's carbon-negative constitution and Rwanda's monthly community work day.</p></div>

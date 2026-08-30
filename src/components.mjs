@@ -54,8 +54,8 @@ const TYPE_CHIPS = [
 export function toolbar(total, entries) {
   /*
    * Only offer a filter for types that are actually on the page. Country pages used to render
-   * all three chips unconditionally, so /destinations/japan/ — which has 10 fun facts, 8
-   * stories and no quotes — showed a "Quotes" chip that filtered the list down to the empty
+   * all three chips unconditionally, so /destinations/japan/ - which has 10 fun facts, 8
+   * stories and no quotes - showed a "Quotes" chip that filtered the list down to the empty
    * state. The page's own navigation led to a dead end on the highest-intent surface on the
    * site. Below two types the group carries no information at all, so it is dropped entirely.
    */

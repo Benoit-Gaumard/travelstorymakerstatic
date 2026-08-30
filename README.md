@@ -1,4 +1,4 @@
-# travelstorymaker.com — static site
+# travelstorymaker.com - static site
 
 A fully static, dependency-free site for <https://www.travelstorymaker.com>, built for fast indexing by Google and a clean AdSense review.
 
@@ -6,7 +6,7 @@ A fully static, dependency-free site for <https://www.travelstorymaker.com>, bui
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Home — presents the site |
+| `/` | Home - presents the site |
 | `/travelstories/` (+ `page/2` … `page/10`) | All 1,000 entries, 100 per page |
 | `/travelstories/stories/`, `/quotes/`, `/fun-facts/` | Collections by type |
 | `/guides/` + 19 article pages | Long-form travel guides |
@@ -41,7 +41,7 @@ Entries live in `src/data/entries-01.mjs` … `entries-10.mjs` as tuples:
 // author: quotes only
 ```
 
-Add a tuple to any file and rebuild — pagination, sitemap, counts, country and region pages all update automatically.
+Add a tuple to any file and rebuild - pagination, sitemap, counts, country and region pages all update automatically.
 
 Long-form guides live in `src/articles/articles-0*.mjs`. Country pages and their intros live in `src/countries.mjs`.
 
@@ -54,7 +54,7 @@ node tools/fetch-assets.mjs fonts    # Inter + Fraunces woff2 into public/assets
 node tools/fetch-assets.mjs photos   # 97 CC / CC0 photos into public/assets/img/photos
 ```
 
-Photos come from Wikimedia Commons via the Openverse API, are self-hosted (never hotlinked), and every one is credited with its licence on `/credits/`. The manifest is `src/generated/photos.json`; delete a key and re-run to replace a single image. Wikimedia only serves a fixed set of thumbnail widths — the fetcher tries 1280, 1024 then 800.
+Photos come from Wikimedia Commons via the Openverse API, are self-hosted (never hotlinked), and every one is credited with its licence on `/credits/`. The manifest is `src/generated/photos.json`; delete a key and re-run to replace a single image. Wikimedia only serves a fixed set of thumbnail widths - the fetcher tries 1280, 1024 then 800.
 
 There are no third-party requests at runtime apart from AdSense and Google's consent/CMP resources.
 

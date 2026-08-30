@@ -96,7 +96,6 @@ export function homePage() {
   const body = [
     '<section class="hero hero--split">',
     '<div class="hero__blobs" aria-hidden="true"><span class="hero__blob hero__blob--a"></span><span class="hero__blob hero__blob--b"></span><span class="hero__blob hero__blob--c"></span></div>',
-    '<div class="hero__grid" aria-hidden="true"></div>',
     '<div class="container hero__inner hero__split">',
     '<div class="hero__copy">',
     '<span class="eyebrow"><span class="dot"></span>Free to read &middot; no account</span>',

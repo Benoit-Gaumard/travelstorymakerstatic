@@ -45,14 +45,19 @@ export function esc(value) {
     .replace(/'/g, '&#39;');
 }
 
+/*
+ * Ordered for the visitor, not for the site. Destinations first, because the confirmed primary
+ * user arrives with a country in mind. "Home" is gone because the logo already goes there, and
+ * seven items was past the point where a menu gets scanned rather than read. "Propose a story"
+ * held the most prominent slot on every page for an action almost no visitor came to perform;
+ * it now lives in the footer and in the call-to-action band, where it is still well linked.
+ */
 const NAV = [
-  { href: '/', label: 'Home' },
-  { href: '/travelstories/', label: 'Stories' },
-  { href: '/guides/', label: 'Guides' },
-  { href: '/blog/', label: 'Blog' },
   { href: '/destinations/', label: 'Destinations' },
+  { href: '/guides/', label: 'Guides' },
+  { href: '/blog/', label: 'Trip reports' },
+  { href: '/travelstories/', label: 'Stories' },
   { href: '/about/', label: 'About' },
-  { href: '/submit/', label: 'Propose a story', cta: true },
 ];
 
 export const SOCIALS = [
@@ -102,8 +107,8 @@ function footerMarkup() {
     '<div class="footer-grid">',
     '<div>',
     '<a class="brand" href="/"><img class="brand__mark" src="/assets/img/logo.svg" alt="" width="34" height="34" loading="lazy" decoding="async"><span>TravelStoryMaker</span></a>',
-    '<p style="font-size:.93rem;max-width:34ch">A free, independent library of travel stories, quotes and fun facts. No account, no paywall, no app.</p>',
-    '<p style="font-size:.93rem"><a href="/submit/">Propose your travel story &rarr;</a></p>',
+    '<p style="font-size:var(--fs-meta);max-width:34ch">A free, independent library of travel stories, quotes and fun facts. No account, no paywall, no app.</p>',
+    '<p style="font-size:var(--fs-meta)"><a href="/submit/">Propose your travel story &rarr;</a></p>',
     socialLinks(),
     '</div>',
     '<div><h2 class="footer-col__title">Read</h2><ul>',

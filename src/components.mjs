@@ -87,7 +87,7 @@ export function toolbar(total, entries) {
     '<input id="entry-search" type="search" placeholder="' + esc(scope) + '&hellip;" autocomplete="off"></div>',
     chips,
     '<button class="chip" type="button" id="entry-shuffle">Surprise me</button>',
-    '<p style="margin:0;font-size:.85rem;color:var(--text-faint);font-weight:600"><span id="entry-count">' + total + '</span> shown</p>',
+    '<p style="margin:0;font-size:var(--fs-meta);color:var(--text-faint);font-weight:600"><span id="entry-count">' + total + '</span> shown</p>',
     '</div>',
     '</div>',
     '</div>',

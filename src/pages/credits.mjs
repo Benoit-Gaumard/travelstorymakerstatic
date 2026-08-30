@@ -30,7 +30,6 @@ export function creditsPage() {
   const body = [
     '<section class="hero hero--compact">',
     '<div class="hero__blobs" aria-hidden="true"><span class="hero__blob hero__blob--a"></span><span class="hero__blob hero__blob--b"></span></div>',
-    '<div class="hero__grid" aria-hidden="true"></div>',
     '<div class="container hero__inner">',
     breadcrumbs(crumbs),
     '<h1>Photo credits</h1>',
@@ -48,9 +47,9 @@ export function creditsPage() {
     '<h3>Our own artwork</h3>',
     '<p>The logo, the icons and the social preview image are generated at build time from code in this repository and are copyright TravelStoryMaker.</p>',
     '</div>',
-    '<h2 style="margin-top:48px;font-size:1.4rem">All images</h2>',
+    '<h2 style="margin-top:48px;font-size:1.3rem">All images</h2>',
     '<div class="credits-list">' + rows + '</div>',
-    '<p style="font-size:.9rem;color:var(--text-faint)">Licence abbreviations: CC0 and Public domain mean no rights reserved. CC BY requires attribution. CC BY-SA requires attribution and that derivative works carry the same licence.</p>',
+    '<p style="font-size:var(--fs-meta);color:var(--text-faint)">Licence abbreviations: CC0 and Public domain mean no rights reserved. CC BY requires attribution. CC BY-SA requires attribution and that derivative works carry the same licence.</p>',
     '</div>',
     '</section>',
   ].join('');

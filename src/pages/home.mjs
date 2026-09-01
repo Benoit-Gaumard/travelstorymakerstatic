@@ -14,22 +14,46 @@ const HERO_ART = {
    * was the single biggest cost in the mobile Lighthouse run. The widths below mirror the
    * breakpoints in .hero__art.
    *
+   * 320w and 400w were added after the 2026-09-01 audit: PageSpeed measured a 560x420 file painted
+   * into a 260x195 box, because 560 was the smallest candidate on offer. A phone at DPR 1 or 1.5
+   * now gets 25KB or 34KB instead of 55KB. Everything was re-encoded at WebP q0.84 at the same
+   * time, which took the whole ladder down another 12-17% with no visible difference on an
+   * illustration of flat shapes.
+   *
    * WebP first, PNG fallback. The .webp files were produced from the .png ones with Chromium's own
    * canvas encoder rather than by adding an image dependency, and they are committed like every
-   * other asset - the build does not generate them. See §6 of handoff.md.
+   * other asset - the build does not generate them. See §6.1 of handoff.md.
    */
   webpSrcset: [
+    '/assets/img/hero-travelstorymaker-320.webp 320w',
+    '/assets/img/hero-travelstorymaker-400.webp 400w',
     '/assets/img/hero-travelstorymaker-560.webp 560w',
     '/assets/img/hero-travelstorymaker-720.webp 720w',
     '/assets/img/hero-travelstorymaker.webp 880w',
   ].join(', '),
   srcset: [
+    '/assets/img/hero-travelstorymaker-320.png 320w',
+    '/assets/img/hero-travelstorymaker-400.png 400w',
     '/assets/img/hero-travelstorymaker-560.png 560w',
     '/assets/img/hero-travelstorymaker-720.png 720w',
     '/assets/img/hero-travelstorymaker.png 880w',
   ].join(', '),
   sizes: '(max-width: 560px) 260px, (max-width: 1000px) 340px, 440px',
 };
+
+/*
+ * The LCP image is discovered by the preload scanner only after the stylesheet has been fetched,
+ * because nothing in the markup above it points at it. PageSpeed measured 1,910ms of "element
+ * render delay" on mobile for exactly that reason. This preload starts the request in the first
+ * round trip instead.
+ *
+ * `type="image/webp"` matters: without it a browser with no WebP support would preload a file it
+ * then cannot use, and download the PNG on top.
+ */
+function heroPreload() {
+  return '<link rel="preload" as="image" type="image/webp" fetchpriority="high"'
+    + ' imagesrcset="' + HERO_ART.webpSrcset + '" imagesizes="' + HERO_ART.sizes + '">';
+}
 
 /** Single illustration that carries the hero. It is the LCP element, so it loads eagerly. */
 function heroArt() {
@@ -211,6 +235,7 @@ export function homePage() {
     title: 'TravelStoryMaker - travel stories, quotes and fun facts',
     description: 'A free library of short travel stories, travel quotes and fun facts about countries around the world, free to read with no account, no app and no paywall.',
     onDark: true,
+    preload: heroPreload(),
     body,
     jsonLd: [
       {

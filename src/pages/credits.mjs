@@ -1,5 +1,5 @@
 import { page, esc, breadcrumbs, breadcrumbJsonLd, SITE } from '../layout.mjs';
-import { ALL_PHOTOS, licenseLabel } from '../photos.mjs';
+import { ALL_PHOTOS, licenseLabel, creditThumb } from '../photos.mjs';
 
 export function creditsPage() {
   const crumbs = [{ href: '/', label: 'Home' }, { href: '/credits/', label: 'Photo credits' }];
@@ -20,7 +20,7 @@ export function creditsPage() {
       : esc(licenseLabel(p));
     return [
       '<div class="credit-row">',
-      '<img src="' + p.src + '" alt="" width="84" height="56" loading="lazy" decoding="async">',
+      creditThumb(p.slot),
       '<div class="credit-row__meta"><strong>' + title + '</strong>' + author + ' &middot; ' + link + '</div>',
       '<div class="credit-row__lic">' + lic + '</div>',
       '</div>',

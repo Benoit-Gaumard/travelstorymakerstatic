@@ -55,17 +55,35 @@ export class Canvas {
 
   /** Paint every pixel with fn(x, y) -> [r,g,b,a] | null */
   paint(fn) {
-    for (let y = 0; y < this.h; y++) {
-      for (let x = 0; x < this.w; x++) {
+    this.paintBox([0, 0, this.w, this.h], fn);
+  }
+
+  /** As paint(), restricted to a bounding box. Cheap when the shape covers a small area. */
+  paintBox(box, fn) {
+    const x0 = Math.max(0, Math.floor(box[0]));
+    const y0 = Math.max(0, Math.floor(box[1]));
+    const x1 = Math.min(this.w, Math.ceil(box[2]));
+    const y1 = Math.min(this.h, Math.ceil(box[3]));
+    for (let y = y0; y < y1; y++) {
+      for (let x = x0; x < x1; x++) {
         const c = fn(x + 0.5, y + 0.5);
         if (c) this.blend(x, y, c[0], c[1], c[2], c[3]);
       }
     }
   }
 
+  /** Copy of the pixel buffer, for reusing an expensive background across many images. */
+  snapshot() {
+    return this.px.slice();
+  }
+
+  /** Restores a buffer taken with snapshot(). */
+  restore(buffer) {
+    this.px.set(buffer);
+  }
+
   /** Fill a shape defined by a signed distance function, with 1px anti-aliasing. */
-  shape(box, sdf, color, alpha) {
-    const a = alpha === undefined ? 1 : alpha;
+  shape(box, sdf, color, alpha) {    const a = alpha === undefined ? 1 : alpha;
     const x0 = Math.max(0, Math.floor(box[0]));
     const y0 = Math.max(0, Math.floor(box[1]));
     const x1 = Math.min(this.w, Math.ceil(box[2]));
@@ -78,7 +96,7 @@ export class Canvas {
     }
   }
 
-  toPNG(withAlpha) {
+  toPNG(withAlpha, level) {
     const alpha = withAlpha !== false;
     const channels = alpha ? 4 : 3;
     const stride = this.w * channels;
@@ -103,7 +121,7 @@ export class Canvas {
     return Buffer.concat([
       Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
       chunk('IHDR', ihdr),
-      chunk('IDAT', deflateSync(raw, { level: 9 })),
+      chunk('IDAT', deflateSync(raw, { level: level === undefined ? 9 : level })),
       chunk('IEND', Buffer.alloc(0)),
     ]);
   }
@@ -146,33 +164,131 @@ export function sdArc(px, py, cx, cy, rx, ry, a0, span) {
 }
 
 /* ---------- geometric stroke font (uppercase subset) ---------- */
-// Unit box: x 0..0.62, y 0..1. s = segment, a = elliptical arc [cx,cy,rx,ry,a0,span], d = dot.
+/*
+ * Unit box: x 0..0.62, y 0..1. s = segment, a = elliptical arc [cx,cy,rx,ry,a0,span], d = dot.
+ *
+ * Angles are in the canvas's own y-down space: 0 is right, PI/2 is *below* centre, -PI/2 above.
+ * `span` sweeps in the direction of increasing angle, which reads clockwise on screen.
+ *
+ * This started as the twelve letters of "TRAVELSTORYMAKER.COM" and nothing else, which was all the
+ * single site-wide Open Graph image needed. It now covers A-Z, 0-9 and the punctuation that shows
+ * up in page titles, because every guide, trip report and country page renders its own title into
+ * its own OG image. Adding a glyph is cheap; adding a font file would not be (zero dependencies,
+ * and the build has no font rasteriser).
+ */
 const PI = Math.PI;
 const GLYPHS = {
-  T: [['s', 0.0, 0.06, 0.62, 0.06], ['s', 0.31, 0.06, 0.31, 1]],
-  R: [['s', 0.06, 0, 0.06, 1], ['s', 0.06, 0, 0.34, 0], ['s', 0.06, 0.5, 0.34, 0.5], ['a', 0.34, 0.25, 0.25, 0.25, -PI / 2, PI], ['s', 0.3, 0.5, 0.58, 1]],
   A: [['s', 0.31, 0, 0.02, 1], ['s', 0.31, 0, 0.6, 1], ['s', 0.13, 0.66, 0.49, 0.66]],
-  V: [['s', 0.02, 0, 0.31, 1], ['s', 0.6, 0, 0.31, 1]],
-  E: [['s', 0.06, 0, 0.06, 1], ['s', 0.06, 0, 0.54, 0], ['s', 0.06, 0.5, 0.46, 0.5], ['s', 0.06, 1, 0.54, 1]],
-  L: [['s', 0.06, 0, 0.06, 1], ['s', 0.06, 1, 0.54, 1]],
-  S: [['a', 0.31, 0.26, 0.25, 0.26, -PI / 6, -1.34 * PI], ['a', 0.31, 0.74, 0.25, 0.26, -PI / 2, 1.34 * PI]],
-  O: [['a', 0.31, 0.5, 0.29, 0.5, 0, 2 * PI]],
-  Y: [['s', 0.02, 0, 0.31, 0.5], ['s', 0.6, 0, 0.31, 0.5], ['s', 0.31, 0.5, 0.31, 1]],
-  M: [['s', 0.05, 1, 0.05, 0], ['s', 0.05, 0, 0.31, 0.56], ['s', 0.57, 0, 0.31, 0.56], ['s', 0.57, 0, 0.57, 1]],
-  K: [['s', 0.06, 0, 0.06, 1], ['s', 0.06, 0.56, 0.55, 0], ['s', 0.21, 0.4, 0.58, 1]],
+  B: [['s', 0.06, 0, 0.06, 1], ['s', 0.06, 0, 0.3, 0], ['s', 0.06, 0.5, 0.32, 0.5], ['s', 0.06, 1, 0.32, 1],
+    ['a', 0.3, 0.25, 0.23, 0.25, -PI / 2, PI], ['a', 0.32, 0.75, 0.25, 0.25, -PI / 2, PI]],
   C: [['a', 0.31, 0.5, 0.29, 0.5, -0.3 * PI, -1.4 * PI]],
+  D: [['s', 0.06, 0, 0.06, 1], ['s', 0.06, 0, 0.26, 0], ['s', 0.06, 1, 0.26, 1], ['a', 0.26, 0.5, 0.3, 0.5, -PI / 2, PI]],
+  E: [['s', 0.06, 0, 0.06, 1], ['s', 0.06, 0, 0.54, 0], ['s', 0.06, 0.5, 0.46, 0.5], ['s', 0.06, 1, 0.54, 1]],
+  F: [['s', 0.06, 0, 0.06, 1], ['s', 0.06, 0, 0.54, 0], ['s', 0.06, 0.5, 0.44, 0.5]],
+  G: [['a', 0.31, 0.5, 0.29, 0.5, -0.3 * PI, -1.4 * PI], ['s', 0.58, 0.52, 0.58, 0.86],
+    ['s', 0.38, 0.52, 0.58, 0.52], ['s', 0.46, 0.92, 0.58, 0.86]],
+  H: [['s', 0.06, 0, 0.06, 1], ['s', 0.56, 0, 0.56, 1], ['s', 0.06, 0.5, 0.56, 0.5]],
+  I: [['s', 0.18, 0, 0.18, 1]],
+  J: [['s', 0.46, 0, 0.46, 0.72], ['a', 0.26, 0.72, 0.2, 0.28, 0, PI]],
+  K: [['s', 0.06, 0, 0.06, 1], ['s', 0.06, 0.56, 0.55, 0], ['s', 0.21, 0.4, 0.58, 1]],
+  L: [['s', 0.06, 0, 0.06, 1], ['s', 0.06, 1, 0.54, 1]],
+  M: [['s', 0.05, 1, 0.05, 0], ['s', 0.05, 0, 0.31, 0.56], ['s', 0.57, 0, 0.31, 0.56], ['s', 0.57, 0, 0.57, 1]],
+  N: [['s', 0.06, 1, 0.06, 0], ['s', 0.06, 0, 0.56, 1], ['s', 0.56, 1, 0.56, 0]],
+  O: [['a', 0.31, 0.5, 0.29, 0.5, 0, 2 * PI]],
+  P: [['s', 0.06, 0, 0.06, 1], ['s', 0.06, 0, 0.3, 0], ['s', 0.06, 0.54, 0.3, 0.54], ['a', 0.3, 0.27, 0.25, 0.27, -PI / 2, PI]],
+  Q: [['a', 0.31, 0.5, 0.29, 0.5, 0, 2 * PI], ['s', 0.38, 0.74, 0.6, 1.04]],
+  R: [['s', 0.06, 0, 0.06, 1], ['s', 0.06, 0, 0.34, 0], ['s', 0.06, 0.5, 0.34, 0.5], ['a', 0.34, 0.25, 0.25, 0.25, -PI / 2, PI], ['s', 0.3, 0.5, 0.58, 1]],
+  S: [['a', 0.31, 0.26, 0.25, 0.26, -PI / 6, -1.34 * PI], ['a', 0.31, 0.74, 0.25, 0.26, -PI / 2, 1.34 * PI]],
+  T: [['s', 0.0, 0.06, 0.62, 0.06], ['s', 0.31, 0.06, 0.31, 1]],
+  U: [['s', 0.06, 0, 0.06, 0.7], ['s', 0.56, 0, 0.56, 0.7], ['a', 0.31, 0.7, 0.25, 0.3, 0, PI]],
+  V: [['s', 0.02, 0, 0.31, 1], ['s', 0.6, 0, 0.31, 1]],
+  W: [['s', 0.02, 0, 0.19, 1], ['s', 0.19, 1, 0.36, 0.36], ['s', 0.36, 0.36, 0.53, 1], ['s', 0.53, 1, 0.7, 0]],
+  X: [['s', 0.04, 0, 0.58, 1], ['s', 0.58, 0, 0.04, 1]],
+  Y: [['s', 0.02, 0, 0.31, 0.5], ['s', 0.6, 0, 0.31, 0.5], ['s', 0.31, 0.5, 0.31, 1]],
+  Z: [['s', 0.05, 0, 0.57, 0], ['s', 0.57, 0, 0.05, 1], ['s', 0.05, 1, 0.57, 1]],
+
+  0: [['a', 0.31, 0.5, 0.26, 0.5, 0, 2 * PI]],
+  1: [['s', 0.24, 0, 0.24, 1], ['s', 0.08, 0.18, 0.24, 0]],
+  2: [['a', 0.31, 0.3, 0.25, 0.3, PI, 1.35 * PI], ['s', 0.42, 0.57, 0.06, 1], ['s', 0.06, 1, 0.57, 1]],
+  3: [['a', 0.3, 0.27, 0.24, 0.27, -0.75 * PI, 1.15 * PI], ['a', 0.3, 0.73, 0.26, 0.27, -0.4 * PI, 1.15 * PI]],
+  4: [['s', 0.45, 0, 0.04, 0.72], ['s', 0.04, 0.72, 0.59, 0.72], ['s', 0.45, 0, 0.45, 1]],
+  5: [['s', 0.54, 0.02, 0.12, 0.02], ['s', 0.12, 0.02, 0.1, 0.44], ['a', 0.31, 0.7, 0.27, 0.3, -0.62 * PI, 1.28 * PI]],
+  6: [['a', 0.31, 0.66, 0.25, 0.34, 0, 2 * PI], ['s', 0.5, 0.04, 0.16, 0.6]],
+  7: [['s', 0.04, 0.04, 0.58, 0.04], ['s', 0.58, 0.04, 0.24, 1]],
+  8: [['a', 0.31, 0.26, 0.23, 0.26, 0, 2 * PI], ['a', 0.31, 0.74, 0.26, 0.26, 0, 2 * PI]],
+  9: [['a', 0.31, 0.34, 0.25, 0.34, 0, 2 * PI], ['s', 0.54, 0.4, 0.2, 0.96]],
+
   '.': [['d', 0.14, 0.98]],
+  ',': [['d', 0.16, 0.98], ['s', 0.16, 0.98, 0.08, 1.14]],
+  '-': [['s', 0.08, 0.53, 0.5, 0.53]],
+  ':': [['d', 0.16, 0.36], ['d', 0.16, 0.94]],
+  "'": [['s', 0.16, 0.02, 0.16, 0.26]],
+  '!': [['s', 0.16, 0, 0.16, 0.72], ['d', 0.16, 0.98]],
+  '?': [['a', 0.28, 0.26, 0.22, 0.26, PI, 1.25 * PI], ['s', 0.4, 0.48, 0.28, 0.72], ['d', 0.28, 0.98]],
+  '/': [['s', 0.06, 1, 0.52, 0]],
   ' ': [],
 };
 
-const ADVANCE = { '.': 0.3, ' ': 0.34 };
+/* Letters whose drawing is narrower or wider than the default 0.62 box get their own advance. */
+const ADVANCE = {
+  '.': 0.3, ',': 0.3, ':': 0.3, "'": 0.26, '!': 0.3, '-': 0.5, ' ': 0.34,
+  I: 0.28, W: 0.72, M: 0.66,
+};
 const advanceOf = (ch) => (ADVANCE[ch] === undefined ? 0.62 : ADVANCE[ch]);
+
+/** Characters the font cannot draw are folded into ones it can, so a title never loses a word. */
+const FOLD = {
+  '&': ' AND ', '’': "'", '‘': "'", '“': '', '”': '', '"': '', '–': '-', '—': '-', '·': '-',
+  '(': '', ')': '', '[': '', ']': '', ';': ',', '|': '-', '+': ' AND ',
+  'À': 'A', 'Â': 'A', 'Ä': 'A', 'Á': 'A', 'Ç': 'C', 'È': 'E', 'É': 'E', 'Ê': 'E', 'Ë': 'E',
+  'Î': 'I', 'Ï': 'I', 'Í': 'I', 'Ô': 'O', 'Ö': 'O', 'Ó': 'O', 'Ù': 'U', 'Û': 'U', 'Ü': 'U', 'Ú': 'U', 'Ñ': 'N',
+};
+
+/** Uppercases and strips anything the stroke font cannot draw. */
+export function sanitizeText(text) {
+  let out = '';
+  for (const ch of String(text).toUpperCase()) {
+    const folded = FOLD[ch] === undefined ? ch : FOLD[ch];
+    for (const c of folded) if (GLYPHS[c] !== undefined) out += c;
+  }
+  return out.replace(/\s+/g, ' ').trim();
+}
 
 export function textWidth(text, size, tracking) {
   const track = tracking === undefined ? 0.1 : tracking;
   let w = 0;
   for (const ch of text.toUpperCase()) w += size * (advanceOf(ch) + track);
   return w - size * track;
+}
+
+/**
+ * Greedy word wrap against a pixel width. Returns null when the text cannot be made to fit in
+ * `maxLines`, so a caller can retry at a smaller size rather than overflow the canvas.
+ * @returns {string[]|null}
+ */
+export function wrapText(text, size, tracking, maxWidth, maxLines) {
+  const words = sanitizeText(text).split(' ').filter(Boolean);
+  const lines = [];
+  let line = '';
+  for (const word of words) {
+    const candidate = line ? line + ' ' + word : word;
+    if (textWidth(candidate, size, tracking) <= maxWidth || !line) {
+      line = candidate;
+    } else {
+      lines.push(line);
+      line = word;
+    }
+  }
+  if (line) lines.push(line);
+  if (!lines.length) return null;
+  if (lines.length > maxLines) return null;
+  /*
+   * Check every line, not just the last. A word wider than maxWidth is force-placed by the `!line`
+   * branch above, and if it lands anywhere but the end, validating only the final line would let
+   * the caller believe this size fits and run the text off the edge of the card.
+   */
+  for (const l of lines) if (textWidth(l, size, tracking) > maxWidth) return null;
+  return lines;
 }
 
 /**

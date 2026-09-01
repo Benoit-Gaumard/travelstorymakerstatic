@@ -117,14 +117,27 @@ export function postIndex(cfg) {
 }
 
 export function postPages(cfg) {
-  return cfg.posts.map(function (post) {
+  return cfg.posts.map(function (post, index) {
     const path = cfg.base + post.slug + '/';
     const crumbs = [
       { href: '/', label: 'Home' },
       { href: cfg.base, label: cfg.label },
       { href: path, label: post.title },
     ];
-    const others = cfg.posts.filter(function (x) { return x.slug !== post.slug; }).slice(0, 3);
+    /*
+     * "Keep reading" used to be `filter(...).slice(0, 3)`, which is the same first three posts on
+     * every page in the section. The result was a hard split: the posts at the top of the array
+     * collected an inbound link from all ten siblings, and the ones at the bottom - Dubai, Moscow,
+     * Slovenia - had exactly one inbound link in the entire site, the section index.
+     *
+     * Taking the next three in a wrapping window instead gives every post exactly three inbound
+     * links from its siblings and costs nothing: the block still shows three real, related posts,
+     * and no post is a link dead end.
+     */
+    const others = [];
+    for (let i = 1; i <= 3 && i < cfg.posts.length; i++) {
+      others.push(cfg.posts[(index + i) % cfg.posts.length]);
+    }
 
     const body = [
       '<article>',

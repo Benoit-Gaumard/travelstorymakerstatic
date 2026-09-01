@@ -54,21 +54,48 @@ function factSheet(country) {
  * 3,400m sits unlinked is exactly the kind of miss this page exists to avoid.
  */
 const COUNTRY_GUIDES = {
-  peru: ['travelling-at-altitude'],
-  bolivia: ['travelling-at-altitude'],
-  nepal: ['travelling-at-altitude'],
-  ecuador: ['travelling-at-altitude'],
-  chile: ['desert-travel'],
-  namibia: ['desert-travel'],
-  morocco: ['desert-travel'],
-  mali: ['desert-travel'],
-  egypt: ['desert-travel'],
-  norway: ['see-the-northern-lights'],
-  greece: ['island-hopping'],
-  philippines: ['island-hopping'],
-  indonesia: ['island-hopping'],
-  japan: ['crossing-a-continent-by-train'],
-  china: ['crossing-a-continent-by-train'],
+  peru: ['travelling-at-altitude', 'responsible-travel'],
+  bolivia: ['travelling-at-altitude', 'packing-light'],
+  nepal: ['travelling-at-altitude', 'packing-light', 'responsible-travel'],
+  ecuador: ['travelling-at-altitude', 'responsible-travel'],
+  chile: ['desert-travel', 'travelling-at-altitude'],
+  namibia: ['desert-travel', 'travel-photographs', 'responsible-travel'],
+  morocco: ['desert-travel', 'eat-where-locals-eat'],
+  mali: ['desert-travel', 'travel-photographs'],
+  egypt: ['desert-travel', 'travel-photographs'],
+  norway: ['see-the-northern-lights', 'travel-photographs', 'shoulder-season'],
+  greece: ['island-hopping', 'shoulder-season', 'eat-where-locals-eat'],
+  philippines: ['island-hopping', 'packing-light'],
+  indonesia: ['island-hopping', 'packing-light', 'eat-where-locals-eat'],
+  japan: ['crossing-a-continent-by-train', 'jet-lag', 'eat-where-locals-eat'],
+  china: ['crossing-a-continent-by-train', 'jet-lag'],
+  /*
+   * Everything below was added to fix a measured problem, not to pad the map: eight guides sat on
+   * exactly one inbound link each - the /guides/ index - because tag matching never reached them
+   * and the essentials fallback only ever promotes the same four. Each entry is a genuine match a
+   * reader planning that country would want, which is the only reason it is here.
+   */
+  australia: ['jet-lag', 'how-to-rent-a-car-while-traveling', 'desert-travel'],
+  'new-zealand': ['how-to-rent-a-car-while-traveling', 'first-solo-trip', 'travel-photographs'],
+  india: ['jet-lag', 'eat-where-locals-eat', 'crossing-a-continent-by-train'],
+  thailand: ['island-hopping', 'eat-where-locals-eat', 'first-solo-trip'],
+  vietnam: ['eat-where-locals-eat', 'first-solo-trip', 'packing-light'],
+  'united-states': ['how-to-rent-a-car-while-traveling', 'desert-travel', 'jet-lag'],
+  canada: ['see-the-northern-lights', 'how-to-rent-a-car-while-traveling', 'crossing-a-continent-by-train'],
+  italy: ['shoulder-season', 'eat-where-locals-eat', 'travel-photographs'],
+  spain: ['shoulder-season', 'eat-where-locals-eat'],
+  portugal: ['shoulder-season', 'first-solo-trip', 'eat-where-locals-eat'],
+  france: ['shoulder-season', 'eat-where-locals-eat', 'crossing-a-continent-by-train'],
+  turkiye: ['eat-where-locals-eat', 'shoulder-season'],
+  mexico: ['eat-where-locals-eat', 'first-solo-trip'],
+  tanzania: ['responsible-travel', 'travelling-at-altitude', 'travel-photographs'],
+  'south-africa': ['responsible-travel', 'how-to-rent-a-car-while-traveling', 'travel-photographs'],
+  ethiopia: ['responsible-travel', 'travelling-at-altitude'],
+  antarctica: ['responsible-travel', 'travel-photographs', 'packing-light'],
+  brazil: ['responsible-travel', 'eat-where-locals-eat'],
+  colombia: ['first-solo-trip', 'eat-where-locals-eat'],
+  argentina: ['travelling-at-altitude', 'shoulder-season'],
+  england: ['shoulder-season', 'crossing-a-continent-by-train'],
 };
 
 /*

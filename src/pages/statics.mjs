@@ -1,4 +1,4 @@
-import { page, esc, breadcrumbs, breadcrumbJsonLd, adSlot, SITE, AUTHOR } from '../layout.mjs';
+import { page, esc, breadcrumbs, breadcrumbJsonLd, adSlot, SITE, AUTHOR, hasAnalytics } from '../layout.mjs';
 import { COUNT_BY_TYPE } from '../data/index.mjs';
 import { FAQS } from './home.mjs';
 
@@ -105,12 +105,13 @@ export function contactPage() {
     crumb: 'Contact',
     h1: 'Contact us',
     lede: 'Corrections, permissions, advertising questions or just a fact we got wrong - this is where it goes.',
-    title: 'Contact TravelStoryMaker',
-    description: 'Get in touch with TravelStoryMaker about corrections, content permissions, advertising or privacy requests.',
+    title: 'Contact TravelStoryMaker - corrections and permissions',
+    description: 'Email TravelStoryMaker about a factual correction, permission to reuse an entry, a privacy request under GDPR or CCPA, advertising, or a story worth adding.',
     content: [
       '<h2>Email</h2>',
       '<p>The fastest way to reach us is by email:</p>',
       '<div class="callout"><p style="font-size:1.15rem"><strong><a href="mailto:' + SITE.email + '">' + SITE.email + '</a></strong></p><p>We read everything and reply to most things within a few working days.</p></div>',
+      '<p>There is no contact form, and there is no newsletter sign-up hiding behind this page. One address, read by the person who writes the site.</p>',
       '<h2>What to include</h2>',
       '<ul>',
       '<li><strong>Corrections</strong> - the entry number (shown as #123 on each card), the page it appears on, and ideally a source we can check.</li>',
@@ -121,13 +122,17 @@ export function contactPage() {
       '</ul>',
       '<h2>Response times</h2>',
       '<p>We are a small team and this is not a 24-hour help desk. Confirmed factual errors are prioritised and usually corrected within a week. Everything else gets answered in the order it arrives.</p>',
+      '<p>If a correction is straightforward and you have given us a source, the page itself is usually updated before the reply is sent - so you may see the fix land first.</p>',
       '<h2>Reporting a copyright concern</h2>',
       '<p>If you believe something on this site infringes your rights, email us with the exact URL, the entry number, a description of the work concerned and your contact details. We investigate every notice and remove material where a claim is substantiated.</p>',
+      '<p>Photographs are used under the licences recorded on the <a href="/credits/">photo credits</a> page, which names the source and licence for every image. If an attribution there is wrong or incomplete, that is worth an email too, and it is quick to fix.</p>',
       '<h2>Reporting a security issue</h2>',
       '<p>If you have found a security problem with the site itself, email us with the URL and the steps to reproduce it, and please give us a reasonable chance to fix it before publishing anything. Machine-readable contact details are published at <a href="/.well-known/security.txt">/.well-known/security.txt</a> following RFC 9116.</p>',
       '<p>For context: this is a static site. There is no login, no database and no account data, so there is nothing here holding personal information about you beyond the emails you choose to send us.</p>',
+      '<h2>Writing for the site</h2>',
+      '<p>Reader submissions have their own route: the <a href="/submit/">propose a story</a> page explains what makes a good entry, how long it should be, and what happens after you send it. Sending a story to the address above still works, but the guidelines there will save you a round trip.</p>',
       '<h2>Before you write</h2>',
-      '<p>A quick look at the <a href="/faq/">FAQ</a> answers most questions about how the site works, where the content comes from and what you may reuse.</p>',
+      '<p>A quick look at the <a href="/faq/">FAQ</a> answers most questions about how the site works, where the content comes from and what you may reuse. How we source, check and correct entries is set out in the <a href="/editorial-policy/">editorial policy</a>.</p>',
     ].join(''),
     jsonLd: [{
       '@context': 'https://schema.org',
@@ -291,13 +296,18 @@ export function privacyPage() {
       '<h3>c. Information collected by advertising partners</h3>',
       '<p>We display advertising through Google AdSense. Google and its partners may set and read cookies or similar identifiers on your device to serve and measure ads. See section 4.</p>',
       '<h3>d. Local storage</h3>',
-      '<p>We store nothing of our own in your browser. The Site sets no cookies and writes no local storage values itself. Any cookie or identifier present will have been set by Google for advertising, as described in section 4.</p>',
+      hasAnalytics()
+        ? '<p>We store nothing of our own in your browser. The Site sets no cookies of its own. Cookies or identifiers that are present will have been set by Google - for advertising, as described in section 4, or for audience measurement, as described in section 4a.</p>'
+        : '<p>We store nothing of our own in your browser. The Site sets no cookies and writes no local storage values itself. Any cookie or identifier present will have been set by Google for advertising, as described in section 4.</p>',
       '<h2>3. Why we process data and on what legal basis</h2>',
       '<ul>',
       '<li><strong>To deliver the Site</strong> - necessary for the performance of providing the service you requested, and our legitimate interest in operating a working website.</li>',
       '<li><strong>To keep the Site secure</strong> - our legitimate interest in preventing abuse, fraud and attacks.</li>',
       '<li><strong>To answer your messages</strong> - our legitimate interest in responding to correspondence.</li>',
       '<li><strong>To show advertising</strong> - consent, where consent is required in your jurisdiction; otherwise our legitimate interest in funding free content. Non-personalised advertising may be shown where consent is refused.</li>',
+      hasAnalytics()
+        ? '<li><strong>To measure audience</strong> - consent, where consent is required in your jurisdiction. No analytics cookie is set in the European Economic Area, the United Kingdom or Switzerland unless you agree to it.</li>'
+        : '',
       '</ul>',
       '<h2>4. Advertising and Google AdSense</h2>',
       '<p>This Site is funded by advertising served by Google AdSense (publisher ID pub-6636684537203477). You should know the following:</p>',
@@ -309,6 +319,12 @@ export function privacyPage() {
       '<li>Google\'s own practices are described in the <a href="https://policies.google.com/technologies/partner-sites" rel="nofollow noopener" target="_blank">Google privacy and terms page for partner sites</a>.</li>',
       '</ul>',
       '<p>If you are in the European Economic Area, the United Kingdom or Switzerland, a consent message is presented before personalised advertising cookies are used, in line with Google\'s EU user consent policy. It is served by Google\'s certified consent management platform, and you can change your choice at any time by reopening that message.</p>',
+      hasAnalytics()
+        ? '<h2>4a. Audience measurement</h2>'
+          + '<p>We use Google Analytics 4 (measurement ID ' + esc(SITE.analyticsId) + ') to understand which pages are read and how visitors arrive, so that we can decide what to write next. It reports on aggregate traffic; we do not use it to identify individuals, and we do not send names, email addresses or any other personal identifier to it.</p>'
+          + '<p>Google Consent Mode is enabled. In the European Economic Area, the United Kingdom and Switzerland, analytics storage is denied by default: until you accept through the consent message, no analytics cookie is written and measurement is limited to cookieless signals. If you refuse, it stays that way.</p>'
+          + '<p>Google describes its own handling of this data in the <a href="https://policies.google.com/privacy" rel="nofollow noopener" target="_blank">Google privacy policy</a>. You can also block collection entirely with the <a href="https://tools.google.com/dlpage/gaoptout" rel="nofollow noopener" target="_blank">Google Analytics opt-out browser add-on</a>.</p>'
+        : '',
       '<h2>5. What we do not do</h2>',
       '<ul>',
       '<li>We do not sell or rent personal data.</li>',
@@ -373,6 +389,11 @@ export function cookiesPage() {
       '<p>Common identifiers in this category include Google\'s DoubleClick cookie and the __gads and __gpi cookies. Their lifetimes and precise purposes are set by Google, not by us, and are described in <a href="https://policies.google.com/technologies/partner-sites" rel="nofollow noopener" target="_blank">Google\'s policy for partner sites</a>.</p>',
       '<h3>Fonts</h3>',
       '<p>Typefaces are served from this site\'s own domain, not from Google Fonts or any other font service. Loading a page therefore makes no request to a third-party font server and discloses your IP address to no one but our host and, if advertising is shown, Google.</p>',
+      hasAnalytics()
+        ? '<h3>Google Analytics</h3>'
+          + '<p>We use Google Analytics 4 to count visits and see which pages are read. Where it is allowed to set them, it writes cookies beginning _ga to tell one browser from another across visits. It does not tell us who you are.</p>'
+          + '<p>Consent Mode is enabled, so in the European Economic Area, the United Kingdom and Switzerland these cookies are not written unless you accept them in the consent message below. Refuse, and measurement falls back to cookieless signals.</p>'
+        : '',
       '<h2>Consent</h2>',
       '<p>If you are in the European Economic Area, the United Kingdom or Switzerland, a consent message is shown before advertising cookies that require consent are used. It is provided by Google\'s certified consent management platform. You can accept, refuse or change your preferences at any time by reopening that message. If you refuse, you will still see advertising, but it will be non-personalised - that is, based on the page you are reading rather than on a profile.</p>',
       '<h2>How to control cookies</h2>',
@@ -383,7 +404,9 @@ export function cookiesPage() {
       '<li><strong>Our own storage value</strong> - clear your browser\'s site data for this domain and it is gone.</li>',
       '</ul>',
       '<h2>Changes</h2>',
-      '<p>If we add analytics or another third-party service, this page is updated before it goes live. The date at the top tells you when it last changed.</p>',
+      hasAnalytics()
+        ? '<p>If we add another third-party service, this page is updated before it goes live. The date at the top tells you when it last changed.</p>'
+        : '<p>If we add analytics or another third-party service, this page is updated before it goes live. The date at the top tells you when it last changed.</p>',
       '<h2>More detail</h2>',
       '<p>See our <a href="/privacy/">privacy policy</a> for the wider picture, or <a href="/contact/">get in touch</a> with a specific question.</p>',
     ].join(''),

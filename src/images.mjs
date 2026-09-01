@@ -207,7 +207,7 @@ export function ogImage() {
   c.shape([bx, ruleY - 3, bx + bs + 30 + ruleW, ruleY + 3],
     (px, py) => Math.max(Math.abs(py - ruleY) - 1.2, Math.max(bx - px, px - (bx + bs + 30 + ruleW))), [255, 255, 255], 0.28);
 
-  return c.toPNG(false);
+  return c.toPNG(false, undefined, true);
 }
 
 /* ---------- per-page Open Graph cards ---------- */

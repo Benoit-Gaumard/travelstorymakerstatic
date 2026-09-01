@@ -96,34 +96,110 @@ export class Canvas {
     }
   }
 
-  toPNG(withAlpha, level) {
+  toPNG(withAlpha, level, tryFilters) {
     const alpha = withAlpha !== false;
     const channels = alpha ? 4 : 3;
     const stride = this.w * channels;
-    const raw = Buffer.alloc((stride + 1) * this.h);
-    for (let y = 0; y < this.h; y++) {
-      const row = y * (stride + 1);
-      raw[row] = 0;
+    const h = this.h;
+
+    /* Unfiltered pixel data, one contiguous block, no per-scanline filter byte. */
+    const pixels = Buffer.alloc(stride * h);
+    for (let y = 0; y < h; y++) {
+      const row = y * stride;
       for (let x = 0; x < this.w; x++) {
         const s = (y * this.w + x) * 4;
-        const d = row + 1 + x * channels;
-        raw[d] = clamp(Math.round(this.px[s]), 0, 255);
-        raw[d + 1] = clamp(Math.round(this.px[s + 1]), 0, 255);
-        raw[d + 2] = clamp(Math.round(this.px[s + 2]), 0, 255);
-        if (alpha) raw[d + 3] = clamp(Math.round(this.px[s + 3]), 0, 255);
+        const d = row + x * channels;
+        pixels[d] = clamp(Math.round(this.px[s]), 0, 255);
+        pixels[d + 1] = clamp(Math.round(this.px[s + 1]), 0, 255);
+        pixels[d + 2] = clamp(Math.round(this.px[s + 2]), 0, 255);
+        if (alpha) pixels[d + 3] = clamp(Math.round(this.px[s + 3]), 0, 255);
       }
     }
+
+    /**
+     * Applies PNG filter `type` to one scanline (spec section 9.2). `type` -1 means "choose per
+     * row" and is handled by the caller.
+     */
+    const filterRow = function (out, at, y, type) {
+      const row = y * stride;
+      const up = row - stride;
+      for (let i = 0; i < stride; i++) {
+        const raw = pixels[row + i];
+        const a = i >= channels ? pixels[row + i - channels] : 0;
+        const b = y > 0 ? pixels[up + i] : 0;
+        const c = y > 0 && i >= channels ? pixels[up + i - channels] : 0;
+        let v;
+        if (type === 0) v = raw;
+        else if (type === 1) v = raw - a;
+        else if (type === 2) v = raw - b;
+        else if (type === 3) v = raw - ((a + b) >> 1);
+        else {
+          const p = a + b - c;
+          const pa = Math.abs(p - a);
+          const pb = Math.abs(p - b);
+          const pc = Math.abs(p - c);
+          v = raw - (pa <= pb && pa <= pc ? a : pb <= pc ? b : c);
+        }
+        out[at + i] = v & 0xff;
+      }
+    };
+
+    /** Builds the full filtered stream for one whole-image filter type. */
+    const encodeWith = function (type) {
+      const out = Buffer.alloc((stride + 1) * h);
+      for (let y = 0; y < h; y++) {
+        const at = y * (stride + 1);
+        out[at] = type;
+        filterRow(out, at + 1, y, type);
+      }
+      return out;
+    };
+
     const ihdr = Buffer.alloc(13);
     ihdr.writeUInt32BE(this.w, 0);
     ihdr.writeUInt32BE(this.h, 4);
     ihdr[8] = 8;
     ihdr[9] = alpha ? 6 : 2;
-    return Buffer.concat([
-      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
-      chunk('IHDR', ihdr),
-      chunk('IDAT', deflateSync(raw, { level: level === undefined ? 9 : level })),
-      chunk('IEND', Buffer.alloc(0)),
-    ]);
+    const build = function (idat) {
+      return Buffer.concat([
+        Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+        chunk('IHDR', ihdr),
+        chunk('IDAT', idat),
+        chunk('IEND', Buffer.alloc(0)),
+      ]);
+    };
+
+    /*
+     * Row filtering turns pixels into deltas so deflate has something to compress. Which filter
+     * wins is entirely picture-dependent, so this measures rather than guesses.
+     *
+     * Adaptive filtering - choosing each row's filter by the minimum-sum-of-absolute-differences
+     * heuristic in the PNG spec, section 12.8 - was tried and rejected. On the one image that gets
+     * filtered it produced 376KB against Sub's 337KB, costing 416ms of filtering plus 10.0s of
+     * deflate against Sub's 36ms plus 5.4s: worse on both axes. The heuristic optimises each row in
+     * isolation, which is the wrong objective, because deflate wants rows that resemble each other
+     * and mixing filter types row to row destroys the cross-row matches it lives on.
+     *
+     * So: encode with filter 0 and with Sub, keep whichever deflates smaller. Filter 0 is always a
+     * candidate, so the result can never be larger than what this encoder produced before -
+     * tools/check-png-invariant.mjs asserts that, and tools/bench-png.mjs reproduces the numbers.
+     * On og-image.png Sub wins and the file drops from 454KB to 337KB, 26% off the most-shared
+     * asset on the site.
+     *
+     * It is opt-in because the win is not universal. The flat-colour share cards come out
+     * byte-identical under filter 0 and larger under everything else - their scanlines already
+     * repeat, so deflate matches whole rows - and enabling this for all 89 of them cost 87 seconds
+     * of build time for zero bytes saved. Only ogImage() asks for it.
+     */
+    const zopts = { level: level === undefined ? 9 : level };
+    if (!tryFilters) return build(deflateSync(encodeWith(0), zopts));
+
+    let bestIdat = null;
+    for (const raw of [encodeWith(0), encodeWith(1)]) {
+      const z = deflateSync(raw, zopts);
+      if (!bestIdat || z.length < bestIdat.length) bestIdat = z;
+    }
+    return build(bestIdat);
   }
 }
 

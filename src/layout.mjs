@@ -24,6 +24,16 @@ export const SITE = {
     inArticle: '',
     articleEnd: '',
   },
+  /*
+   * GA4 measurement ID, in the form 'G-XXXXXXXXXX'. Empty is a supported state and the current
+   * one: no tag is emitted, no third-party request is made, and the analytics paragraphs of
+   * /privacy/ and /cookies/ describe the site as analytics-free.
+   *
+   * Put a real ID here and rebuild - the tag, the Consent Mode defaults, the preconnect, and the
+   * policy wording all switch on together. Never put an example or a staging ID here: this value
+   * ships to every page in production.
+   */
+  analyticsId: '',
   email: 'travelstorymaker@gmail.com',
   locale: 'en',
   /*
@@ -54,6 +64,14 @@ export const AUTHOR = {
 
 export function fmt(n) {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+/**
+ * True when a real GA4 measurement ID is configured. Page modules use this so that the analytics
+ * wording in /privacy/ and /cookies/ can never claim a tag the build did not actually emit.
+ */
+export function hasAnalytics() {
+  return /^G-[A-Z0-9]{4,}$/.test(String(SITE.analyticsId || '').trim());
 }
 
 export function esc(value) {
@@ -326,10 +344,16 @@ export function page(opts) {
     monetised ? '<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>' : '',
     monetised ? '<link rel="preconnect" href="https://fundingchoicesmessages.google.com" crossorigin>' : '',
     monetised ? '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' : '',
+    /*
+     * Analytics is not monetisation: the tag ships on every page, including the unmonetised ones,
+     * so this preconnect is gated on the measurement ID alone rather than on `monetised`.
+     */
+    hasAnalytics() ? '<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>' : '',
     opts.preload || '',
     fontPreloads(),
     '<style>' + fontFaceCss() + '</style>',
     '<link rel="stylesheet" href="/assets/css/style.css">',
+    analyticsLoader(),
     monetised ? adsLoader() : '',
     jsonLd,
     '</head>',
@@ -345,6 +369,58 @@ export function page(opts) {
     '</html>',
     '',
   ].join('\n');
+}
+
+/*
+ * Google Analytics 4, consent-aware and off the critical path.
+ *
+ * Returns an empty string unless SITE.analyticsId holds a real G- measurement ID, so the default
+ * build ships no analytics at all rather than a broken or example tag.
+ *
+ * Two parts, and the order matters:
+ *
+ *  1. An inline stub that creates dataLayer and sets Consent Mode v2 *defaults* before any Google
+ *     script exists. Storage is denied by default across the EEA, the UK and Switzerland, so no
+ *     analytics or advertising cookie is written there until Google's certified CMP - the same one
+ *     AdSense already loads - calls consent update with the visitor's choice. Outside those
+ *     regions the defaults are granted, matching how the ad stack already behaves. Setting the
+ *     defaults inline is mandatory: a default that arrives after gtag.js has run is ignored, which
+ *     is the usual way a "consent-gated" tag turns out not to be gated at all.
+ *
+ *  2. The gtag.js request itself, deferred exactly like adsLoader() below, because it is a third
+ *     party competing with the stylesheet, the font and the LCP image for a phone's first
+ *     connections. Deferring costs nothing in accuracy: the page_view is queued in dataLayer at
+ *     parse time and sent as soon as the library arrives.
+ *
+ * `ads_data_redaction` keeps ad clicks cookieless while consent is denied. There is no route-change
+ * page_view handler because there are no client-side routes - every page is a document load.
+ */
+function analyticsLoader() {
+  if (!hasAnalytics()) return '';
+  const id = String(SITE.analyticsId).trim();
+  const eea = ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IS',
+    'IE', 'IT', 'LV', 'LI', 'LT', 'LU', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
+    'GB', 'CH'];
+  const js = [
+    'window.dataLayer=window.dataLayer||[];',
+    'function gtag(){dataLayer.push(arguments);}',
+    'gtag("consent","default",{region:' + JSON.stringify(eea) + ',',
+    'ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied",',
+    'analytics_storage:"denied",wait_for_update:500});',
+    'gtag("consent","default",{ad_storage:"granted",ad_user_data:"granted",',
+    'ad_personalization:"granted",analytics_storage:"granted"});',
+    'gtag("set","ads_data_redaction",true);',
+    'gtag("js",new Date());',
+    'gtag("config","' + id + '");',
+    '(function(){var done=false;function go(){if(done)return;done=true;',
+    'var s=document.createElement("script");s.async=true;',
+    's.src="https://www.googletagmanager.com/gtag/js?id=' + id + '";',
+    'document.head.appendChild(s);}',
+    'if(document.readyState==="complete")go();',
+    'else window.addEventListener("load",go,{once:true});',
+    'setTimeout(go,3000);})();',
+  ].join('');
+  return '<script>' + js + '</script>';
 }
 
 /*

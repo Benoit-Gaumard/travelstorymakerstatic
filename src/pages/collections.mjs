@@ -41,26 +41,61 @@ function pageRoutes(entries) {
   ].join('');
 }
 
-/** Builds an intro sentence from the actual contents of one page, so no two pages repeat. */
-function pageSummary(slice, pageNo, totalPages) {
+/** The raw ingredients of a page's own summary: what is on it, and where those entries are set. */
+function pageParts(slice) {
   const counts = slice.reduce(function (acc, e) { acc[e.type] = (acc[e.type] || 0) + 1; return acc; }, {});
-  const parts = [
+  const countsText = [
     counts.story ? counts.story + ' ' + (counts.story === 1 ? 'story' : 'stories') : '',
     counts.fact ? counts.fact + ' fun ' + (counts.fact === 1 ? 'fact' : 'facts') : '',
     counts.quote ? counts.quote + ' ' + (counts.quote === 1 ? 'quote' : 'quotes') : '',
-  ].filter(Boolean);
+  ].filter(Boolean).join(', ');
 
   const places = [];
   slice.forEach(function (e) {
     const tail = e.place.includes(',') ? e.place.split(',').pop().trim() : e.place.trim();
     if (tail && tail !== 'World' && !places.includes(tail)) places.push(tail);
   });
-  const highlights = places.slice(0, 6).join(', ');
+  return { countsText: countsText, places: places };
+}
 
-  return parts.join(', ') + ' on this page. It covers '
+/** Builds an intro sentence from the actual contents of one page, so no two pages repeat. */
+function pageSummary(slice, pageNo, totalPages) {
+  const parts = pageParts(slice);
+  const highlights = parts.places.slice(0, 6).join(', ');
+  return parts.countsText + ' on this page. It covers '
     + (highlights || 'destinations around the world')
-    + (places.length > 6 ? ' and ' + (places.length - 6) + ' other places' : '')
+    + (parts.places.length > 6 ? ' and ' + (parts.places.length - 6) + ' other places' : '')
     + (totalPages > 1 ? '. Page ' + pageNo + ' of ' + totalPages + '.' : '.');
+}
+
+/*
+ * The on-page summary used to double as the meta description on pages 2+. It reads correctly but is
+ * built only from counts and place names, so on a page whose entries carry region names rather than
+ * towns it collapsed to 88 characters - "100 quotes on this page. It covers Americas, Europe, Asia,
+ * Africa, Oceania. Page 2 of 2." - which gives Google little to work with and makes every quotes
+ * page read alike.
+ *
+ * Naming the collection makes each page distinct. The place list is then fitted to a budget rather
+ * than fixed at six, because the collection name and page numbers vary in length: pinning six
+ * places pushed the stories pages to 188 characters, well past what Google renders, and
+ * fitDescription() could not rescue them without cutting below its 120-character floor.
+ */
+const META_TARGET = 158;
+
+function pageMetaDescription(slice, collection, pageNo, totalPages) {
+  const parts = pageParts(slice);
+  const tail = ' Page ' + pageNo + ' of ' + totalPages + ' of ' + collection
+    + ', free to read with no account.';
+  const compose = function (n) {
+    const places = parts.places.slice(0, n);
+    const where = places.length ? ' from ' + places.join(', ') : ' from destinations around the world';
+    return parts.countsText + ' on this page,' + where + '.' + tail;
+  };
+  for (let n = Math.min(6, parts.places.length); n > 1; n--) {
+    const text = compose(n);
+    if (text.length <= META_TARGET) return text;
+  }
+  return compose(1);
 }
 
 /**
@@ -78,6 +113,7 @@ function collection(opts) {
     const suffix = p === 1 ? '' : ' - page ' + p + ' of ' + totalPages;
     const crumbs = opts.crumbs.concat(p === 1 ? [] : [{ href: path, label: 'Page ' + p }]);
     const summary = pageSummary(slice, p, totalPages);
+    const metaDescription = p === 1 ? opts.description : pageMetaDescription(slice, opts.h1, p, totalPages);
     const heading = p === 1 ? opts.h1 : opts.h1 + ', part ' + p;
     const lede = p === 1 ? opts.lede : summary;
 
@@ -112,7 +148,7 @@ function collection(opts) {
       html: page({
         path,
         title: opts.title + suffix,
-        description: p === 1 ? opts.description : summary,
+        description: metaDescription,
         onDark: true,
         body,
         jsonLd: [
@@ -122,7 +158,7 @@ function collection(opts) {
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
             name: heading,
-            description: p === 1 ? opts.description : summary,
+            description: metaDescription,
             url: SITE.url + path,
             isPartOf: { '@type': 'WebSite', name: SITE.name, url: SITE.url + '/' },
           },

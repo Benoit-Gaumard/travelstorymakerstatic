@@ -124,8 +124,15 @@ p { margin: 0 0 1.1em; }
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   border-bottom: 1px solid var(--line);
 }
+/*
+ * 0.8, not 0.62. The header is sticky and translucent, so once the page scrolls the dark bar sits
+ * over white content: at 0.62 the effective background became rgb(101,104,113) and the nav links -
+ * rgba(255,255,255,.78) - measured 4.14:1, with the current page's white link at 3.95:1. Both fail
+ * AA, and both are invisible if contrast is only checked at scroll position zero, where the bar is
+ * still over the dark hero. At 0.8 the worst case is rgb(57,60,72): 7.2:1 and 8.9:1.
+ */
 .site-header--on-dark {
-  background: rgba(7, 11, 26, 0.62);
+  background: rgba(7, 11, 26, 0.8);
   border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 .site-header .container { display: flex; align-items: center; gap: 18px; }
@@ -422,7 +429,12 @@ p { margin: 0 0 1.1em; }
 }
 .entry[data-type='quote'] .badge { background: rgba(168,85,247,.14); color: #6d28d9; }
 .entry[data-type='fact'] .badge { background: rgba(16,185,129,.14); color: #047857; }
-.entry[data-type='story'] .badge { background: rgba(255,122,69,.16); color: #c2410c; }
+/*
+ * orange-800, not orange-700. #c2410c on the story badge's rgba(255,122,69,.16) wash measured
+ * 4.46:1 against the 4.5 required at 11.5px/800 - a near miss, but it repeats 29 times on a single
+ * listing page. #9a3412 is 6.2:1 and reads as the same colour.
+ */
+.entry[data-type='story'] .badge { background: rgba(255,122,69,.16); color: #9a3412; }
 .entry__num { margin-left: auto; font-size: var(--fs-label); font-weight: 700; color: var(--text-faint); font-variant-numeric: tabular-nums; }
 .entry__title { font-size: 1.04rem; font-weight: 800; margin: 0; letter-spacing: -0.015em; }
 .entry__text { margin: 0; color: var(--text-soft); font-size: var(--fs-body-sm); }
@@ -557,6 +569,18 @@ details.faq p { color: var(--text-soft); margin: 0 0 16px; }
 .submit-final__note { font-size: var(--fs-meta); color: var(--text-faint); margin-bottom: 0; }
 
 /* ---------- Photos ---------- */
+/*
+ * Every photo is wrapped in <picture> to offer WebP. `display: contents` removes the wrapper from
+ * layout entirely, so the <img> stays the direct child of .hero__photo, .post-card__media and the
+ * .credit-row grid and every rule below still applies to it unchanged.
+ *
+ * The `source` rule is not redundant. With `display: contents` on the parent, the <source> element
+ * is promoted into the parent's layout and becomes a real grid item: the credits page renders a
+ * three-column grid, so every row gained a fourth child and the licence badge wrapped onto a second
+ * line. Hiding <source> costs nothing - image selection is done by the HTML algorithm, not by CSS.
+ */
+picture { display: contents; }
+picture source { display: none; }
 .hero--photo { background: #070b1a; }
 .hero__photo { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
 .hero__photo img { width: 100%; height: 100%; object-fit: cover; opacity: 0.42; }

@@ -1,5 +1,5 @@
 // Generates the Open Graph image and all favicons as real PNG files at build time.
-import { Canvas, hex, sdSegment, sdRoundRect, drawText, textWidth, encodeICO, clamp, mix } from './png.mjs';
+import { Canvas, hex, sdSegment, sdRoundRect, drawText, textWidth, wrapText, encodeICO, clamp, mix } from './png.mjs';
 
 function stopsAt(t, stops) {
   let a = stops[0];
@@ -210,8 +210,144 @@ export function ogImage() {
   return c.toPNG(false);
 }
 
-export function iconPNG(size) {
-  const c = new Canvas(size, size);
+/* ---------- per-page Open Graph cards ---------- */
+
+/*
+ * One generic /og-image.png was shared by the homepage, every guide, every trip report and every
+ * country page, so a link to "How to book a cheap flight" and a link to "Japan" arrived in a feed
+ * looking like the same link. These cards carry the page's own title.
+ *
+ * The design is deliberately flat - two-stop gradient, one soft glow, one ridge silhouette, no
+ * per-pixel noise. That is not an aesthetic decision: the detailed painterly card used for the
+ * site-wide image takes 790ms and deflates to 465KB, which is fine once per build and absurd 70
+ * times. A flat card reuses a cached background buffer and compresses to a fraction of that.
+ *
+ * Text is drawn with the stroke font in png.mjs, so no font file is involved and the result is
+ * identical on every machine.
+ */
+const OG_W = 1200;
+const OG_H = 630;
+
+const THEMES = {
+  guide: { stops: [[0, '#061033'], [0.55, '#1b2a6b'], [1, '#3d2a72']], glow: '#2f84ff', accent: [147, 197, 253] },
+  trip: { stops: [[0, '#0a0722'], [0.5, '#3a1d5c'], [1, '#7a2f4a']], glow: '#ff7a45', accent: [253, 186, 140] },
+  country: { stops: [[0, '#04121f'], [0.55, '#0d3b52'], [1, '#1f5f5a']], glow: '#22d3ee', accent: [153, 246, 228] },
+  library: { stops: [[0, '#0a0620'], [0.55, '#2b1a5e'], [1, '#5b2b7a']], glow: '#a855f7', accent: [216, 180, 254] },
+  page: { stops: [[0, '#070b1a'], [0.55, '#16204a'], [1, '#2c2360']], glow: '#7c3aed', accent: [191, 199, 255] },
+};
+
+const baseCache = new Map();
+
+/** Paints the reusable background for a theme once and keeps the pixel buffer. */
+function themeBase(name) {
+  if (baseCache.has(name)) return baseCache.get(name);
+  const theme = THEMES[name] || THEMES.page;
+  const c = new Canvas(OG_W, OG_H);
+  const glow = hex(theme.glow);
+
+  c.paint(function (x, y) {
+    const t = clamp((x / OG_W) * 0.3 + (y / OG_H) * 0.7, 0, 1);
+    const rgb = stopsAt(t, theme.stops);
+    const g1 = Math.max(0, 1 - Math.hypot(x - 1010, y - 96) / 620);
+    const g2 = Math.max(0, 1 - Math.hypot(x - 40, y - 620) / 520);
+    const k1 = g1 * g1 * 0.5;
+    const k2 = g2 * g2 * 0.22;
+    return [
+      mix(rgb[0], glow[0], k1) + k2 * 30,
+      mix(rgb[1], glow[1], k1) + k2 * 20,
+      mix(rgb[2], glow[2], k1) + k2 * 40,
+      1,
+    ];
+  });
+
+  // A single ridge silhouette along the bottom edge, so the card reads as travel rather than as a slide.
+  const seed = name.length * 2.7 + 1.3;
+  const prof = new Float32Array(OG_W);
+  for (let x = 0; x < OG_W; x++) prof[x] = OG_H - 58 - Math.abs(ridgeHeight(x, OG_W, seed, 96, 1.35));
+  c.paint(function (x, y) {
+    const top = prof[Math.min(OG_W - 1, Math.floor(x))];
+    const cov = clamp(y - top + 0.5, 0, 1);
+    if (cov <= 0) return null;
+    return [6, 9, 26, cov * 0.62];
+  });
+
+  const buffer = c.snapshot();
+  baseCache.set(name, buffer);
+  return buffer;
+}
+
+/** Largest size at which the title fits the card, so short titles are big and long ones still fit. */
+function fitLines(title) {
+  const attempts = [[62, 3], [54, 3], [46, 4], [40, 4], [34, 5]];
+  for (const [size, maxLines] of attempts) {
+    const lines = wrapText(title, size, 0.06, 1010, maxLines);
+    if (lines) return { size, lines };
+  }
+  return { size: 30, lines: wrapText(title, 30, 0.06, 1010, 6) || ['TRAVELSTORYMAKER'] };
+}
+
+/**
+ * @param {{title:string, kicker?:string, theme?:string}} opts
+ * @returns {Buffer} 1200x630 PNG
+ */
+export function ogCard(opts) {
+  const themeName = THEMES[opts.theme] ? opts.theme : 'page';
+  const theme = THEMES[themeName];
+  const c = new Canvas(OG_W, OG_H);
+  c.restore(themeBase(themeName));
+
+  // Brand badge and wordmark, top left.
+  const bx = 72;
+  const by = 56;
+  const bs = 54;
+  c.paintBox([bx - 2, by - 2, bx + bs + 2, by + bs + 2], function (x, y) {
+    const d = sdRoundRect(x, y, bx + bs / 2, by + bs / 2, bs, bs, bs * 0.27);
+    if (d > 0.5) return null;
+    const t = clamp(((x - bx) / bs + (y - by) / bs) / 2, 0, 1);
+    const rgb = stopsAt(t, [[0, '#2f84ff'], [0.55, '#7c3aed'], [1, '#ff7a45']]);
+    return [rgb[0], rgb[1], rgb[2], clamp(0.5 - d, 0, 1)];
+  });
+  const mk = (fx, fy) => [bx + fx * bs, by + fy * bs];
+  const p1 = mk(0.22, 0.7);
+  const p2 = mk(0.45, 0.33);
+  const p3 = mk(0.78, 0.7);
+  c.shape([bx, by, bx + bs, by + bs], (px, py) => {
+    const a = sdSegment(px, py, p1[0], p1[1], p2[0], p2[1]);
+    const b = sdSegment(px, py, p2[0], p2[1], p3[0], p3[1]);
+    return Math.min(a, b) - bs * 0.05;
+  }, [255, 255, 255], 0.97);
+  const dot = mk(0.66, 0.27);
+  c.shape([dot[0] - 10, dot[1] - 10, dot[0] + 10, dot[1] + 10],
+    (px, py) => Math.hypot(px - dot[0], py - dot[1]) - bs * 0.075, [255, 255, 255], 0.97);
+  drawText(c, 'TRAVELSTORYMAKER.COM', bx + bs + 20, by + 17, 24, [255, 255, 255], { weight: 0.14, tracking: 0.09, alpha: 0.92 });
+
+  // Section label.
+  if (opts.kicker) {
+    drawText(c, opts.kicker, bx, 214, 21, theme.accent, { weight: 0.16, tracking: 0.22, alpha: 0.95 });
+  }
+
+  // Title.
+  const fitted = fitLines(opts.title);
+  const lineHeight = fitted.size * 1.44;
+  let y = opts.kicker ? 268 : 250;
+  for (const line of fitted.lines) {
+    drawText(c, line, bx, y, fitted.size, [255, 255, 255], { weight: 0.135, tracking: 0.06 });
+    y += lineHeight;
+  }
+
+  // Accent rule under the block.
+  const ruleY = Math.min(566, y + 26);
+  c.shape([bx, ruleY - 4, bx + 168, ruleY + 4],
+    (px, py) => Math.max(Math.abs(py - ruleY) - 2.4, Math.max(bx - px, px - (bx + 168))), theme.accent, 0.9);
+
+  /*
+   * Level 6, not 9. On a flat gradient the extra effort buys about 2% at three times the cost, and
+   * this runs once per indexable page.
+   */
+  return c.toPNG(false, 6);
+}
+
+export function iconPNG(size) {  const c = new Canvas(size, size);
   const r = size * 0.24;
   c.paint(function (x, y) {
     const d = sdRoundRect(x, y, size / 2, size / 2, size, size, r);

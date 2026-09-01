@@ -1,5 +1,5 @@
 import { page, esc, breadcrumbs, breadcrumbJsonLd, SITE, storyCta } from '../layout.mjs';
-import { heroBackdrop, hasPhoto } from '../photos.mjs';
+import { heroBackdrop, hasPhoto, thumb } from '../photos.mjs';
 import { flagImg } from '../flags.mjs';
 import { toolbar, entryList, pagination, itemListJsonLd, regionTile } from '../components.mjs';
 import { ENTRIES, TYPES, REGIONS, COUNT_BY_TYPE, COUNT_BY_REGION, interleaveByType } from '../data/index.mjs';
@@ -226,7 +226,7 @@ export function destinationsHub(countryCounts) {
   const countryCards = countries.map(function (c) {
     return [
       '<a class="post-card" href="/destinations/' + c.slug + '/">',
-      hasPhoto('country-' + c.slug) ? '<div class="post-card__media"><img class="thumb" src="/assets/img/photos/country-' + c.slug + '.jpg" alt="' + esc(c.title) + '" width="600" height="400" loading="lazy" decoding="async"></div>' : '',
+      hasPhoto('country-' + c.slug) ? '<div class="post-card__media">' + thumb('country-' + c.slug, c.title) + '</div>' : '',
       '<div class="post-card__body">',
       '<div class="post-card__meta">' + countryCounts[c.slug] + ' entries</div>',
       '<h3 class="post-card__title-flag">' + flagImg(c.slug, c.title, { className: 'flag flag--inline', width: 30, height: 20, decorative: true }) + '<span>' + esc(c.title) + '</span></h3>',

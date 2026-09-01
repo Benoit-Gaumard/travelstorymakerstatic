@@ -8,11 +8,12 @@ export const SITE = {
   email: 'travelstorymaker@gmail.com',
   locale: 'en',
   /*
-   * Sitemap <lastmod> fallback for pages that carry no date of their own (home, collections,
-   * destinations, country pages, legal pages). Bump this by hand when the entry data or the site
-   * copy genuinely changes - do NOT wire it to the build date. Stamping every URL with "today" on
-   * every deploy tells Google all 113 pages changed when they did not, and Google then starts
-   * ignoring lastmod for the whole site.
+   * Seed date for the very first run of the <lastmod> tracker (src/lastmod.mjs), and nothing else.
+   * It used to be the fallback <lastmod> for every page that carried no date of its own, which
+   * meant 93 of 113 URLs shared it and it was only ever correct if somebody remembered to bump it.
+   * Dates now come from the committed manifest in src/generated/lastmod.json, which the build
+   * updates when a page's content actually changes. Do not bump this by hand, and do not wire it
+   * to the clock.
    */
   contentUpdated: '2026-08-28',
 };
@@ -127,6 +128,7 @@ function footerMarkup() {
     '<li><a href="/faq/">FAQ</a></li>',
     '<li><a href="/credits/">Photo credits</a></li>',
     '<li><a href="/sitemap.xml">Sitemap</a></li>',
+    '<li><a href="/feed.xml">RSS feed</a></li>',
     '</ul></div>',
     '<div><h2 class="footer-col__title">Legal</h2><ul>',
     '<li><a href="/privacy/">Privacy policy</a></li>',
@@ -190,13 +192,62 @@ export function fitDescription(raw) {
   return trimmed.length >= 120 ? trimmed : text;
 }
 
+/*
+ * Open Graph cards, one per page.
+ *
+ * `page()` registers the card it needs and returns the URL for it; `build.mjs` drains the registry
+ * afterwards and renders the PNGs. The alternative was threading an `og:` option through all
+ * eleven page modules by hand, which is more code and one more thing to forget when a page is
+ * added. The trade-off is that `page()` now has a side effect - it is a build-time generator, and
+ * the registry is write-once per path, so rendering the same page twice is harmless.
+ *
+ * What does NOT get its own card:
+ *   - the homepage, which keeps the detailed painterly /og-image.png;
+ *   - paginated collection pages, which point at their own page 1 - "part 4 of 10" is not a
+ *     distinctive share image, and it would be nine extra renders per collection;
+ *   - 404, which is noindex.
+ */
+const OG_REGISTRY = new Map();
+
+export function ogRegistry() {
+  return OG_REGISTRY;
+}
+
+const OG_SECTIONS = [
+  { test: /^\/guides\//, theme: 'guide', kicker: 'Travel guide' },
+  { test: /^\/blog\//, theme: 'trip', kicker: 'Trip report' },
+  { test: /^\/destinations\//, theme: 'country', kicker: 'Destination' },
+  { test: /^\/travelstories\//, theme: 'library', kicker: 'Collection' },
+];
+
+function ogCardFor(path, title) {
+  if (path === '/' || path.endsWith('.html')) return null;
+
+  const canonicalPath = path.replace(/page\/\d+\/$/, '');
+  const section = OG_SECTIONS.find(function (s) { return s.test.test(canonicalPath); });
+  const slug = canonicalPath.replace(/^\/|\/$/g, '').replace(/\//g, '-') || 'home';
+  const url = '/og/' + slug + '.png';
+
+  if (!OG_REGISTRY.has(url) && canonicalPath === path) {
+    OG_REGISTRY.set(url, {
+      title: String(title).split(' | ')[0].split(' - part ')[0],
+      kicker: section ? section.kicker : '',
+      theme: section ? section.theme : 'page',
+    });
+  }
+  return url;
+}
+
 /**
- * @param {{title:string,description:string,path:string,body:string,onDark?:boolean,jsonLd?:object[],noindex?:boolean}} opts
+ * @param {{title:string,description:string,path:string,body:string,onDark?:boolean,jsonLd?:object[],noindex?:boolean,image?:string,preload?:string}} opts
  */
 export function page(opts) {
   const canonical = SITE.url + opts.path;
   const title = fitTitle(opts.title);
   const description = fitDescription(opts.description);
+  const image = SITE.url + (opts.image || ogCardFor(opts.path, opts.title) || '/og-image.png');
+  /* fitTitle() keeps the brand on short titles and drops it on long ones, so only add it when it went. */
+  const imageAlt = title.includes(SITE.name) ? title : title + ' - ' + SITE.name;
   const jsonLd = (opts.jsonLd || [])
     .map(function (obj) {
       return '<script type="application/ld+json">' + JSON.stringify(obj).replace(/</g, '\\u003c') + '</script>';
@@ -220,22 +271,24 @@ export function page(opts) {
     '<meta property="og:title" content="' + esc(title) + '">',
     '<meta property="og:description" content="' + esc(description) + '">',
     '<meta property="og:url" content="' + esc(canonical) + '">',
-    '<meta property="og:image" content="' + SITE.url + '/og-image.png">',
-    '<meta property="og:image:secure_url" content="' + SITE.url + '/og-image.png">',
+    '<meta property="og:image" content="' + image + '">',
+    '<meta property="og:image:secure_url" content="' + image + '">',
     '<meta property="og:image:type" content="image/png">',
     '<meta property="og:image:width" content="1200">',
     '<meta property="og:image:height" content="630">',
-    '<meta property="og:image:alt" content="' + esc(SITE.name) + ' - ' + esc(SITE.tagline) + '">',
+    '<meta property="og:image:alt" content="' + esc(imageAlt) + '">',
     '<meta name="twitter:card" content="summary_large_image">',
     '<meta name="twitter:title" content="' + esc(title) + '">',
     '<meta name="twitter:description" content="' + esc(description) + '">',
-    '<meta name="twitter:image" content="' + SITE.url + '/og-image.png">',
-    '<meta name="twitter:image:alt" content="' + esc(SITE.name) + ' - ' + esc(SITE.tagline) + '">',
+    '<meta name="twitter:image" content="' + image + '">',
+    '<meta name="twitter:image:alt" content="' + esc(imageAlt) + '">',
     '<meta name="theme-color" content="#070b1a">',
     '<link rel="icon" href="/favicon.ico" sizes="32x32">',
     '<link rel="icon" href="/favicon.svg" type="image/svg+xml">',
     '<link rel="apple-touch-icon" href="/apple-touch-icon.png">',
     '<link rel="manifest" href="/site.webmanifest">',
+    '<link rel="alternate" type="application/rss+xml" title="' + esc(SITE.name) + ' - guides and trip reports" href="/rss.xml">',
+    '<link rel="alternate" type="application/atom+xml" title="' + esc(SITE.name) + ' - guides and trip reports" href="/feed.xml">',
     /*
      * The AdSense loader and Google's consent message are the two blocking third-party origins on
      * every page. Warming their connections early is worth roughly 300ms of LCP on mobile.
@@ -244,10 +297,11 @@ export function page(opts) {
     '<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>',
     '<link rel="preconnect" href="https://fundingchoicesmessages.google.com" crossorigin>',
     '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+    opts.preload || '',
     fontPreloads(),
     '<style>' + fontFaceCss() + '</style>',
     '<link rel="stylesheet" href="/assets/css/style.css">',
-    '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + SITE.adsenseClient + '" crossorigin="anonymous"></script>',
+    adsLoader(),
     jsonLd,
     '</head>',
     '<body>',
@@ -262,6 +316,40 @@ export function page(opts) {
     '</html>',
     '',
   ].join('\n');
+}
+
+/*
+ * AdSense, off the critical path.
+ *
+ * `adsbygoogle.js` used to sit in <head> as a plain async script. Async does not mean free: the
+ * request is issued during the initial parse, it competes with the stylesheet, the font and the
+ * LCP image for a phone's first connections, and it pulls in the Funding Choices bundle plus the
+ * ad-quality script behind it - roughly 390KB and 130ms of main-thread work measured by
+ * PageSpeed, all of it before the hero has painted.
+ *
+ * This injects exactly the same tag, unmodified, once the page has loaded. Nothing about consent
+ * changes: the consent message is still served by Google's certified CMP, which this script loads
+ * itself, in the same order as before, only later. It is deliberately NOT gated on consent by us -
+ * that decision belongs to Google's CMP, and gating it here would break the ad stack for the
+ * majority of visitors who are outside the EEA and never see a message at all.
+ *
+ * The three triggers are belt and braces: load, first interaction, and a hard 4s ceiling so that a
+ * visitor on a stalled connection still gets the consent dialog in a reasonable time.
+ */
+function adsLoader() {
+  const src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + SITE.adsenseClient;
+  const js = [
+    '(function(){var done=false;function go(){if(done)return;done=true;',
+    'var s=document.createElement("script");s.async=true;s.crossOrigin="anonymous";',
+    's.src="' + src + '";document.head.appendChild(s);}',
+    'function soon(){setTimeout(go,1000);}',
+    'if(document.readyState==="complete")soon();',
+    'else window.addEventListener("load",soon,{once:true});',
+    'var ev=["pointerdown","keydown","touchstart","wheel","scroll"];',
+    'for(var i=0;i<ev.length;i++)window.addEventListener(ev[i],go,{once:true,passive:true});',
+    'setTimeout(go,4000);})();',
+  ].join('');
+  return '<script>' + js + '</script>';
 }
 
 export function fontFaceCss() {

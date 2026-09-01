@@ -111,19 +111,32 @@ export function entryList(entries, heading) {
   ].join('');
 }
 
+/**
+ * Pagination that keeps every archive page one click away.
+ *
+ * The window used to be {first, last, current±1}, so from page 1 of the ten-page /travelstories/
+ * archive the only routes onward were pages 2 and 10: page 5 took four clicks and sat four levels
+ * deep for a crawler. No collection here runs past ten pages, so below the threshold every number
+ * is rendered and the archive is flat. Above it the window is kept, because a strip of forty
+ * numbers is not navigation either.
+ */
+const FLAT_UP_TO = 12;
+
 export function pagination(baseHref, current, totalPages) {
   if (totalPages <= 1) return '';
   const href = function (n) { return n === 1 ? baseHref : baseHref + 'page/' + n + '/'; };
   const parts = [];
   if (current > 1) parts.push('<a href="' + href(current - 1) + '" rel="prev">&larr; Previous</a>');
-  const shown = new Set([1, totalPages, current, current - 1, current + 1]);
+  const shown = totalPages <= FLAT_UP_TO
+    ? new Set(Array.from({ length: totalPages }, function (_, i) { return i + 1; }))
+    : new Set([1, 2, totalPages - 1, totalPages, current, current - 1, current + 1]);
   let last = 0;
   for (let n = 1; n <= totalPages; n++) {
     if (!shown.has(n)) continue;
     if (n - last > 1) parts.push('<span aria-hidden="true">…</span>');
     parts.push(n === current
       ? '<span aria-current="page">' + n + '</span>'
-      : '<a href="' + href(n) + '">' + n + '</a>');
+      : '<a href="' + href(n) + '" aria-label="Page ' + n + '">' + n + '</a>');
     last = n;
   }
   if (current < totalPages) parts.push('<a href="' + href(current + 1) + '" rel="next">Next &rarr;</a>');

@@ -50,6 +50,11 @@ Run through this before pushing a deploy. Everything here has bitten this projec
 
 - [ ] `node build.mjs` completes and reports **114 pages from 1000 entries**. A different page count
       means something silently dropped out of the data.
+- [ ] The build reports **89 share cards** and does not say `SKIPPED` - `SKIP_OG_CARDS=1` must never
+      reach a deploy, or every `og:image` 404s.
+- [ ] If the build says `lastmod: N changed`, **`src/generated/lastmod.json` is in the commit**. If it
+      is not, the next build re-dates the same pages and the sitemap goes back to publishing deploy
+      dates. (§2.2)
 - [ ] `git status` is clean and `dist/` is *not* in the diff - it is gitignored on purpose.
 - [ ] No `.env` file has crept in. The repo is public.
 - [ ] `git var GIT_AUTHOR_IDENT` and `git var GIT_COMMITTER_IDENT` both show
@@ -73,6 +78,8 @@ Run through this before pushing a deploy. Everything here has bitten this projec
       is blocked in the console.
 - [ ] `/sitemap.xml`, `/robots.txt`, `/ads.txt` and `/llms.txt` all return 200 with the right
       `Content-Type`.
+- [ ] `/feed.xml`, `/atom.xml` and `/rss.xml` return 200 as `application/xml`, and a couple of
+      `/og/*.png` cards return 200 as `image/png`.
 - [ ] Submit the sitemap in Google Search Console and re-check `ads.txt` in AdSense - AdSense caches
       it and can take a day to re-read.
 
@@ -82,17 +89,36 @@ in Search Console, and re-checking `ads.txt` in AdSense. All 113 sitemap URLs we
 every one returns 200, is self-canonical to its own `https://www.` URL, is indexable, has exactly one
 `<h1>` and a unique `<title>`.
 
-### 2.2 The sitemap's `lastmod` is deliberately not the build date
+### 2.2 The sitemap's `lastmod` is derived from the content, never from the clock
 
-`sitemapXml()` in `build.mjs` used `new Date()`, so every deploy stamped all 113 URLs with today -
-telling Google the entire site had changed when nothing had. Google discounts `lastmod` it judges
-unreliable, which then devalues the signal for pages that genuinely did change.
+`sitemapXml()` in `build.mjs` once used `new Date()`, so every deploy stamped all 113 URLs with
+today - telling Google the entire site had changed when nothing had. Google discounts `lastmod` it
+judges unreliable, which then devalues the signal for pages that genuinely did change.
 
-Now: guide and trip-report pages use their own `updated`/`published` field, the two section indexes
-use the newest date among their posts, and everything else falls back to **`SITE.contentUpdated`** in
-`src/layout.mjs`. **Bump that constant by hand when content actually changes. Never wire it to the
-clock.** The sitemap is byte-identical across consecutive builds - if it stops being, something has
-reintroduced a build-time date.
+That was replaced with a hand-maintained `SITE.contentUpdated` constant, which was better but still
+wrong: 93 of 113 URLs shared one date, and the constant was only ever correct if somebody remembered
+to bump it. **Since 2026-09-01 the dates come from `src/lastmod.mjs`.**
+
+How it works: each page is fingerprinted from its own rendered content and compared with the
+committed manifest `src/generated/lastmod.json`. Same fingerprint, same date as last time. Different
+fingerprint, today's date, and the build prints what changed and asks you to commit the manifest.
+
+The fingerprint is **text and image identity, not markup**. It strips the nav, breadcrumbs,
+pagination, the search toolbar, the CTA band and the author box, reduces what is left to its text,
+and replaces each `<img>` with the identity of the picture it shows (`hero-world-640.webp`,
+`hero-world.jpg` and `hero-world-1280.webp` are all `hero-world`). This is not decoration: the first
+version hashed the markup, and wrapping every photo in a `<picture>` re-dated 105 of 113 pages
+without changing a word on any of them. If a restyle can move a date, the signal is worthless again.
+
+Guides and trip reports still declare `published`/`updated` in their own data and the build never
+publishes a `lastmod` older than the date shown in the byline.
+
+**Consequences for you:**
+- `SITE.contentUpdated` is now only a seed for the very first run. Do not bump it by hand.
+- Commit `src/generated/lastmod.json` whenever the build says a page changed. If you do not, the next
+  build re-dates the same page again, and you are back to deploy dates.
+- Two consecutive builds with no content edit must produce a byte-identical sitemap. If they do not,
+  something has reintroduced a build-time date.
 
 ---
 
@@ -100,7 +126,9 @@ reintroduced a build-time date.
 ```powershell
 cd C:\REPOS\VIBE\travelstorymakerstatic
 
-node build.mjs          # wipes dist/, regenerates everything (~3-4 s, 114 pages)
+node build.mjs          # wipes dist/, regenerates everything (~17 s, 114 pages + 89 share cards)
+$env:SKIP_OG_CARDS=1; node build.mjs   # ~5 s, for iterating on markup. Never for a deploy.
+Remove-Item Env:SKIP_OG_CARDS          # PowerShell keeps it for the rest of the session
 node serve.mjs 4173     # static preview server on http://localhost:4173
 npm run dev             # build + serve
 ```
@@ -133,20 +161,23 @@ travelstorymakerstatic/
 │   ├── favicon.svg
 │   └── assets/{css/style.css, js/app.js, fonts/*.woff2, img/{logo.svg, hero-travelstorymaker.png, photos/, flags/}}
 ├── src/
-│   ├── layout.mjs             SITE + AUTHOR config, page shell, nav, footer, esc(), page()
+│   ├── layout.mjs             SITE + AUTHOR config, page shell, nav, footer, esc(), page(), ads loader
 │   ├── components.mjs         entryCard(), entryList(), toolbar(), pagination(), regionTile()
-│   ├── photos.mjs             photo(), hasPhoto(), heroBackdrop(), figure(), thumb()
+│   ├── photos.mjs             photo(), hasPhoto(), heroBackdrop(), figure(), thumb(), creditThumb()
 │   ├── flags.mjs              hasFlag(), flagImg()  - scans public/assets/img/flags at build time
 │   ├── countries.mjs          36 countries: slug, title, match[], query, lede, intro
 │   ├── country-facts.mjs      per-country fact sheet data (capital, currency, plugs, ...)
-│   ├── images.mjs             hand-rolled PNG/ICO encoders for og-image and favicons
-│   ├── png.mjs                zlib-based PNG writer used by images.mjs
+│   ├── images.mjs             hand-rolled PNG/ICO encoders: og-image, favicons, per-page share cards
+│   ├── png.mjs                zlib-based PNG writer + the stroke font, used by images.mjs
+│   ├── lastmod.mjs            content fingerprints behind the sitemap's <lastmod>  (§2.2)
+│   ├── feeds.mjs              Atom and RSS 2.0 for guides + trip reports
+│   ├── minify.mjs             small, conservative CSS minifier applied when copying public/
 │   ├── data/
 │   │   ├── entries-01..10.mjs 1000 entries as tuples [type, title, place, region, text, author]
 │   │   └── index.mjs          merges, validates, assigns ids, exports interleaveByType()
 │   ├── articles/              19 guides (articles-01..05.mjs + index.mjs)
 │   ├── blog/                  10 trip reports (trips-01..03.mjs + index.mjs)
-│   ├── generated/             photos.json, fonts.json, factlinks.json  (committed, not built)
+│   ├── generated/             photos.json, fonts.json, factlinks.json, photo-variants.json, lastmod.json
 │   └── pages/                 home, collections, countries, sections, posts, statics, submit, credits
 └── tools/
     ├── fetch-assets.mjs       ONE-OFF asset fetcher. NOT part of the build.
@@ -201,6 +232,8 @@ node tools/fetch-assets.mjs fonts | photos | flags | links | all
 | `fonts.json` | array of 3 `@font-face` descriptors (family, style, weight, unicode-range, src) | woff2 files live in `public/assets/fonts/`. **Public Sans is one variable file covering 400-800 (26KB); Newsreader is two static faces (48KB).** 75KB total. Both request shapes were measured, not assumed - see the comment above `FONT_CSS` in `tools/fetch-assets.mjs` before changing either URL. |
 | `photos.json` | 97 slots → `{ src, alt, author, license, link, ... }` | Wikimedia Commons, CC / CC0 |
 | `factlinks.json` | 466 keys `"title\|place"` → `{ title, url }` | Wikipedia "Read more" links on fun facts |
+| `photo-variants.json` | 97 slots → `[{width, height, bytes}]` for the 320/640/1280 WebP copies | Written by hand from the encoder run described in 6.1, not by `fetch-assets.mjs`. `src/photos.mjs` builds every `srcset` from it. |
+| `lastmod.json` | every indexable path → `{ hash, date }` | **Written by `build.mjs` itself.** Commit it when the build says a page changed - see §2.2. |
 
 `factlinks.json` is keyed by **`title|place`, never by numeric id** - ids shift whenever entry data is
 reordered, which would silently mis-assign links.
@@ -226,6 +259,23 @@ by two one-off scripts run locally, not by the build:
   with transparency intact.
 
 If you add another hero-sized image, do the same and commit the output. Do not add `sharp`.
+
+**The 291 photo WebP files were produced the same way, on 2026-09-01.** Chromium has no Node API
+inside the automation sandbox used here, so the pipeline was: `node serve.mjs` on 4173, a throwaway
+HTTP writer on 4174 that accepted `{path, base64}` and wrote into `public/`, and a page script that
+fetched each JPEG over the preview server (same origin, so the canvas is not tainted), downscaled it
+by repeated halving with `imageSmoothingQuality: 'high'` - a single `drawImage` to the target size
+aliases visibly on detailed photos - and posted `canvas.toDataURL('image/webp', q)` back. Quality
+0.80 at 320px, 0.78 at 640px, 0.72 at 1280px. The writer script was deleted afterwards; recreate it
+in ten lines if you need another batch.
+
+Sizes actually measured: the JPEG originals average 300KB; the WebP copies average 13KB / 53KB /
+190KB. **The 1280 copy is only 25-30% smaller than the JPEG** - these are detailed Wikimedia
+photographs and WebP does not work miracles on them. The win is not the format, it is that a phone
+now gets the 640 file where it used to get the full-size JPEG.
+
+The JPEGs are kept as the `<img>` fallback inside `<picture>`. Deleting them would save 30MB in the
+working tree and nothing at all in a clone, since they stay in history either way.
 
 ---
 
@@ -283,6 +333,25 @@ These all cost real debugging time. Do not rediscover them.
     illustration is centred with `inset: 0 0 0 auto` + flexbox rather than a transform, because its
     float animation animates the `translate` property and would otherwise reset the centring offset
     to zero on the first keyframe.
+
+11. **`picture { display: contents }` promotes `<source>` into the parent's layout.** Wrapping the
+    credits page thumbnails in `<picture>` gave every row of the three-column `.credit-row` grid a
+    fourth child - the `<source>` element - so the image slid into column two and the licence badge
+    wrapped onto its own line. The UA `display: none` on `source` does not survive the parent being
+    `display: contents`. `picture source { display: none }` is in the stylesheet for this reason;
+    it does not affect image selection, which is done by the HTML algorithm and not by CSS.
+
+12. **Contrast has to be measured in the scrolled state, not at the top of the page.** The dark
+    header is `position: sticky` with `background: rgba(7,11,26,.62)`. At scroll position zero it
+    sits over the dark hero and the nav links measure fine; scrolled down over white content the
+    effective background is `rgb(101,104,113)` and the same links measure 4.14:1, with the current
+    page's link at 3.95:1. Both fail AA, and any check that only looks at the top of the page misses
+    both. The alpha is now 0.8, worst case 7.2:1.
+
+13. **The browser reuses a larger cached candidate rather than the one `sizes` selects.** While
+    verifying that the new 320px hero variant was picked on a phone-sized viewport, Chrome kept
+    serving the 560px file - because an earlier run at desktop width had already cached it. Test
+    responsive images in a fresh browser context, or you will "prove" a bug that is not there.
 
 ---
 
@@ -347,6 +416,12 @@ engine. Keep them.
 `form-action 'none'` is correct **today** because there are zero `<form>` elements in all 114 pages
 (the `/submit/` flow is a `mailto:` link). If a real form is ever added, this must change to `'self'`
 or the submission will be blocked.
+
+**One more dependency on `'unsafe-inline'`, added 2026-09-01:** the AdSense tag is no longer a static
+`<script src>` in the head - it is injected by a small inline script in `adsLoader()`
+(`src/layout.mjs`) after the page has loaded. If `'unsafe-inline'` is ever removed from `script-src`,
+that loader stops running and **ads and the consent message disappear together, silently**. Either
+keep it, or move the loader into `/assets/js/` and hash it - do not simply tighten the policy.
 
 ---
 
@@ -421,6 +496,68 @@ it is wrong; this directory is the only source of truth.
 ---
 
 ## 10. Recently completed work
+
+### SEO audit follow-up, 2026-09-01
+
+An external audit produced seven findings. What was done about each, honestly:
+
+| Finding | Priority | Status |
+| --- | --- | --- |
+| 93 URLs dated 2026-08-28, 20 dated 2026-08-27 - `lastmod` reflects deployment, not modification | P2 | **Fixed structurally.** Content-fingerprint tracker, §2.2. The dates themselves did not move, and should not have: those 93 pages really were all generated from one dataset commit. What changed is that the next edit produces a true date without anyone remembering to do anything. |
+| Mobile LCP 5.6s, FCP 3.8s, Performance 67 | P2 | **Improved, not "fixed".** See below. |
+| Ad and consent scripts on the critical path (390KB, 130ms) | P2 | **Fixed.** The tag now loads after `load`, or on first interaction, or at 4s. |
+| Pagination too deep | P2 | **Fixed.** Every page number is rendered for archives of 12 pages or fewer, which is all of them. |
+| Lighthouse contrast failures | P2 | **Fixed.** Two real ones found and fixed - gotchas 12 and the story badge. Re-measured across 11 pages at 1440px and 390px plus the open mobile menu: zero failures. |
+| One generic `/og-image.png` on every page | P3 | **Fixed.** 89 per-page cards. |
+| No RSS/Atom feed | P3 | **Fixed.** `/feed.xml`, `/atom.xml`, `/rss.xml`. |
+| Two-step redirect on the apex without `www` | P3 | **Not fixed, and not fixable here.** See §11 item 7: `http://` → `https://` is Vercel's own upgrade and happens before any redirect we control. The only way to make it one hop is to stop redirecting, i.e. serve the apex, which means rewriting every canonical. Declined for the same reasons as before. |
+| A 403 on an ad request | P3 | **Not a defect.** Reproduced locally: AdSense returns 403 for any origin that is not an approved site, which includes `localhost`. There is nothing to fix in the repo. Judge it on production only. Note that `adSlot()` returns an empty string by design - there are no manual ad units anywhere, only Auto ads, so "empty ad placement" is expected markup. |
+
+**Mobile LCP.** Four separate changes, each measured:
+
+- The hero illustration ladder gained 320w and 400w steps and everything was re-encoded at WebP
+  q0.84. A phone at DPR 1 now downloads **25KB where it downloaded 63KB**; at DPR 2, 55KB. Verified
+  in three fresh browser contexts at DPR 1/2/3: one request each, correct file, no double download.
+- The illustration is now preloaded with `imagesrcset`/`imagesizes` and `type="image/webp"`.
+  PageSpeed attributed 1,910ms of "element render delay" to it being discovered only after the
+  stylesheet; nothing in the markup above it pointed at it.
+- `adsbygoogle.js` left the critical path (below).
+- Every photo now ships as WebP at 320/640/1280 behind a `<picture>`. This is the big one for the
+  ~100 pages whose LCP is a hero *photo*, not the illustration: `/destinations/japan/` went from a
+  483KB JPEG to a **79KB WebP** on mobile, and the destinations hub's 43 lazy thumbnails from
+  ~300KB each to ~53KB.
+
+**AdSense off the critical path.** The tag used to be a plain `async` script in `<head>`, which still
+competes with the stylesheet, the font and the LCP image for a phone's first connections. It is now
+injected by a small inline loader on `load`, on first interaction, or at a 4s ceiling, whichever
+comes first. **Consent is unchanged**: the certified CMP is loaded by that same tag, in the same
+order, only later - we do not gate it ourselves, because that decision belongs to Google's CMP and
+gating it here would break ads for every visitor outside the EEA. Verified in the browser: zero
+requests to `googlesyndication.com` at the `load` event, six of them three seconds later.
+
+**Per-page Open Graph cards.** `page()` registers a card for its own path and `build.mjs` renders
+them (`/og/<slug>.png`, 1200×630). This meant extending the stroke font in `src/png.mjs` from the
+twelve letters of "TRAVELSTORYMAKER.COM" to A-Z, 0-9 and punctuation - still no font file, still zero
+dependencies. Cards are flat by design: the painterly site-wide image takes 790ms and 465KB, which is
+fine once and absurd 89 times; a flat card reuses a cached background buffer and costs 116ms. The
+homepage keeps the painterly image. Paginated pages point at their own page 1.
+
+**Feeds.** Guides and trip reports only - 29 items. The 1,000 library entries are deliberately not in
+the feed: they shipped as one dataset and would flood a reader with a thousand items that never
+change.
+
+**CSS is minified into `dist`** by `src/minify.mjs` (40.8KB → 29.0KB). It is the safe subset only -
+no colour rewriting, no rule merging, and it never touches whitespace around `-` or `+` because
+`calc(100% - 60px)` breaks without it. Verified by parsing both files in the browser and comparing
+the CSSOM rule count: 348 = 348.
+
+**What this pass did not do.** The remaining mobile Performance cost is still third-party and still
+mostly out of our hands (§11 item 4) - deferring the tag moves it off the critical path, it does not
+make it smaller. No new Lighthouse run is quoted here because the numbers were not re-measured on
+production; the claims above are byte counts and request timings measured locally, which is what
+§11 item 4 says to judge by.
+
+### Earlier work
 
 **Fun-fact reference links.** Every fun fact card can render `Read more: <Article> ↗` linking to
 Wikipedia. 466 of 506 resolved. Rendered by `entryCard()` in `src/components.mjs`, styled `.entry__ref`.
@@ -564,11 +701,15 @@ query at a higher specificity.
    time was 3,944 ms for FundingChoices and 903 ms for Ads; first-party contributes essentially none
    of it.
 
+   **Updated 2026-09-01:** that third-party weight is unchanged, but it is no longer on the critical
+   path - the tag is injected after `load`. First-party dropped again as well: the hero illustration
+   is 25-55KB on a phone instead of 63KB, and photo backdrops are 53-79KB of WebP instead of
+   300-600KB of JPEG. **A poor mobile Performance score is now a consequence of running ads, not of
+   a fixable defect.** Do not let a future pass chase it by making the LCP image lazy - that games
+   the metric and makes the real experience worse.
+
    The first-party side has been taken about as far as it goes without a build toolchain: the hero
-   is 62 KB of WebP instead of 499 KB of PNG, and the fonts are 40 KB instead of 188 KB. **A poor
-   mobile Performance score is now a consequence of running ads, not of a fixable defect.** Do not
-   let a future pass chase it by making the LCP image lazy - that games the metric and makes the
-   real experience worse.
+   is 62 KB of WebP instead of 499 KB of PNG, and the fonts are 40 KB instead of 188 KB.
 
    Note that the Performance number is extremely noisy run to run: local runs during this work
    produced TBT between 620 ms and 3,950 ms on the same commit. Judge changes by bytes and by the

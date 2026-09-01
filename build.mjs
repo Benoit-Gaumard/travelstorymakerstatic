@@ -170,6 +170,29 @@ function llmsTxt() {
   ].join('\n');
 }
 
+/*
+ * RFC 9116. `Expires` is generated rather than hardcoded because a stale date makes the file
+ * invalid, and a hand-written one always goes stale. One year from the build keeps it valid for
+ * as long as the site is being deployed, which is exactly the signal the field is meant to carry.
+ */
+function securityTxt() {
+  const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().replace(/\.\d{3}Z$/, 'Z');
+  return [
+    '# Security contact for ' + SITE.url,
+    '# If you believe you have found a vulnerability, please email us before disclosing it.',
+    '',
+    'Contact: mailto:' + SITE.email,
+    'Expires: ' + expires,
+    'Preferred-Languages: en, fr',
+    'Canonical: ' + SITE.url + '/.well-known/security.txt',
+    'Policy: ' + SITE.url + '/contact/',
+    '',
+    '# This site is static HTML with no backend, no accounts and no user data store.',
+    '# Reports about the published content itself belong on the contact page.',
+    '',
+  ].join('\n');
+}
+
 function webmanifest() {
   return JSON.stringify({
     name: SITE.name,
@@ -241,6 +264,9 @@ async function main() {
   await writeFile(join(DIST, 'robots.txt'), robotsTxt(), 'utf8');
   await writeFile(join(DIST, 'llms.txt'), llmsTxt(), 'utf8');
   await writeFile(join(DIST, 'site.webmanifest'), webmanifest(), 'utf8');
+
+  await mkdir(join(DIST, '.well-known'), { recursive: true });
+  await writeFile(join(DIST, '.well-known', 'security.txt'), securityTxt(), 'utf8');
 
   const items = feedItems();
   const atom = atomXml(items);

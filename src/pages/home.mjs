@@ -144,7 +144,7 @@ export function homePage() {
 
     '<section class="section section--tight">',
     '<div class="container">',
-    adSlot(),
+    adSlot('display'),
     '</div>',
     '</section>',
 
@@ -222,7 +222,7 @@ export function homePage() {
 
     '<section class="section">',
     '<div class="container center">',
-    adSlot(),
+    adSlot('display'),
     '<h2 class="mt-24">Ready when you are</h2>',
     '<p class="lead" style="margin-inline:auto">One page. The whole library. Nothing to install.</p>',
     '<p class="mt-24"><a class="btn btn--primary" href="/travelstories/">Start reading &rarr;</a></p>',

@@ -849,6 +849,40 @@ picture source { display: none; }
   }
 }
 
+/* ---------- Ad slots ---------- */
+/*
+ * The height is reserved before the ad exists. adsbygoogle.js is injected after load (see
+ * adsLoader in src/layout.mjs), so without a reserved box the unit would appear a second or
+ * more after the text has painted and shove everything below it down the page - a large,
+ * entirely avoidable CLS hit on exactly the long articles people actually read.
+ *
+ * min-height rather than height: the reservation is a floor, so a responsive unit that comes
+ * back taller than the placeholder still grows into place instead of being clipped, and an
+ * unfilled unit collapses to the floor rather than to nothing.
+ */
+.ad-slot {
+  margin: 48px auto;
+  text-align: center;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+}
+.ad-slot--in-article { margin: 40px auto; min-height: 280px; }
+.ad-slot .adsbygoogle { display: block; width: 100%; }
+/* Neutral, low-contrast, and required: AdSense asks that ads be distinguishable from content. */
+.ad-slot__label {
+  font-size: var(--fs-meta);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+@media (max-width: 640px) {
+  .ad-slot { margin: 36px auto; min-height: 260px; }
+  .ad-slot--in-article { margin: 32px auto; min-height: 260px; }
+}
+
 /* ---------- Utils ---------- */
 .center { text-align: center; }
 .mt-0 { margin-top: 0; }

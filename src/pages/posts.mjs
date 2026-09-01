@@ -1,4 +1,4 @@
-import { page, esc, breadcrumbs, breadcrumbJsonLd, SITE, AUTHOR, storyCta } from '../layout.mjs';
+import { page, esc, breadcrumbs, breadcrumbJsonLd, adSlot, SITE, AUTHOR, storyCta } from '../layout.mjs';
 import { heroBackdrop, thumb, hasPhoto, figure } from '../photos.mjs';
 
 function readableDate(iso) {
@@ -12,6 +12,28 @@ function renderBody(body) {
   return body.replace(/\{\{PHOTO:([a-z0-9-]+)(?:\|([^}]*))?\}\}/gi, function (_, slot, caption) {
     return figure(slot, (caption || '').trim());
   });
+}
+
+/*
+ * Drops the in-article unit immediately before the second <h2>, which on these posts means after
+ * the intro and the first full section - far enough in that the reader has committed to the page,
+ * and never between a heading and the paragraph it introduces.
+ *
+ * Anchoring on a heading rather than a paragraph count is deliberate: it lands the unit on a
+ * natural break in every post regardless of how long the sections are, and it cannot land inside
+ * a figure or a table. Posts with fewer than two headings are left alone and keep only the
+ * end-of-article unit - splitting a short body around an ad is how you get a thin page with more
+ * advertising than content on it.
+ */
+function withInArticleAd(html) {
+  const ad = adSlot('inArticle');
+  if (!ad) return html;
+  const heads = [];
+  const re = /<h2[\s>]/g;
+  let m;
+  while ((m = re.exec(html)) !== null) heads.push(m.index);
+  if (heads.length < 2) return html;
+  return html.slice(0, heads[1]) + ad + html.slice(heads[1]);
 }
 
 export function postCard(post, base) {
@@ -128,9 +150,10 @@ export function postPages(cfg) {
       '<section class="section">',
       '<div class="container">',
       '<div class="prose prose--article">',
-      renderBody(post.body),
+      withInArticleAd(renderBody(post.body)),
       '<div class="tagline">' + post.tags.map(function (t) { return '<span class="chip chip--static">' + esc(t) + '</span>'; }).join('') + '</div>',
       '</div>',
+      adSlot('articleEnd'),
       '<aside class="author-box">',
       '<img src="/assets/img/logo.svg" alt="" width="64" height="64" loading="lazy" decoding="async">',
       '<div><h2>' + esc(AUTHOR.name) + '</h2>',

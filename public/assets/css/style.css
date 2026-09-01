@@ -396,11 +396,10 @@ p { margin: 0 0 1.1em; }
 .entry[hidden] { display: none; }
 
 /*
- * Quote: a line somebody said. Set as a quotation, on paper rather than on a card - the sand
- * surface, the display italic and the attribution carry it. There is no oversized decorative
- * quotation mark: it was absolutely positioned behind the opening line and overlapped the text.
+ * Quote: a line somebody said. It shares the same white card surface as facts and stories - the
+ * display italic and the attribution carry it. There is no oversized decorative quotation mark:
+ * it was absolutely positioned behind the opening line and overlapped the text.
  */
-.entry[data-type='quote'] { background: var(--sand); border-color: var(--sand-2); }
 /*
  * A quote's title is a shortened form of the quote itself, so showing both printed the same words
  * twice, with the duplicate read first. The heading stays in the document for anyone navigating by

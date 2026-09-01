@@ -5,6 +5,25 @@ export const SITE = {
   name: 'TravelStoryMaker',
   tagline: 'Stories that make you pack a bag',
   adsenseClient: 'ca-pub-6636684537203477',
+  /*
+   * Manual ad units, by name. Each value is the `data-ad-slot` of a unit created in
+   * AdSense > Ads > By ad unit. They are deliberately empty until those units exist:
+   * adSlot() renders nothing for an unset slot, because an <ins> pointing at a
+   * non-existent slot is a permanently unfilled 0x0 box, and a run of empty ad
+   * containers is exactly the "no content" pattern AdSense penalises.
+   *
+   * Fill these in and nothing else needs to change - the markup, the labels and the
+   * reserved height are already wired up at every call site.
+   *
+   *   display    - responsive block used on the homepage and the prose/policy pages.
+   *   inArticle  - fluid in-article unit, dropped mid-body on guides and trip reports.
+   *   articleEnd - responsive block after the article body, before the author box.
+   */
+  adsenseSlots: {
+    display: '',
+    inArticle: '',
+    articleEnd: '',
+  },
   email: 'travelstorymaker@gmail.com',
   locale: 'en',
   /*
@@ -254,6 +273,15 @@ export function page(opts) {
     })
     .join('');
 
+  /*
+   * A noindex page carries no ads. In practice that is the 404, and running the ad stack there
+   * means requesting ads against a page whose entire content is "this does not exist" - a page
+   * with no content to match against, which is the sort of inventory AdSense asks publishers not
+   * to create. It also spares the visitor who just hit a dead link ~390KB of third-party
+   * JavaScript and a consent dialog on a page they are about to leave.
+   */
+  const monetised = !opts.noindex;
+
   return [
     '<!DOCTYPE html>',
     '<html lang="' + SITE.locale + '">',
@@ -291,17 +319,18 @@ export function page(opts) {
     '<link rel="alternate" type="application/atom+xml" title="' + esc(SITE.name) + ' - guides and trip reports" href="/feed.xml">',
     /*
      * The AdSense loader and Google's consent message are the two blocking third-party origins on
-     * every page. Warming their connections early is worth roughly 300ms of LCP on mobile.
-     * fonts.gstatic.com is here because Google's consent dialog pulls its own webfonts from it.
+     * every monetised page. Warming their connections early is worth roughly 300ms of LCP on mobile.
+     * fonts.gstatic.com is here because Google's consent dialog pulls its own webfonts from it, so
+     * all three go away together when the page carries no ads.
      */
-    '<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>',
-    '<link rel="preconnect" href="https://fundingchoicesmessages.google.com" crossorigin>',
-    '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+    monetised ? '<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>' : '',
+    monetised ? '<link rel="preconnect" href="https://fundingchoicesmessages.google.com" crossorigin>' : '',
+    monetised ? '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' : '',
     opts.preload || '',
     fontPreloads(),
     '<style>' + fontFaceCss() + '</style>',
     '<link rel="stylesheet" href="/assets/css/style.css">',
-    adsLoader(),
+    monetised ? adsLoader() : '',
     jsonLd,
     '</head>',
     '<body>',
@@ -333,8 +362,16 @@ export function page(opts) {
  * that decision belongs to Google's CMP, and gating it here would break the ad stack for the
  * majority of visitors who are outside the EEA and never see a message at all.
  *
- * The three triggers are belt and braces: load, first interaction, and a hard 4s ceiling so that a
+ * The three triggers are belt and braces: load, first interaction, and a hard ceiling so that a
  * visitor on a stalled connection still gets the consent dialog in a reasonable time.
+ *
+ * The delays used to be 1s after load with a 4s ceiling. That protected the LCP well and cost
+ * impressions: every visitor who left before the tag fired counted as a page view with no ad
+ * request behind it, and on mobile that is a real share of sessions. 200ms still clears the
+ * critical path - load has already fired, so the stylesheet, the font and the LCP image are in -
+ * while the 2s ceiling bounds the loss on a slow connection. Do not push these back up without
+ * checking what it does to impressions, and do not drop them to zero either: moving the tag back
+ * into the parse is what cost ~390KB and ~130ms of main-thread work before the hero painted.
  */
 function adsLoader() {
   const src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + SITE.adsenseClient;
@@ -342,12 +379,12 @@ function adsLoader() {
     '(function(){var done=false;function go(){if(done)return;done=true;',
     'var s=document.createElement("script");s.async=true;s.crossOrigin="anonymous";',
     's.src="' + src + '";document.head.appendChild(s);}',
-    'function soon(){setTimeout(go,1000);}',
+    'function soon(){setTimeout(go,200);}',
     'if(document.readyState==="complete")soon();',
     'else window.addEventListener("load",soon,{once:true});',
     'var ev=["pointerdown","keydown","touchstart","wheel","scroll"];',
     'for(var i=0;i<ev.length;i++)window.addEventListener(ev[i],go,{once:true,passive:true});',
-    'setTimeout(go,4000);})();',
+    'setTimeout(go,2000);})();',
   ].join('');
   return '<script>' + js + '</script>';
 }
@@ -399,8 +436,45 @@ export function breadcrumbJsonLd(items) {
   };
 }
 
-export function adSlot() {
-  return '';
+/*
+ * One manual ad unit.
+ *
+ * Returns an empty string unless the named slot carries a real `data-ad-slot`, so the site
+ * degrades to "no ad" rather than to an empty box - see SITE.adsenseSlots.
+ *
+ * The container reserves its height in CSS before the ad arrives. That matters more here than
+ * on a normal site: adsbygoogle.js is injected late (see adsLoader), so an unreserved slot
+ * would push the article down several hundred pixels well after the text has been painted,
+ * which is the worst kind of CLS. The label is there because AdSense requires ads to be
+ * distinguishable from content; it is deliberately the neutral wording Google asks for, with
+ * nothing that could read as an invitation to click.
+ *
+ * `(adsbygoogle = window.adsbygoogle || []).push({})` queues into a plain array when the
+ * library has not loaded yet, and adsbygoogle.js drains that queue on arrival. The deferred
+ * loader is therefore safe: the push runs at parse time, the fill happens later.
+ *
+ * @param {'display'|'inArticle'|'articleEnd'} name
+ */
+export function adSlot(name) {
+  const slot = SITE.adsenseSlots[name || 'display'];
+  if (!slot) return '';
+
+  const inArticle = name === 'inArticle';
+  const ins = [
+    '<ins class="adsbygoogle"',
+    ' style="display:block' + (inArticle ? ';text-align:center' : '') + '"',
+    inArticle ? ' data-ad-layout="in-article" data-ad-format="fluid"' : ' data-ad-format="auto" data-full-width-responsive="true"',
+    ' data-ad-client="' + SITE.adsenseClient + '"',
+    ' data-ad-slot="' + slot + '"></ins>',
+  ].join('');
+
+  return [
+    '<div class="ad-slot ad-slot--' + (inArticle ? 'in-article' : 'block') + '">',
+    '<span class="ad-slot__label">Advertisement</span>',
+    ins,
+    '<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>',
+    '</div>',
+  ].join('');
 }
 
 const SUBMIT_SUBJECT = 'Travel story submission';

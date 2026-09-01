@@ -21,7 +21,7 @@ function prosePage(opts) {
     opts.updated ? '<p class="prose__meta">Last updated: ' + UPDATED + '</p>' : '',
     opts.content,
     '</div>',
-    adSlot(),
+    adSlot('display'),
     '</div>',
     '</section>',
   ].join('');
